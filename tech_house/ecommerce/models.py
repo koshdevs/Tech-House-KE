@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
+
 class ProductCategory(models.Model):
     
     name = models.CharField(max_length=100)
@@ -11,11 +12,11 @@ class ProductCategory(models.Model):
         return self.name
     class Meta:
         
-        verbose_name_plural = 'Product Categories'
-        
+        verbose_name_plural = 'Product Categories'    
 class ProductBrand(models.Model):
     
     name = models.CharField(max_length=100)
+    category = models.ForeignKey(ProductCategory,null=True,on_delete=models.CASCADE)
     
     def __str__(self):
         
@@ -57,7 +58,7 @@ class ProductFeatures(models.Model):
     
     def __str__(self):
         
-        return self.name
+        return self.name + "-" + self.specifications
     
     class Meta:
         
@@ -66,7 +67,7 @@ class ProductFeatures(models.Model):
 class ProductImages (models.Model):
     
     angle = models.CharField(max_length=100)
-    image = models.ImageField(default='default.jpg', upload_to="products_images")
+    image = models.ImageField(default='default.jpg', upload_to="products_pics")
         
         
 class ProductBuild(models.Model):

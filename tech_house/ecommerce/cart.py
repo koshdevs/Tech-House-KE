@@ -37,7 +37,7 @@ class ShopCart():
             
         for item in cart.values():
             item["price"] = item["price"]
-            item['total_price'] = item['qty'] * item['price']
+            item['total_price'] = item['qty'] * float(item['price'])
             yield item
         
         
@@ -83,5 +83,31 @@ def display_cart_items(items):
         for item in items
             
             ]
+    
+def cart_render(cart): 
+    
+
+    """
+    Render the cart items and item number from a given cart instance.
+
+    Parameters
+    ----------
+    cart : Cart
+        The cart instance to render.
+
+    Returns
+    -------
+    dict
+        A dictionary with two keys: 'items' and 'item_no'. 'items' is a list of
+        dictionaries, each representing an item in the cart, and 'item_no' is
+        the total number of items in the cart.
+
+    """
+    
+
+    items = display_cart_items(cart.get_items())
+    item_no = cart.__len__()
+    total = cart.sub_total_price()
+    return {"items":items,"item_no":item_no,"total":total}
     
     

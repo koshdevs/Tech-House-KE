@@ -1,34 +1,43 @@
 {% extends 'ecommerce/base.html' %}
 {% load static %}
 
+{% block cartButton %}
+<div class="attr-nav">
+    <ul>
+        <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
+        <li class="side-menu"><a href="#">
+        <i class="fa fa-shopping-bag"></i>
+            <span class="badge" id="cartCount">{{item_no}}</span>
+            <p>My Cart</p>
+    </a></li>
+    </ul>
+</div>
+{% endblock cartButton %}
+
 {% block sideCart %}
 <div class="side" id="sideCart">
     <a href="#" class="close-side"><i class="fa fa-times"></i></a>
     <li class="cart-box">
         <ul class="cart-list">
-            <li>
-                <a href="#" class="photo"><img src="images/img-pro-01.jpg" class="cart-thumb" alt="" /></a>
-                <h6><a href="#">Delica omtantur </a></h6>
-                <p>1x - <span class="price">$80.00</span></p>
-            </li>
-            <li>
-                <a href="#" class="photo"><img src="images/img-pro-02.jpg" class="cart-thumb" alt="" /></a>
-                <h6><a href="#">Omnes ocurreret</a></h6>
-                <p>1x - <span class="price">$60.00</span></p>
-            </li>
-            <li>
-                <a href="#" class="photo"><img src="images/img-pro-03.jpg" class="cart-thumb" alt="" /></a>
-                <h6><a href="#">Agam facilisis</a></h6>
-                <p>1x - <span class="price">$40.00</span></p>
-            </li>
-            <li class="total">
-                <a href="#" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
-                <span class="float-right"><strong>Total</strong>: $180.00</span>
-            </li>
+            {% for item in items %}
+        <li>
+            <a href="{% url 'eco-shop-details' item.product_id %}" class="photo"><img src="{{item.image}}" class="cart-thumb" alt="" /></a>
+            <h6><a href="{% url 'eco-shop-details' item.product_id %}">{{item.product_name}} </a></h6>
+            <p>{{item.quantity}}x - 
+                 <span class="price">{{item.total_price}}</span></p>
+        </li>
+        {% endfor %}
+
+        <li class="total">
+            <a href="#" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
+            <span class="float-right"><strong>Total</strong>: {{total}}</span>
+        </li>
         </ul>
     </li>
 </div>
 {% endblock %}
+
+
 {% block content %}
 
   <!-- Start Shop Page  -->
@@ -138,7 +147,7 @@
                         <ul class="pagination">
                           {% if page_obj.has_previous %}
                               <li class="page-item">
-                                <a  href="?page={{ page_obj.previous_page_number}}" hx-boost="true" hx-target="#respBody"><span class="page-link">Previous</span></a>
+                                <a  href="?page={{ page_obj.previous_page_number}}" hx-boost="true" hx-swap="#respBody,"><span class="page-link">Previous</span></a>
                                 
                               </li>
                           {% else %}

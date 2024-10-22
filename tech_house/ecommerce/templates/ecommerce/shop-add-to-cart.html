@@ -1,3 +1,4 @@
+<p id="item_no" style="display:none">{{item_no}}</p>
 
 <a href="#" class="close-side"><i class="fa fa-times"></i></a>
 <li class="cart-box">
@@ -13,3 +14,11 @@
        
     </ul>
 </li>
+
+<script>
+    document.getElementById('cartCount').innerHTML
+    document.getElementById('cartCount').innerHTML = document.getElementById("item_no").innerHTML
+    document.getElementById('item_qty').value = document.getElementById("item_no").innerHTML
+
+ 
+</script>

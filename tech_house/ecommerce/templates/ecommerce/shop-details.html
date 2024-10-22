@@ -2,6 +2,37 @@
 
 {% load static %}
 
+{% block cartButton %}
+<div class="attr-nav">
+    <ul>
+        <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
+        <li class="side-menu"><a href="#">
+        <i class="fa fa-shopping-bag"></i>
+            <span class="badge" id="cartCount">{{item_no}}</span>
+            <p>My Cart</p>
+    </a></li>
+    </ul>
+</div>
+{% endblock cartButton %}
+
+{% block sideCart %}
+<div class="side" id="sideCart">
+    <a href="#" class="close-side"><i class="fa fa-times"></i></a>
+    <li class="cart-box">
+        <ul class="cart-list">
+            {% for item in items %}
+        <li>
+            <a href="{% url 'eco-shop-details' item.product_id %}" class="photo"><img src="{{item.image}}" class="cart-thumb" alt="" /></a>
+            <h6><a href="{% url 'eco-shop-details' item.product_id %}">{{item.product_name}} </a></h6>
+            <p>{{item.quantity}}x - 
+                 <span class="price">{{item.total_price}}</span></p>
+        </li>
+        {% endfor %}
+        </ul>
+    </li>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="shop-detail-box-main">
     <div class="container">
@@ -47,20 +78,30 @@
                         <li>
                             <div class="form-group quantity-box">
                                 <label class="control-label">Quantity</label>
-                                <input class="form-control" value="0" min="0" max="20" type="number">
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+                                        <div class="input-group">
+                                            <a class="btn btn-danger" hx-get="{% url 'eco-shop-minus-to-cart' product.pk %}" hx-target="#sideCart">-</a>
+                                            &nbsp &nbsp &nbsp
+                                            <input class="form-control" style="width:30px; font-size:12px;" value="{{item_no}}" type="text" id="item_qty" >
+                                            &nbsp &nbsp &nbsp
+                                            <a class="btn btn-success" hx-get="{% url 'eco-shop-add-to-cart' product.pk %}" hx-target="#sideCart">+</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                
                             </div>
                         </li>
                     </ul>
 
-                    <div class="price-box-bar">
-                        <div class="cart-and-bay-btn">
-                            <a class="btn hvr-hover" data-fancybox-close="" href="#">Buy New</a>
-                            <a class="btn hvr-hover" data-fancybox-close="" href="#">Add to cart</a>
-                        </div>
-                    </div>
+                   
 
                     <div class="add-to-btn">
                         <div class="add-comp">
+                        
                             <a class="btn hvr-hover" href="#"><i class="fas fa-heart"></i> Add to wishlist</a>
                             <a class="btn hvr-hover" href="#"><i class="fas fa-sync-alt"></i> Add to Compare</a>
                         </div>

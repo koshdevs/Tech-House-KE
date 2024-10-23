@@ -28,6 +28,11 @@
                  <span class="price">{{item.total_price}}</span></p>
         </li>
         {% endfor %}
+
+        <li class="total">
+            <a href="{% url 'eco-shop-cart' %}" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
+            <span class="float-right"><strong>Total</strong>: {{total}}</span>
+        </li>
         </ul>
     </li>
 </div>

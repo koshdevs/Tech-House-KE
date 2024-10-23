@@ -74,9 +74,17 @@ def shop_details_view(request,pk):
     
     return render(request,'ecommerce/shop-details.html',contxt)
 
-def shop_view_cart(request):
+def shop_cart_view(request):
     
-    pass
+    cart = ShopCart(request)
+    
+    items = cart_render(cart)
+    
+    contxt = items
+    
+    
+    
+    return render(request,'ecommerce/shop-cart.html',contxt)
 
 def shop_add_to_cart_view(request,pk):
 

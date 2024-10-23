@@ -1,0 +1,148 @@
+{% extends 'ecommerce/base.html' %}
+
+{% load static %}
+
+{% block cartButton %}
+<div class="attr-nav">
+    <ul>
+        <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
+        <li class="side-menu"><a href="#">
+        <i class="fa fa-shopping-bag"></i>
+            <span class="badge" id="cartCount">{{item_no}}</span>
+            <p>My Cart</p>
+    </a></li>
+    </ul>
+</div>
+{% endblock cartButton %}
+
+{% block sideCart %}
+<div class="side" id="sideCart">
+    <a href="#" class="close-side"><i class="fa fa-times"></i></a>
+    <li class="cart-box">
+        <ul class="cart-list">
+            {% for item in items %}
+        <li>
+            <a href="{% url 'eco-shop-details' item.product_id %}" class="photo"><img src="{{item.image}}" class="cart-thumb" alt="" /></a>
+            <h6><a href="{% url 'eco-shop-details' item.product_id %}">{{item.product_name}} </a></h6>
+            <p>{{item.quantity}}x - 
+                 <span class="price">{{item.total_price}}</span></p>
+        </li>
+        {% endfor %}
+
+        <li class="total">
+            <a href="{% url 'eco-shop-cart' %}" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
+            <span class="float-right"><strong>Total</strong>: {{total}}</span>
+        </li>
+        </ul>
+    </li>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="cart-box-main">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-main table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Images</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td class="thumbnail-img">
+                                    <a href="#">
+                                <img class="img-fluid" src="{{item.image}}" alt="" />
+                            </a>
+                                </td>
+                                <td class="name-pr">
+                                    <a href="#">
+                                {{item.product_name}}
+                            </a>
+                                </td>
+                                <td class="price-pr">
+                                    <p>{{item.price}}</p>
+                                </td>
+                                <td class="quantity-box"><input type="number" size="4" value="{{item.quantity}}" min="0" step="1" class="c-input-text qty text"></td>
+                                <td class="total-pr">
+                                    <p>{{item.total_price}}</p>
+                                </td>
+                                <td class="remove-pr">
+                                    <a href="#">
+                                <i class="fas fa-times"></i>
+                            </a>
+                                </td>
+                            </tr>
+                           {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-5">
+            <div class="col-lg-6 col-sm-6">
+                <div class="coupon-box">
+                    <div class="input-group input-group-sm">
+                        <input class="form-control" placeholder="Enter your coupon code" aria-label="Coupon code" type="text">
+                        <div class="input-group-append">
+                            <button class="btn btn-theme" type="button">Apply Coupon</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="update-box">
+                    <input value="Update Cart" type="submit">
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-5">
+            <div class="col-lg-8 col-sm-12"></div>
+            <div class="col-lg-4 col-sm-12">
+                <div class="order-box">
+                    <h3>Order summary</h3>
+                    <div class="d-flex">
+                        <h4>Sub Total</h4>
+                        <div class="ml-auto font-weight-bold">{{total}}</div>
+                    </div>
+                    <div class="d-flex">
+                        <h4>Discount</h4>
+                        <div class="ml-auto font-weight-bold"></div>
+                    </div>
+                    <hr class="my-1">
+                    <div class="d-flex">
+                        <h4>Coupon Discount</h4>
+                        <div class="ml-auto font-weight-bold">  </div>
+                    </div>
+                    <div class="d-flex">
+                        <h4>Tax</h4>
+                        <div class="ml-auto font-weight-bold"> </div>
+                    </div>
+                    <div class="d-flex">
+                        <h4>Shipping Cost</h4>
+                        <div class="ml-auto font-weight-bold"> Free </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex gr-total">
+                        <h5>Grand Total</h5>
+                        <div class="ml-auto h5"> {{total}}</div>
+                    </div>
+                    <hr> </div>
+            </div>
+            <div class="col-12 d-flex shopping-box"><a href="checkout.html" class="ml-auto btn hvr-hover">Checkout</a> </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -113,3 +113,87 @@ class ShopMinusToCartViewTests(TestCase):
     def test_invalid_product_id(self):
         response = self.client.get(reverse('shop_minus_to_cart', args=['abc']))
         self.assertEqual(response.status_code, 404)
+        
+        
+class TestShopCartView(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_view_returns_http_response(self):
+        response = self.client.get(reverse('shop-cart'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('shop-cart'))
+        self.assertEqual(response.templates[0].name, 'ecommerce/shop-cart.html')
+
+    def test_view_passes_correct_context(self):
+        response = self.client.get(reverse('shop-cart'))
+        self.assertIn('items', response.context)
+
+    def test_view_handles_empty_cart(self):
+        response = self.client.get(reverse('shop-cart'))
+        self.assertEqual(response.context['items'], [])
+        self.assertEqual(response.context['item_no'], 0)
+        self.assertEqual(response.context['total'], 0)
+        
+
+class ShopRemCartViewTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.product_id = 1
+        self.product = ProductBuild.objects.create(name='Test Product', price=10.99)
+
+    def test_removes_product_from_cart(self):
+        # Add product to cart
+        session = self.client.session
+        session['cart_session_key'] = {self.product_id: {'quantity': 1, 'price': self.product.price}}
+        session.save()
+
+        # Remove product from cart
+        url = reverse('shop-rem-cart', args=[self.product_id])
+        response = self.client.get(url)
+
+        # Check that product is removed from cart
+        self.assertNotIn(self.product_id, self.client.session['cart_session_key'])
+
+    def test_renders_template_with_updated_cart_items(self):
+        # Add product to cart
+        session = self.client.session
+        session['cart_session_key'] = {self.product_id: {'quantity': 1, 'price': self.product.price}}
+        session.save()
+
+        # Remove product from cart
+        url = reverse('shop-rem-cart', args=[self.product_id])
+        response = self.client.get(url)
+
+        # Check that template is rendered with updated cart items
+        self.assertTemplateUsed(response, 'ecommerce/shop-add-to-cart.html')
+        self.assertIn('items', response.context_data)
+        self.assertIn('product', response.context_data)
+        self.assertIn('pk', response.context_data)
+
+    def test_returns_404_if_product_not_found(self):
+        # Remove product from cart with invalid product id
+        url = reverse('shop-rem-cart', args=[self.product_id + 1])
+        response = self.client.get(url)
+
+        # Check that 404 is returned
+        self.assertEqual(response.status_code, 404)
+
+    def test_returns_404_if_invalid_product_id(self):
+        # Remove product from cart with invalid product id
+        url = reverse('shop-rem-cart', args=['invalid-id'])
+        response = self.client.get(url)
+
+        # Check that 404 is returned
+        self.assertEqual(response.status_code, 404)
+
+    def test_returns_404_if_product_id_not_in_cart(self):
+        # Remove product from cart with product id not in cart
+        url = reverse('shop-rem-cart', args=[self.product_id])
+        response = self.client.get(url)
+
+        # Check that 404 is returned
+        self.assertEqual(response.status_code, 404)

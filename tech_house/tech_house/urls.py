@@ -22,7 +22,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('ecommerce.urls')),
-    path('ecommerce/ecommerce_api/',include('ecommerce.ecommerce_api.urls'))
+    path('ecommerce/ecommerce_api/',include('ecommerce.ecommerce_api.urls')),
+    path('store/',include('manager.urls')),
 ]
 
 if settings.DEBUG:

@@ -164,7 +164,7 @@ def shop_rem_cart_view(request,pk):
     
     items =cart_render(cart)
     
-    contxt = {"product":product} | items
+    contxt = {"product":product,"pk":pk} | items
     
     return render(request,'ecommerce/shop-add-to-cart.html',contxt)
 

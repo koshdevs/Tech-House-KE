@@ -1,4 +1,6 @@
 <p id="item_no" style="display:none">{{item_no}}</p>
+<p id="pk" style="display:none">{{pk}}</p>
+
 
 <a href="#" class="close-side"><i class="fa fa-times"></i></a>
 <li class="cart-box">
@@ -11,6 +13,10 @@
                  <span class="price">{{item.total_price}}</span></p>
         </li>
         {% endfor %}
+        <li class="total">
+            <a href="{% url 'eco-shop-cart' %}" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
+            <span class="float-right"><strong>Total</strong>: {{total}}</span>
+        </li>
        
     </ul>
 </li>
@@ -18,7 +24,19 @@
 <script>
     document.getElementById('cartCount').innerHTML
     document.getElementById('cartCount').innerHTML = document.getElementById("item_no").innerHTML
+    if(document.getElementById('item_qty')){
     document.getElementById('item_qty').value = document.getElementById("item_no").innerHTML
+    }else{
+        console.log("This is not the cart page")
+    }
 
+    let pk = "product"+document.getElementById('pk').innerHTML
+    
+    if (document.getElementById(pk)){
+        document.getElementById(pk).remove()
+    }else
+    {
+        console.log("This is not the cart page")
+    }
  
 </script>

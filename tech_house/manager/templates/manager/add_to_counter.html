@@ -1,0 +1,72 @@
+<div class="col-lg-8 col-sm-8">
+    <div class="row" style="overflow-y:auto">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Serial</th>
+                    <th>Name</th>
+                    <th>Qty</th>
+                    <th>Sub Total</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                <tr>
+                    <td>
+                        {{sale.product.serial1}}
+                    </td>
+                    <td>
+                        {{sale.product.model.name}}
+                    </td>
+                    <td class="quantity-box">
+                        <div class="input-group">
+                            
+                            <input class="form-control" style="width:30px; font-size:12px;" value="{{sale.quantity}}" type="text" id="item_qty" >
+                           
+                            
+                        </div>
+                    </td>
+                    <td>{{sale.price}}</td>
+                    <td>
+                        <a href="#" class="btn btn-danger" >
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="col-lg-4 col-sm-4">
+    <div class="order-box">
+        <h3>Order summary</h3>
+        <div class="d-flex gr-total">
+            <h5>Sub Total</h5>
+            <div class="ml-auto h5"> {{total}}</div>
+        </div>
+        <hr class="my-1">
+        
+        <div class="d-flex">
+            <h4>Tax</h4>
+            <div class="ml-auto font-weight-bold"> </div>
+        </div>
+       
+        <hr>
+        <div class="d-flex gr-total">
+            <h5>Grand Total</h5>
+            <div class="ml-auto h5"> {{total}}</div>
+        </div>
+        <hr> </div>
+
+    <div class="row">
+        <div class="col-6 d-flex shopping-box">
+            <a href="checkout.html" class="btn btn-primary">Invoice</a> 
+        </div>
+        <div class="col-6 d-flex shopping-box">
+            <a href="checkout.html" class="ml-auto btn hvr-hover">Checkout</a> 
+        </div>
+
+    </div>
+</div>

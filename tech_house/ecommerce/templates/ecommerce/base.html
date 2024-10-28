@@ -103,6 +103,17 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'eco-shop' %}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
                         <li class="dropdown active">
+                            <a href="#" class=" btn btn-primary nav-link dropdown-toggle arrow" data-toggle="dropdown">Store Management</a>
+                            <ul class="dropdown-menu">
+								<li><a href="{% url 'manager-store-counter' %}">Counter</a></li>
+								<li><a href="shop-detail.html">Sales</a></li>
+                                <li><a href="cart.html">Stocks</a></li>
+                                <li><a href="checkout.html">Dashboard</a></li>
+                                <li><a href="my-account.html">Reports</a></li>
+                                
+                            </ul>
+                        </li>
+                        <li class="dropdown active">
                             <a href="#" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">Laptops</a>
                             <ul class="dropdown-menu">
 								<li><a href="shop.html">Laptops</a></li>

@@ -10,6 +10,7 @@ class StoreSales(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    status = models.CharField(max_length=200,choices=(('cart','cart'),('sold','sold'),('returned','returned'),('delivered','delivered')))
     
     
     class Meta:  

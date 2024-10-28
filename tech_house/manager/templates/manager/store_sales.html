@@ -63,7 +63,7 @@
                                     <p>status</p>
                                 </td>
                                 <td class="remove-pr">
-                                    <a class="btn btn-danger" hx-get="" hx-target="#sideCart">
+                                    <a class="btn btn-danger" hx-get="{% url 'manager-add-to-counter' item.pk %}" hx-target="#counterCart">
                                 <i class="fas fa-plus"></i>
                             </a>
                                 </td>
@@ -75,7 +75,7 @@
             </div>
             <div class="col-lg-6" style="zoom:80%">
 
-                <div class="row">
+                <div class="row" id="counterCart">
                     <div class="col-lg-8 col-sm-8">
                         <div class="row" style="overflow-y:auto">
                             <table class="table">
@@ -98,16 +98,15 @@
                                         </td>
                                         <td class="quantity-box">
                                             <div class="input-group">
-                                                <a class="btn btn-danger" hx-get="" hx-target="#sideCart">-</a>
-                                                &nbsp &nbsp &nbsp
+                                                
                                                 <input class="form-control" style="width:30px; font-size:12px;" value="{{item_no}}" type="text" id="item_qty" >
-                                                &nbsp &nbsp &nbsp
-                                                <a class="btn btn-success" hx-get="" hx-target="#sideCart">+</a>
+                                               
+                                                
                                             </div>
                                         </td>
                                         <td>subtotal</td>
                                         <td>
-                                            <a href="#" class="btn btn-danger" hx-get="" hx-target="#sideCart">
+                                            <a href="#" class="btn btn-danger" >
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         </td>

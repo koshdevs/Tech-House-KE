@@ -83,6 +83,7 @@ class ProductBuild(models.Model):
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     was = models.DecimalField(max_digits=10, decimal_places=2,null=True,blank=True)
+    tax= models.DecimalField(max_digits=10,default=16.00, decimal_places=2) 
     status = models.CharField(max_length=200,choices=(('in-stock','in-stock'),('out-stock','out-stock'),('low','low')))
     stage = models.CharField(max_length=100,default='in-stock',choices=(('in-stock','in-stock'),('sold','sold'),('returned','returned')))
     overview = models.TextField()

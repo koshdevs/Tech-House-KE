@@ -76,8 +76,9 @@
             <div class="col-lg-6" style="zoom:80%">
 
                 <div class="row" id="counterCart">
+                    
                     <div class="col-lg-8 col-sm-8">
-                        <div class="row" style="overflow-y:auto">
+                        <div class="row" style="overflow-y:auto; height:800px;">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -89,28 +90,30 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for sale in sales %}
                                     <tr>
                                         <td>
-                                            Serial
+                                            {{sale.product.serial1}}
                                         </td>
                                         <td>
-                                            Name
+                                            {{sale.product.model.name}}
                                         </td>
                                         <td class="quantity-box">
                                             <div class="input-group">
                                                 
-                                                <input class="form-control" style="width:30px; font-size:12px;" value="{{item_no}}" type="text" id="item_qty" >
+                                                <input class="form-control" style="width:30px; font-size:12px;" value="{{sale.quantity}}" type="text" id="item_qty" >
                                                
                                                 
                                             </div>
                                         </td>
-                                        <td>subtotal</td>
+                                        <td>{{sale.price}}</td>
                                         <td>
-                                            <a href="#" class="btn btn-danger" >
+                                            <a hx-get="{% url 'manager-remove-from-counter' sale.pk %}" hx-target="#counterCart" class="btn btn-danger" >
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         </td>
                                     </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
@@ -120,22 +123,22 @@
                             <h3>Order summary</h3>
                             <div class="d-flex gr-total">
                                 <h5>Sub Total</h5>
-                                <div class="ml-auto h5"> {{total}}</div>
+                                <div class="ml-auto h5"> {{totals.subtotal}}</div>
                             </div>
                             <hr class="my-1">
                             
                             <div class="d-flex">
                                 <h4>Tax</h4>
-                                <div class="ml-auto font-weight-bold"> </div>
+                                <div class="ml-auto font-weight-bold">{{totals.tax}}</div>
                             </div>
                            
                             <hr>
                             <div class="d-flex gr-total">
                                 <h5>Grand Total</h5>
-                                <div class="ml-auto h5"> {{total}}</div>
+                                <div class="ml-auto h5"> {{totals.total}}</div>
                             </div>
                             <hr> </div>
-
+                    
                         <div class="row">
                             <div class="col-6 d-flex shopping-box">
                                 <a href="checkout.html" class="btn btn-primary">Invoice</a> 
@@ -143,10 +146,9 @@
                             <div class="col-6 d-flex shopping-box">
                                 <a href="checkout.html" class="ml-auto btn hvr-hover">Checkout</a> 
                             </div>
-
+                    
                         </div>
                     </div>
-                   
                 </div>
                 
             </div>

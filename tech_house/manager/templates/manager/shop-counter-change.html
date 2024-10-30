@@ -1,5 +1,5 @@
 <div class="col-lg-8 col-sm-8">
-    <div class="row" style="overflow-y:auto">
+    <div class="row" style="overflow-y:auto; height:800px;">
         <table class="table">
             <thead>
                 <tr>
@@ -29,7 +29,7 @@
                     </td>
                     <td>{{sale.price}}</td>
                     <td>
-                        <a href="#" class="btn btn-danger" >
+                        <a hx-get="{% url 'manager-remove-from-counter' sale.pk %}" hx-target="#counterCart"  class="btn btn-danger" >
                             <i class="fas fa-trash-alt"></i>
                         </a>
                     </td>
@@ -40,23 +40,25 @@
     </div>
 </div>
 <div class="col-lg-4 col-sm-4">
+    
     <div class="order-box">
+        {{msg | safe }}
         <h3>Order summary</h3>
         <div class="d-flex gr-total">
             <h5>Sub Total</h5>
-            <div class="ml-auto h5"> {{total}}</div>
+            <div class="ml-auto h5"> {{totals.subtotal}}</div>
         </div>
         <hr class="my-1">
         
         <div class="d-flex">
             <h4>Tax</h4>
-            <div class="ml-auto font-weight-bold"> </div>
+            <div class="ml-auto font-weight-bold">{{totals.tax}}</div>
         </div>
        
         <hr>
         <div class="d-flex gr-total">
             <h5>Grand Total</h5>
-            <div class="ml-auto h5"> {{total}}</div>
+            <div class="ml-auto h5"> {{totals.total}}</div>
         </div>
         <hr> </div>
 

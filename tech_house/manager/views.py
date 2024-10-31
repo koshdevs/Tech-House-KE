@@ -79,6 +79,15 @@ def remove_from_counter(request,pk):
     return render(request, 'manager/shop-counter-change.html',contxt)
 
 
+def gen_store_invoices(request): 
+    
+    sales,totals = get_sales_data('cart')
+    
+    contxt = {"sales":sales,"totals":totals}
+    
+    return render(request, 'manager/store-invoice.html',contxt)
+
+
     
     
 

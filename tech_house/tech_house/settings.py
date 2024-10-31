@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'general',
     'manager',
     'rest_framework',
-    'django_htmx'
+    'django_htmx',
+    
 ]
 
 MIDDLEWARE = [

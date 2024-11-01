@@ -40,11 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'ecommerce',
     'general',
     'manager',
     'rest_framework',
     'django_htmx',
+    
     
 ]
 
@@ -78,6 +80,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tech_house.wsgi.application'
+
+USE_THOUSAND_SEPARATOR = True
 
 
 # Database

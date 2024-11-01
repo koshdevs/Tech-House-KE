@@ -1,3 +1,5 @@
+{% load humanize %}
+<p id="cusResp">{{resp|safe}}</p>
 <div class="col-lg-8 col-sm-8">
     <div class="row" style="overflow-y:auto; height:800px;">
         <table class="table">
@@ -62,13 +64,19 @@
         </div>
         <hr> </div>
 
-    <div class="row">
-        <div class="col-6 d-flex shopping-box">
-            <a href="checkout.html" class="btn btn-primary">Invoice</a> 
+        <div class="row">
+            <div class="col-6 d-flex shopping-box">
+                <a onclick="showInvoiceModal();" class="btn btn-primary">Invoice</a> 
+            </div>
+            <div class="col-6 d-flex shopping-box">
+                <a href="checkout.html" class="ml-auto btn hvr-hover">Checkout</a> 
+            </div>
+    
         </div>
-        <div class="col-6 d-flex shopping-box">
-            <a href="checkout.html" class="ml-auto btn hvr-hover">Checkout</a> 
-        </div>
-
-    </div>
 </div>
+
+<script>
+
+    document.getElementById("customerDetailsResp").innerHTML = document.getElementById("cusResp").innerHTML;
+
+</script>

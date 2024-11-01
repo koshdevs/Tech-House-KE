@@ -1,6 +1,8 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_protect,csrf_exempt
 from ecommerce.models import ProductBuild 
-from .models import StoreSales
+from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails
 from.sales_ops import get_sales_data
 
 # Create your views here.
@@ -86,6 +88,72 @@ def gen_store_invoices(request):
     contxt = {"sales":sales,"totals":totals}
     
     return render(request, 'manager/store-invoice.html',contxt)
+
+@csrf_exempt
+def customer_invoice_details(request):
+    
+    if request.method == 'POST':
+        
+        fname = request.POST.get('fname')
+        lname = request.POST.get('lname')
+        cname = request.POST.get('cname')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        caddress = request.POST.get('caddress')
+        terms = request.POST.get('terms')
+        print(fname)
+        orderid = request.POST.get('orderId') 
+        
+        
+        customer_details = CustomerDetails( 
+                                           
+                                           name = fname+' '+lname,
+                                           company_name = cname,
+                                           email = email,
+                                           phone = phone,
+                                           address = caddress,
+                                           terms = terms,
+                                           order_id = orderid                            
+                                           
+                                           )
+        
+        customer_details.save()
+        
+        sales = StoreSales.objects.filter(status='cart')
+        
+        for sale in sales:
+            
+            sale.status = 'invoiced'
+            sale.save()
+            
+            order = StoreOrders( 
+                                           
+                                           sales = sale,
+                                           customer_details = customer_details,
+                                           order_id = orderid
+                                )
+            
+            order.save()
+            
+            
+            
+    
+    resp = '<strong style="color:green">Details Saved successfully</strong>'
+    
+    sales,totals = get_sales_data('cart')
+    
+    contxt = {"sales":sales,"totals":totals,"resp":resp}
+    
+    return render(request, 'manager/shop-counter-change.html',contxt)
+
+
+
+            
+        
+        
+        
+        
+        
 
 
     

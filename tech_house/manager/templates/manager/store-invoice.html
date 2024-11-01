@@ -738,7 +738,7 @@ video {
             <tr>
               <td class="w-full align-top">
                 <div>
-                  <img src="https://raw.githubusercontent.com/templid/email-templates/main/templid-dynamic-templates/invoice-02/brand-sample.png" class="h-12" />
+                  <img src="{{org.logo.url}}" class="h-12" />
                 </div>
               </td>
 
@@ -750,13 +750,13 @@ video {
                         <td class="border-r pr-4">
                           <div>
                             <p class="whitespace-nowrap text-slate-400 text-right">Date</p>
-                            <p class="whitespace-nowrap font-bold text-main text-right">April 26, 2023</p>
+                            <p class="whitespace-nowrap font-bold text-main text-right">{{date}}</p>
                           </div>
                         </td>
                         <td class="pl-4">
                           <div>
                             <p class="whitespace-nowrap text-slate-400 text-right">Invoice #</p>
-                            <p class="whitespace-nowrap font-bold text-main text-right">BRA-00335</p>
+                            <p class="whitespace-nowrap font-bold text-main text-right">{{order_id}}</p>
                           </div>
                         </td>
                       </tr>
@@ -775,17 +775,19 @@ video {
             <tr>
               <td class="w-1/2 align-top">
                 <div class="text-sm text-neutral-600">
-                  <p class="font-bold">Supplier Company INC</p>
-                  <p>Number: 23456789</p>
-                  <p>VAT: 23456789</p>
-                  <p>6622 Abshire Mills</p>
-                  <p>Port Orlofurt, 05820</p>
-                  <p>United States</p>
+                  <p class="font-bold">{{org.name}}</p>
+                  <p>Phone: {{org.phone}}</p>
+                  <p>Email: {{org.email}}</p>
+                  
                 </div>
               </td>
               <td class="w-1/2 align-top text-right">
                 <div class="text-sm text-neutral-600">
                   <p class="font-bold">Customer Details</p>
+
+                  <p>Name: {{customer_details.company_name}}</p>
+                  <p>Email: {{customer_details.email}}</p>
+                  <p>Phone: {{customer_details.phone}}</p>
                   
                 </div>
               </td>
@@ -809,15 +811,15 @@ video {
           </thead>
           <tbody>
 
-            {% for sale in sales %}
+            {% for order in orders %}
             <tr>
-              <td class="border-b py-3 pl-3">{{sale.product.serial1}}</td>
-              <td class="border-b py-3 pl-2">{{sale.product.brand.name}}-{{sale.product.model.name}}</td>
-              <td class="border-b py-3 pl-2 text-right">{{sale.price}}</td>
-              <td class="border-b py-3 pl-2 text-center">{{sale.quantity}}</td>
-              <td class="border-b py-3 pl-2 text-center">{{sale.price|multiply:sale.tax|multiply:0.01}}</td>
-              <td class="border-b py-3 pl-2 text-right">{{sale.price|multiply:sale.quantity}}</td>
-              <td class="border-b py-3 pl-2 pr-3 text-right">{{sale.price|multiply:sale.tax|multiply:0.01 |add:sale.price|multiply:sale.quantity}}</td>
+              <td class="border-b py-3 pl-3">{{order.sales.product.serial1}}</td>
+              <td class="border-b py-3 pl-2">{{order.sales.product.brand.name}}-{{order.sales.product.model.name}}</td>
+              <td class="border-b py-3 pl-2 text-right">{{order.sales.price}}</td>
+              <td class="border-b py-3 pl-2 text-center">{{order.sales.quantity}}</td>
+              <td class="border-b py-3 pl-2 text-center">{{order.sales.price|multiply:order.sales.tax|multiply:0.01}}</td>
+              <td class="border-b py-3 pl-2 text-right">{{order.sales.price|multiply:order.sales.quantity}}</td>
+              <td class="border-b py-3 pl-2 pr-3 text-right">{{order.sales.price|multiply:order.sales.tax|multiply:0.01 |add:order.sales.price|multiply:order.sales.quantity}}</td>
             </tr>
 
             {% endfor %}
@@ -869,24 +871,20 @@ video {
 
       <div class="px-14 text-sm text-neutral-700">
         <p class="text-main font-bold">PAYMENT DETAILS</p>
-        <p>Banks of Banks</p>
-        <p>Bank/Sort Code: 1234567</p>
-        <p>Account Number: 123456678</p>
-        <p>Payment Reference: BRA-00335</p>
+        {{org.payment}}
       </div>
 
       <div class="px-14 py-10 text-sm text-neutral-700">
         <p class="text-main font-bold">Notes</p>
-        <p class="italic">Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries
-          for previewing layouts and visual mockups.</p>
+        <p class="italic">{{customer_details.terms}}</p>
         </div>
 
         <footer class="fixed bottom-0 left-0 bg-slate-100 w-full text-neutral-600 text-center text-xs py-3">
-          Supplier Company
+          {{org.name}}
           <span class="text-slate-300 px-2">|</span>
-          info@company.com
+          {{org.email}}
           <span class="text-slate-300 px-2">|</span>
-          +1-202-555-0106
+          {{org.phone}}
         </footer>
       </div>
     </div>

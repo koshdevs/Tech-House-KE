@@ -25,7 +25,7 @@ def add_to_counter(request,pk):
     
     product = ProductBuild.objects.get(pk=pk)
     
-    sales_check = StoreSales.objects.filter(product__serial1=product.serial1)
+    sales_check = StoreSales.objects.filter(product__serial1=product.serial1,status='cart')
     
     msg = '' 
     if len(sales_check) == 0:
@@ -81,11 +81,27 @@ def remove_from_counter(request,pk):
     return render(request, 'manager/shop-counter-change.html',contxt)
 
 
-def gen_store_invoices(request): 
+def gen_store_invoices(request,order_id):
     
-    sales,totals = get_sales_data('cart')
+    orders = StoreOrders.objects.filter(order_id=order_id)
     
-    contxt = {"sales":sales,"totals":totals}
+    if len(orders) > 0:
+        
+        customer_details = StoreOrders.objects.filter(order_id=order_id)[0].customer_details
+        date = orders[0].date
+        
+    subtotal = round(sum([i.sales.price for i in orders]))
+    tax = round((subtotal*orders[0].sales.tax)/100 if len(orders) > 0 else 0.00,2)
+    total = tax  + subtotal
+    total = round(total,2)
+    totals  = {'tax':tax,'subtotal':subtotal,'total':total}
+    
+    if OrgDetails.objects.count() > 0:
+        org = OrgDetails.objects.all()[0]
+    
+    
+    
+    contxt = {"orders":orders, "customer_details":customer_details,"totals":totals ,"order_id":order_id,"date":date,"org":org}
     
     return render(request, 'manager/store-invoice.html',contxt)
 
@@ -147,7 +163,25 @@ def customer_invoice_details(request):
     return render(request, 'manager/shop-counter-change.html',contxt)
 
 
+def list_invoices(request):
+    
+    
+    """
+    Retrieves and displays a list of all store orders.
 
+    :param request: The request object.
+    :type request: django.http.HttpRequest
+    :return: The rendered shop-invoice-list.html template with all store orders.
+    :rtype: django.http.HttpResponse
+    """
+
+    orders= StoreOrders.objects.raw("select * from manager_StoreOrders group by order_id")
+    
+    contxt = {"orders":orders}
+    
+    return render(request, 'manager/shop-invoice-list.html',contxt)
+    
+    
             
         
         

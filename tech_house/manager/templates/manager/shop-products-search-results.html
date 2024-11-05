@@ -1,0 +1,32 @@
+{% for item in items %}
+                            <tr id="product{{item.product_id}}">
+                                <td class="thumbnail-img">
+                                    <a href="#">
+                                <img class="img-fluid" src="{{item.images.first.image.url}}" alt="" />
+                            </a>
+                                </td>
+                                <td class="name-pr">
+                                    
+                                    {{item.serial1}}
+                                
+                                    </td>
+                                <td class="name-pr">
+                                    
+                                {{item.model.name}}
+                            
+                                </td>
+                                <td class="price-pr">
+                                    <p>{{item.price}}</p>
+                                </td>
+
+                                
+                                <td class="total-pr">
+                                    <p>status</p>
+                                </td>
+                                <td class="remove-pr">
+                                    <a class="btn btn-danger" hx-get="{% url 'manager-add-to-counter' item.pk %}" hx-target="#counterCart">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                                </td>
+                            </tr>
+                           {% endfor %}

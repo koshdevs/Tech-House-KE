@@ -1,0 +1,37 @@
+{% for order in orders %}
+                            <tr id="product{{item.product_id}}">
+                                <td class="thumbnail-img">
+                                {{order.order_id}}
+                                </td>
+
+                                <td>
+
+                                    {{order.date}}
+
+                                </td>
+                                <td>
+
+                                    <a><i class="fa fa-eye"></i></a>
+
+                                </td>
+                                <td>
+
+                                    <a><i class="fa fa-eye"></i></a>
+
+                                </td>
+                                <td>
+                                      {{order.sales.status}}
+                                </td>
+                                <td>
+
+                                    <a href="{% url 'manager-generate-store-invoices' order.order_id %}" download><i class="fa fa-print"></i></a>
+
+                                </td>
+                                <td>
+
+                                    <a><i class="fa fa-plus"></i></a>
+
+                                </td>
+                               
+                            </tr>
+{% endfor %}

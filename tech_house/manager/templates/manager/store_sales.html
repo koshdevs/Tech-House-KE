@@ -6,6 +6,19 @@
 
 {% block content %}
 
+<style type="text/css">
+    .htmx-indicator{
+        opacity:0;
+        transition: opacity 500ms ease-in;
+    }
+    .htmx-request .htmx-indicator{
+        opacity:1;
+    }
+    .htmx-request.htmx-indicator{
+        opacity:1;
+    }
+    </style>
+
 <div class="modal fade" id="invoiceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -75,17 +88,19 @@
             <div class="col-lg-6">
                 <div class="row">
 
-                    <div class="col-lg-4">
-                        <input class="form-control" placeholder="Scan here..." type="text">
-                    </div>
-                    &nbsp;  &nbsp;  
                     <div class="col-lg-6">
-                        <input class="form-control" placeholder="Search by name..." type="text">
+                        <input hx-get="{% url 'manager-filter-products' %}" hx-trigger="keyup changed delay:1s" hx-target="#itemTab" hx-indicator="#productSearchIndicator"  class="form-control" name="scan" placeholder="Scan here or search by name" type="text">
                     </div>
+                    
                      
                 </div>
 
                 <br>
+                <div class="htmx-indicator" id="productSearchIndicator">
+                    <i class="fa fa-spinner fa-spin" style="font-size:24px color:blue"></i>
+                </div>
+                
+                
                 <div class="table-main table-responsive">
                     <table class="table">
                         <thead>
@@ -99,7 +114,7 @@
                                 <th>Sell</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="itemTab">
                             {% for item in items %}
                             <tr id="product{{item.product_id}}">
                                 <td class="thumbnail-img">

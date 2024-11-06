@@ -29,7 +29,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form>
+              <form >
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -37,7 +37,7 @@
                         <input type="text" class="form-control" name="order_id" id="order_id" placeholder="First Name"> </div>
                     <div class="form-group col-md-6">
                         <label for="InputLastname" class="mb-0">Status</label>
-                        <select class="form-control"> 
+                        <select class="form-control" name="status"> 
 
                             <option value="pnd">
 
@@ -66,13 +66,41 @@
 
 
                         </div>
-                    <div class="form-group col-md-6">
-                        <label for="InputEmail1" class="mb-0">Delivery Cost</label>
-                        <input type="email" class="form-control" name="email" id="InputEmail1" placeholder="Enter Email" required> </div>
-                    <div class="form-group col-md-6">
-                        <label for="InputPassword1" class="mb-0">Phone number</label>
-                        <input type="text" class="form-control" name="phone" id="InputPassword1" placeholder="Phone Number" required>
-                     </div> 
+                  
+                   
+                     <div class="form-group col-md-6">
+                        <label for="InputPassword1" class="mb-0">Delivery Person Name</label>
+                        <input type="text" class="form-control" name="dpn"  placeholder="Phone Number" required>
+                     </div>
+                     <div class="form-group col-md-6">
+                        <label for="InputPassword1" class="mb-0">Delivery Phone Number</label>
+                        <input type="text" class="form-control" name="dppn"  placeholder="Phone Number" required>
+                     </div>
+                     <div class="form-group col-md-6">
+                        <label for="InputPassword1" class="mb-0">Delivery Id Image</label>
+                        <input type="file" class="form-control" name="dpidf" id="dpidf"  onchange="dpiffOnchange();" required>
+                     </div>
+                     <div class="form-group col-md-6">
+                        <label for="InputPassword1" class="mb-0">Delivery Person Id</label>
+                        <input type="text" class="form-control" name="dpd"  placeholder="Phone Number" required>
+                     </div>
+
+                     <div class="form-group col-md-12">
+                        <label for="InputPassword1" class="mb-0">Delivery Details</label>
+
+                           <textarea class="form-control" name="dd">
+
+
+                           </textarea>
+                     </div>
+
+                     <div class="form-group col-md-12">
+
+                         <button type="submit" class="btn btn-primary">Save</button>
+                     </div>
+
+          
+
 
                     </div>
 
@@ -82,7 +110,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              
             </div>
           </div>
         </div>
@@ -189,7 +217,29 @@
     function completeOrderModal(orderId) {
 
         $('#exampleModalCenter').modal('show');
+
+        $("#order_id").val(orderId);
       
+    }
+
+    function dpiffOnchange(){
+
+        let base64String = "";
+
+        var dpidf = document.getElementById('dpidf').files[0];
+        let reader = new FileReader();
+            console.log("next");
+
+            reader.onload = function () {
+                base64String = reader.result.replace("data:", "")
+                    .replace(/^.+,/, "");
+
+                imageBase64Stringsep = base64String;
+
+                // alert(imageBase64Stringsep);
+                console.log(base64String);
+            }
+            reader.readAsDataURL(dpidf);
     }
 
 </script>

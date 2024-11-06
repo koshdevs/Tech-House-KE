@@ -335,7 +335,31 @@ def filter_orders(request):
 def store_complete_order(request, order_id): 
     
     
-    orders = StoreOrders.objects.filter(order_id=order_id) 
+    """
+    Marks all store orders with a given order id as 'sold' and retrieves and displays a list of all store orders.
+
+    :param request: The request object.
+    :type request: django.http.HttpRequest
+    :param order_id: The order id to mark as 'sold'.
+    :type order_id: str
+    :return: The rendered shop-invoice-list.html template with all store orders.
+    :rtype: django.http.HttpResponse
+    """
+    
+    if request.method == 'POST':
+        
+        status = request.POST.get('status')
+        dpn = request.POST.get('dpn')
+        dppn  = request.POST.get('dppn')
+        dpidf = request.POST.get('dpidf')
+        dpidb = request.POST.get('dpidb')
+        dd = request.POST.get('dd')
+        
+        
+        
+        
+
+    orders = StoreOrders.objects.filter(order_id=order_id)
     
     for order in orders: 
         

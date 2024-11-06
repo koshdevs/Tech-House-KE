@@ -11,7 +11,7 @@ class StoreSales(models.Model):
     tax= models.DecimalField(max_digits=10,default=16.00, decimal_places=2)   
     date = models.DateField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.CharField(max_length=200,choices=(('cart','cart'),('ínvoiced','invoiced'),('sold','sold'),('returned','returned'),('delivered','delivered')))
+    status = models.CharField(max_length=200,choices=(('cart','cart'),('ínvoiced','invoiced'),('sold','sold'),('returned','returned'),('delivered','delivered'),('Sold & Delivered','Sold & Delivered')))
     
     
     class Meta:  
@@ -38,6 +38,7 @@ class StoreOrders(models.Model):
     order_id = models.CharField(max_length=100)
     sales = models.ForeignKey(StoreSales, on_delete=models.CASCADE)
     customer_details = models.ForeignKey(CustomerDetails,null=True, on_delete=models.SET_NULL)
+    delivery_cost = models.DecimalField(max_digits=10, default=0.00,decimal_places=2, )
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta:

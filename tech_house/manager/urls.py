@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from .views import store_counter,add_to_counter,remove_from_counter,gen_store_invoices,\
-    customer_invoice_details,list_invoices,filter_orders,filter_products
+    customer_invoice_details,list_invoices,filter_orders,filter_products,store_complete_order
 
 
 urlpatterns = [
@@ -14,5 +14,6 @@ urlpatterns = [
     path('list-invoice/', list_invoices, name="manager-list-invoices"),
     path('filter-orders/', filter_orders, name="manager-filter-orders"),
     path('filter-products/', filter_products, name="manager-filter-products"),
+    path('store-complete-order/<str:order_id>/', store_complete_order, name="manager-store-complete-order"),
     
 ]

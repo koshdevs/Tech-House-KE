@@ -1,7 +1,8 @@
 from django.urls import path
 from . import views
 from .views import store_counter,add_to_counter,remove_from_counter,gen_store_invoices,\
-    customer_invoice_details,list_invoices,filter_orders,filter_products,store_complete_order
+    customer_invoice_details,list_invoices,filter_orders,filter_products,\
+        store_complete_order,store_process_delivery,store_generate_d_notes
 
 
 urlpatterns = [
@@ -15,5 +16,7 @@ urlpatterns = [
     path('filter-orders/', filter_orders, name="manager-filter-orders"),
     path('filter-products/', filter_products, name="manager-filter-products"),
     path('store-complete-order/<str:order_id>/', store_complete_order, name="manager-store-complete-order"),
+    path('store-processing-delivery/',store_process_delivery, name="manager-store-process-delivery"),
+    path('store-generate-d-notes/<str:order_id>/', store_generate_d_notes, name="manager-store-generate-d-notes"),
     
 ]

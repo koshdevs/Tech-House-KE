@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.db.models import Q
 from ecommerce.models import ProductBuild 
-from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails
+from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails
 from.sales_ops import get_sales_data
 import datetime
 
@@ -346,18 +346,7 @@ def store_complete_order(request, order_id):
     :rtype: django.http.HttpResponse
     """
     
-    if request.method == 'POST':
-        
-        status = request.POST.get('status')
-        dpn = request.POST.get('dpn')
-        dppn  = request.POST.get('dppn')
-        dpidf = request.POST.get('dpidf')
-        dpidb = request.POST.get('dpidb')
-        dd = request.POST.get('dd')
-        
-        
-        
-        
+    
 
     orders = StoreOrders.objects.filter(order_id=order_id)
     
@@ -377,6 +366,140 @@ def store_complete_order(request, order_id):
     contxt = {"orders":orders}
     
     return render(request, 'manager/shop-invoice-list.html',contxt)
+
+def store_process_delivery(request):
+
+    """
+    Handles POST requests containing delivery details and updates the relevant
+    models, namely StoreOrders and DeliveryDetails. The function renders a
+    success or failure message to the user based on the status of the update.
+
+    :param request: The request object.
+    :type request: django.http.HttpRequest
+    :return: An HttpResponse object with a success or failure message.
+    :rtype: django.http.HttpResponse
+    """
+
+    if request.method == 'POST':
+        
+        order_id = request.POST.get('order_id')
+        status = request.POST.get('status')
+        dpn = request.POST.get('dpn')
+        dppn  = request.POST.get('dppn')
+        person_image = request.POST.get('personImageString')
+        d_note_image = request.POST.get('noteImageString')
+       
+        dd = request.POST.get('dd')
+        dc = request.POST.get('dc')
+        
+        print(status)
+        
+        resp = ""
+        
+        if status == 'pnd' or status == 'npd' : 
+            
+           status = 'paid & delivered' if status == 'pnd' else 'not paid & delivered'
+            
+           orders = StoreOrders.objects.filter(order_id=order_id)
+           
+           for order in orders:
+               
+               if order.delivery_details.paid_status == 'paid & not delivered' or order.delivery_details.paid_status == 'not paid & not delivered':
+                   
+                   order.delivery_details.paid_status = status
+                   order.delivery_details.delivery_note_image = d_note_image
+                   order.delivery_details.status = 'delivered'
+                   order.delivery_details.last_updates = datetime.datetime.now()
+                   order.sales.status = 'sold & delivered'
+                   
+                   order.save()
+                   
+                   resp = f'<strong style="color:green">Order marked as {status} successfully</strong>'
+                   
+                   
+               else:
+                   
+                   resp = '<strong style="color:red">Order is already paid & delivered</strong>'
+                   
+                   
+                   
+                   
+                
+                   
+                   
+                  
+        
+        elif status == 'pnotd' or status == 'npnd':
+            
+            status = 'paid & not delivered' if status == 'pnotd' else 'not paid & not delivered'
+            
+            orders = StoreOrders.objects.filter(order_id=order_id)
+            
+            delivery_details = DeliveryDetails(
+                
+                    delivery_cost = dc,
+                    delivery_address = dd,
+                    delivery_date = datetime.datetime.now(),
+                    delivery_person_name = dpn,
+                    delivery_person_phone = dppn,
+                    delivery_perdon_id = dppn,
+                    delivery_person_id_image = person_image,
+                    delivery_note_image = d_note_image,
+                    status = 'in-transit',
+                    paid_status = status,
+                    last_updates = datetime.datetime.now()
+                
+                )
+            delivery_details.save()
+                
+              
+            
+            for order in orders:
+                
+                order.delivery_details = delivery_details
+                order.sales.status = 'sold & not delivered'
+                
+                order.save()
+                
+                resp = f'<strong style="color:green">Order marked as {status} successfully</strong>'
+                
+    
+    return HttpResponse(resp)
+
+
+def store_generate_d_notes(request,order_id):
+    
+    orders = StoreOrders.objects.filter(order_id=order_id)
+    
+    if len(orders) > 0:
+        
+        customer_details = StoreOrders.objects.filter(order_id=order_id)[0].customer_details
+        delivery_details = StoreOrders.objects.filter(order_id=order_id)[0].delivery_details
+        date = orders[0].date
+        
+    subtotal = round(sum([i.sales.price for i in orders]))
+    tax = round((subtotal*orders[0].sales.tax)/100 if len(orders) > 0 else 0.00,2)
+    total = tax  + subtotal
+    total = round(total,2)
+    totals  = {'tax':tax,'subtotal':subtotal,'total':total}
+    
+    if OrgDetails.objects.count() > 0:
+        org = OrgDetails.objects.all()[0] 
+        
+        
+    
+    
+    
+    contxt = {"orders":orders, "customer_details":customer_details,"delivery_details":delivery_details,"totals":totals ,"order_id":order_id,"date":date,"org":org}
+    
+    return render(request, 'manager/store-dnote.html',contxt)
+    
+    
+    
+    
+    
+    
+    
     
     
     

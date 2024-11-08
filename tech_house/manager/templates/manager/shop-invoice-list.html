@@ -23,21 +23,34 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+              <h4 class="modal-title" id="exampleModalLongTitle">Process Delivery</h4>
+              <br>  
+               <div class="row" id="deliveryResp">
+               </div>
+               <br>
+               <div class="htmx-indicator" id="deliveryIndicator">
+                <i class="fa fa-spinner fa-spin" style="font-size:24px color:blue"></i>
+            </div>
+
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
-              <form >
-
+            <div class="modal-body" style="zoom:80px;">
+              <form hx-post="{% url 'manager-store-process-delivery' %}" hx-target="#deliveryResp" hx-indicator="#deliveryIndicator">
+                 {% csrf_token %}
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="InputName" class="mb-0">order Id/ Invoice Id</label>
                         <input type="text" class="form-control" name="order_id" id="order_id" placeholder="First Name"> </div>
                     <div class="form-group col-md-6">
                         <label for="InputLastname" class="mb-0">Status</label>
-                        <select class="form-control" name="status"> 
+                        <select class="form-control" id="status" name="status" onchange="onChangeStatus()" required> 
+                            <option >
+
+                               select Status
+
+                            </option>
 
                             <option value="pnd">
 
@@ -49,14 +62,14 @@
                                 paid and not delivered
 
                             </option>
-                            <option value="pond">
+                            <option value="npd">
 
-                                payment on deliverly
+                               not paid and delivered
 
                             </option>
-                            <option value="pnod">
+                            <option value="npnd">
 
-                                payment only no delivery
+                                not paid and not delivered
 
                             </option>
 
@@ -67,22 +80,24 @@
 
                         </div>
                   
-                   
+                   <div class="row" id="beforeDelivery" style="display:none;">
                      <div class="form-group col-md-6">
                         <label for="InputPassword1" class="mb-0">Delivery Person Name</label>
-                        <input type="text" class="form-control" name="dpn"  placeholder="Phone Number" required>
+                        <input type="text" class="form-control" name="dpn"  placeholder="Name">
                      </div>
                      <div class="form-group col-md-6">
                         <label for="InputPassword1" class="mb-0">Delivery Phone Number</label>
-                        <input type="text" class="form-control" name="dppn"  placeholder="Phone Number" required>
+                        <input type="text" class="form-control" name="dppn"  placeholder="Phone Number">
                      </div>
                      <div class="form-group col-md-6">
                         <label for="InputPassword1" class="mb-0">Delivery Id Image</label>
-                        <input type="file" class="form-control" name="dpidf" id="dpidf"  onchange="dpiffOnchange();" required>
+                        <input type="file" class="form-control" name="dpidf" id="dpidf"  onchange="dpiffOnchange();">
+                        <textarea class="form-control" id="personImageString" name="personImageString" style="display:none">
+                        </textarea>
                      </div>
                      <div class="form-group col-md-6">
-                        <label for="InputPassword1" class="mb-0">Delivery Person Id</label>
-                        <input type="text" class="form-control" name="dpd"  placeholder="Phone Number" required>
+                        <label for="InputPassword1" class="mb-0">Delivery Cost</label>
+                        <input type="text" class="form-control" name="dc"  placeholder="Delivery Cost" required>
                      </div>
 
                      <div class="form-group col-md-12">
@@ -94,9 +109,24 @@
                            </textarea>
                      </div>
 
+                    </div>
+                    <div class="row" id="afterDelivery" style="display:none;">
+
+                        <div class="form-group col-md-6">
+                            <label for="InputPassword1" class="mb-0">Delivery Note Image</label>
+                            <input type="file" class="form-control" name="dnidf" id="dnidf"  onchange="dniffOnchange();">
+                            <textarea class="form-control" id="noteImageString" name="noteImageString" style="display:none">
+                            </textarea>
+                         </div>
+
+                         
+
+
+                    </div>
+
                      <div class="form-group col-md-12">
 
-                         <button type="submit" class="btn btn-primary">Save</button>
+                         <button type="submit" class="btn btn-primary">Process</button>
                      </div>
 
           
@@ -147,7 +177,7 @@
                 </div>
             </form>
                 <br>
-                <div class="table-main table-responsive">
+                <div class="table-main table-responsive" style="zoom:80%">
                     <table class="table">
                         <thead>
                             <tr>
@@ -156,8 +186,11 @@
                                 <th>Items</th>
                                 
                                 <th>Customer Details</th>
-                                <th>Status</th>
+                                <th>Item Status</th>
+                                <th>Delivery Status</th>
+                                <th>Payment Status</th>
                                 <th>Print Invoice</th>
+                                <th>Print D-Note</th>
                                 <th>Complete </th>
                             </tr>
                         </thead>
@@ -187,8 +220,19 @@
                                       {{order.sales.status}}
                                 </td>
                                 <td>
+                                    {{order.delivery_details.status}}
+                              </td>
+                              <td>
+                                {{order.delivery_details.paid_status}}
+                          </td>
+                                <td>
 
                                     <a href="{% url 'manager-generate-store-invoices' order.order_id %}" download><i class="fa fa-print"></i></a>
+
+                                </td>
+                                <td>
+
+                                    <a href="{% url 'manager-store-generate-d-notes' order.order_id %}" download><i class="fa fa-print"></i></a>
 
                                 </td>
                                 <td>
@@ -237,9 +281,49 @@
                 imageBase64Stringsep = base64String;
 
                 // alert(imageBase64Stringsep);
-                console.log(base64String);
+                document.getElementById("personImageString").value = imageBase64Stringsep
             }
             reader.readAsDataURL(dpidf);
+    }
+
+    function dniffOnchange(){
+
+        let base64String = "";
+
+        var dpidf = document.getElementById('dnidf').files[0];
+        let reader = new FileReader();
+            console.log("next");
+
+            reader.onload = function () {
+                base64String = reader.result.replace("data:", "")
+                    .replace(/^.+,/, "");
+
+                imageBase64Stringsep = base64String;
+
+                // alert(imageBase64Stringsep);
+                document.getElementById("noteImageString").value = imageBase64Stringsep
+            }
+            reader.readAsDataURL(dpidf);
+    }
+
+    function onChangeStatus() {
+
+
+        let status = document.getElementById('status').value;
+
+        console.log(status);
+
+        if(status=="pnd" || status=="npd"){
+
+            document.getElementById("afterDelivery").style.display = "block";
+            document.getElementById("afterDelivery").classList.add("row")
+
+        }else if(status=="pnotd" || status=="npnd") { 
+              
+            document.getElementById("beforeDelivery").style.display = "block";
+            document.getElementById("beforeDelivery").classList.add("row")
+
+        }
     }
 
 </script>

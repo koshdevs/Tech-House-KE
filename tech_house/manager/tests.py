@@ -2,7 +2,8 @@ import unittest
 from django.test import Client
 from django.urls import reverse
 from tech_house.manager.views import store_counter
-from ecommerce.models import ProductBuild
+from ecommerce.models import ProductBuild  
+from .models import *
 
 class TestStoreCounterView(unittest.TestCase):
     def setUp(self):
@@ -28,7 +29,7 @@ class TestStoreCounterView(unittest.TestCase):
         self.assertEqual(len(response.context['items']), 0)
         
         
-class TestAddToCounterView(TestCase):
+class TestAddToCounterView(unittest.TestCase):
     def setUp(self):
         self.client = Client()
         self.product = ProductBuild.objects.create(

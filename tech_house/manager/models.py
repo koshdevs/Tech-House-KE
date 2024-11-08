@@ -31,6 +31,25 @@ class CustomerDetails(models.Model):
     class Meta:
         
         verbose_name_plural = "Customer Details"
+
+class DeliveryDetails(models.Model):
+    
+    delivery_cost = models.DecimalField(max_digits=10, default=0.00,decimal_places=2, )
+    delivery_address = models.TextField(null=True, blank=True)
+    delivery_date = models.DateField(auto_now=True)
+    delivery_person_name = models.CharField(max_length=100, null=True)
+    delivery_person_phone = models.CharField(max_length=15, null=True)
+    delivery_perdon_id = models.CharField(max_length=100, null=True)
+    delivery_person_id_image = models.TextField(null=True)
+    delivery_note_image = models.TextField(null=True)
+    status = models.CharField(max_length=200,choices=(('in-transit','in-transit'),('delivered','delivered'),('returned','returned')))
+    paid_status = models.CharField(max_length=200,choices=(('paid & delivered','paid & delivered'),('paid & not delivered','paid & not delivered'),('not paid & delivered','not paid & delivered'),('not paid & not delivered','not paid & not delivered')))
+    last_updates = models.DateTimeField(auto_now_add=True)
+    
+    
+    class Meta: 
+        
+        verbose_name_plural = "Delivery Details"
     
         
 class StoreOrders(models.Model):
@@ -38,8 +57,9 @@ class StoreOrders(models.Model):
     order_id = models.CharField(max_length=100)
     sales = models.ForeignKey(StoreSales, on_delete=models.CASCADE)
     customer_details = models.ForeignKey(CustomerDetails,null=True, on_delete=models.SET_NULL)
-    delivery_cost = models.DecimalField(max_digits=10, default=0.00,decimal_places=2, )
+    delivery_details = models.ForeignKey(DeliveryDetails,null=True, on_delete=models.SET_NULL)
     date = models.DateTimeField(auto_now_add=True)
+  
     
     class Meta:
         

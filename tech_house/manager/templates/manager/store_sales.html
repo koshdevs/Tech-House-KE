@@ -219,10 +219,10 @@
                     
                         <div class="row">
                             <div class="col-6 d-flex shopping-box">
-                                <a onclick="showInvoiceModal();" class="btn btn-primary">Invoice</a> 
+                                <a onclick="showInvoiceModal();" class="btn btn-outline">Invoice</a> 
                             </div>
                             <div class="col-6 d-flex shopping-box">
-                                <a href="checkout.html" class="ml-auto btn hvr-hover">Checkout</a> 
+                                <a onclick="genReceipt()" class="ml-auto btn hvr-hover">Checkout</a> 
                             </div>
                     
                         </div>
@@ -247,6 +247,15 @@
     function showInvoiceModal(){
 
         $("#invoiceModal").modal()
+    }
+
+    function genReceipt(){
+
+        
+            
+        let url = "{% url 'manager-gen-instant-receipt' %}";
+        myWin = window.open(url,"Receipt Page", 'height=600,width=400,toolbar=yes,resizable=yes,scrollbars=yes,top=100,left=1000');
+
     }
    
     let obj = new Date(); 

@@ -1,0 +1,200 @@
+<style>
+
+    #invoice-POS{
+        box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+        padding:2mm;
+        margin: 0 auto;
+        width: 44mm;
+        background: #FFF;
+        
+        
+      ::selection {background: #f31544; color: #FFF;}
+      ::moz-selection {background: #f31544; color: #FFF;}
+      h1{
+        font-size: 1.5em;
+        color: #222;
+      }
+      h2{font-size: .9em;}
+      h3{
+        font-size: 1.2em;
+        font-weight: 300;
+        line-height: 2em;
+      }
+     
+      p{
+        font-size: .7em;
+        color: #666;
+        line-height: 1.2em;
+      }
+       
+      #top, #mid,#bot{ /* Targets all id with 'col-' */
+        border-bottom: 1px solid #EEE;
+      }
+      
+      #top{min-height: 100px;}
+      #mid{min-height: 80px;} 
+      #bot{ min-height: 50px;}
+      
+      #top .logo{
+        //float: left;
+          height: 60px;
+          width: 60px;
+          background: url(http://michaeltruong.ca/images/logo1.png) no-repeat;
+          background-size: 60px 60px;
+      }
+      .clientlogo{
+        float: left;
+          height: 60px;
+          width: 60px;
+          background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
+          background-size: 60px 60px;
+        border-radius: 50px;
+      }
+      .info{
+        display: block;
+        //float:left;
+        margin-left: 0;
+      }
+      .title{
+        float: right;
+      }
+      .title p{text-align: right;} 
+      table{
+        width: 100%;
+        border-collapse: collapse;
+      }
+      td{
+        //padding: 5px 0 5px 15px;
+        //border: 1px solid #EEE
+      }
+      .tabletitle{
+        //padding: 5px;
+        font-size: .5em;
+        background: #EEE;
+      }
+      .service{border-bottom: 1px solid #EEE;}
+      .item{width: 24mm;}
+      .itemtext{font-size: .5em;}
+      
+      #legalcopy{
+        margin-top: 5mm;
+      }
+      
+        
+        
+      }
+
+      hr.dashed {
+        border-top: 1px dashed;
+        border-bottom: none;
+       }
+       hr.dotted {
+        border-top: 1px dotted;
+        border-bottom: none;
+       }
+       hr.double {
+        border-top: 3px double;
+        border-bottom: none;
+       }
+</style>
+
+
+
+<div id="invoice-POS">
+    
+    <div id="top">
+      <div class="logo"></div>
+      <div class="info"> 
+        <h4>{{org_details.name}}</h4>
+      </div><!--End Info-->
+    </div><!--End InvoiceTop-->
+    
+    <div id="mid">
+      <div class="info">
+        
+        <strong style="font-size:10px;">
+            Email : {{org_details.email}}</br>
+        
+            Phone   : {{org_details.phone}}</br>
+        </strong>
+        <strong style="font-size:10px;">{{date}}</strong>
+      </div>
+    </div><!--End Invoice Mid-->
+    <hr class="dotted">
+    <div id="bot">
+
+					<div id="table" style="zoom:80%">
+						<table>
+							<tr class="tabletitle">
+                                <td class="item"><h6>Serial</h6></td>
+								<td class="item"><h6>Item</h6></td>
+								<td class="Hours"><h6>Qty</h6></td>
+								<td class="Rate"><h6>Sub Total</h6></td>
+							</tr>
+              
+                           {% for sale in sales %}
+							<tr class="service">
+                                <td class="tableitem"><p class="itemtext">{{sale.product.serial1}}</p></td>
+								<td class="tableitem"><p class="itemtext">{{sale.product.model.name}}</p></td>
+								<td class="tableitem"><p class="itemtext">{{sale.quantity}}</p></td>
+								<td class="tableitem"><p class="itemtext">{{sale.price}}</p></td>
+							</tr>
+
+                            {% endfor %}
+
+							
+                            
+
+						</table>
+                        <hr class="double">
+                        <table>
+                        <tr class="tabletitle">
+                                
+							
+                            <td class="Rate"><h6>Subtotal</h6></td>
+                            <td class="payment"><h6>{{subtotal}}</h6></td>
+                        </tr>
+
+                        <tr class="tabletitle">
+                        
+                            <td class="Rate"><h6>tax</h6></td>
+                            <td class="payment"><h6>{{tax}}</h6></td>
+                        </tr>
+
+                        <tr class="tabletitle">
+                            
+                            <td class="Rate"><h4>Total</h4></td>
+                            <td class="payment"><h4>{{total}}</h4></td>
+                        </tr>
+                    </table>
+					</div><!--End Table-->
+          <hr class="dashed">     
+					<div id="legalcopy">
+						<p class="legal"><strong>Thank you for</strong> {{org_details.terms}}
+						</p>
+					</div>
+
+				</div><!--End InvoiceBot-->
+  </div>
+  
+  <button onclick="completeSale()" style="margin-left:80px; background-color:greenyellow;"> Complete </button><!--End Invoice-->
+<script>
+
+  function printDiv() { 
+    var divContents = document.getElementById("invoice-POS").innerHTML; 
+    var a = window.open('', '', 'height=500, width=500'); 
+    a.document.write('<html>'); 
+    a.document.write(divContents); 
+    a.document.write('</body></html>'); 
+    a.document.close(); 
+    a.print(); 
+} 
+        printDiv()
+
+    function completeSale(){
+
+      window.close()
+    }
+    
+
+</script>

@@ -6,7 +6,7 @@ from django.core.cache import cache
 from django.db.models import Q
 from ecommerce.models import ProductBuild 
 from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails
-from.sales_ops import get_sales_data
+from.sales_ops import get_sales_data,gen_order_docs,get_sales_by_status
 import datetime
 
 # Create your views here.
@@ -117,6 +117,14 @@ def remove_from_counter(request,pk):
     return render(request, 'manager/shop-counter-change.html',contxt)
 
 
+def gen_instant_receipt(request): 
+    
+    contxt = get_sales_by_status('cart')
+    
+    
+    return render(request, 'manager/store-receipt.html',contxt)
+
+
 def filter_products(request):
     
     
@@ -175,25 +183,7 @@ def gen_store_invoices(request,order_id):
     :rtype: django.http.HttpResponse
     """
 
-    orders = StoreOrders.objects.filter(order_id=order_id)
-    
-    if len(orders) > 0:
-        
-        customer_details = StoreOrders.objects.filter(order_id=order_id)[0].customer_details
-        date = orders[0].date
-        
-    subtotal = round(sum([i.sales.price for i in orders]))
-    tax = round((subtotal*orders[0].sales.tax)/100 if len(orders) > 0 else 0.00,2)
-    total = tax  + subtotal
-    total = round(total,2)
-    totals  = {'tax':tax,'subtotal':subtotal,'total':total}
-    
-    if OrgDetails.objects.count() > 0:
-        org = OrgDetails.objects.all()[0]
-    
-    
-    
-    contxt = {"orders":orders, "customer_details":customer_details,"totals":totals ,"order_id":order_id,"date":date,"org":org}
+    contxt = gen_order_docs(order_id)
     
     return render(request, 'manager/store-invoice.html',contxt)
 
@@ -469,30 +459,11 @@ def store_process_delivery(request):
 
 def store_generate_d_notes(request,order_id):
     
-    orders = StoreOrders.objects.filter(order_id=order_id)
-    
-    if len(orders) > 0:
-        
-        customer_details = StoreOrders.objects.filter(order_id=order_id)[0].customer_details
-        delivery_details = StoreOrders.objects.filter(order_id=order_id)[0].delivery_details
-        date = orders[0].date
-        
-    subtotal = round(sum([i.sales.price for i in orders]))
-    tax = round((subtotal*orders[0].sales.tax)/100 if len(orders) > 0 else 0.00,2)
-    total = tax  + subtotal
-    total = round(total,2)
-    totals  = {'tax':tax,'subtotal':subtotal,'total':total}
-    
-    if OrgDetails.objects.count() > 0:
-        org = OrgDetails.objects.all()[0] 
-        
-        
-    
-    
-    
-    contxt = {"orders":orders, "customer_details":customer_details,"delivery_details":delivery_details,"totals":totals ,"order_id":order_id,"date":date,"org":org}
+    contxt = gen_order_docs(order_id)
     
     return render(request, 'manager/store-dnote.html',contxt)
+
+
     
     
     

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_protect,csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
@@ -24,7 +24,7 @@ def store_counter(request):
     """
     
 
-    items = ProductBuild.objects.filter()
+    items = ProductBuild.objects.filter(stage="in-stock")
     
     sales,totals = get_sales_data('cart')
     
@@ -124,6 +124,43 @@ def gen_instant_receipt(request):
     
     return render(request, 'manager/store-receipt.html',contxt)
 
+def complete_instant_sales(request): 
+    
+
+    """
+    Completes all sales in the user's cart by updating their status to 'sold' and
+    setting the sale date to the current date and time. Returns an HttpResponse
+    with a success message if all sales are completed successfully, or an error
+    message if an exception occurs.
+
+    :param request: The request object containing the user information.
+    :type request: django.http.HttpRequest
+    :return: An HttpResponse object with a success or error message.
+    :rtype: django.http.HttpResponse
+    """
+
+    resp = ""
+    try:
+    
+        sales = StoreSales.objects.filter(status='cart',created_by=request.user)
+        
+        
+        for sale in sales:
+            
+            sale.status = 'sold'
+            sale.product.stage = "sold"
+            
+            sale.date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            
+            sale.save()
+            sale.product.save()
+        resp+=f"Completed successfully"
+        
+    except Exception as e: 
+        
+        resp = str(e)
+            
+    return JsonResponse(resp,safe=False)
 
 def filter_products(request):
     
@@ -462,6 +499,9 @@ def store_generate_d_notes(request,order_id):
     contxt = gen_order_docs(order_id)
     
     return render(request, 'manager/store-dnote.html',contxt)
+
+
+
 
 
     

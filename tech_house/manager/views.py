@@ -3,7 +3,7 @@ from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_protect,csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
-from django.db.models import Q
+from django.db.models import Q,Sum,Count
 from ecommerce.models import ProductBuild 
 from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails
 from.sales_ops import get_sales_data,gen_order_docs,get_sales_by_status
@@ -499,6 +499,35 @@ def store_generate_d_notes(request,order_id):
     contxt = gen_order_docs(order_id)
     
     return render(request, 'manager/store-dnote.html',contxt)
+
+
+
+def store_generate_reports(request):  
+    
+    
+    # stocks
+    
+    by_model_name = ProductBuild.objects.values("model__name").annotate(Count('model__name'))
+    by_category_name = ProductBuild.objects.values("category__name").annotate(Count('category__name'))
+    by_brand_name = ProductBuild.objects.values("brand__name").annotate(Count('brand__name'))
+    
+    # sales
+    
+    sales_by_model_name = StoreSales.objects.filter(status="sold").values("product__model__name").annotate(Count('product__model__name'))	
+    
+    print(sales_by_model_name)
+    
+    contxt = {"by_model_name":by_model_name,
+              "by_category_name":by_category_name,
+              "by_brand_name":by_brand_name,
+              "sales_by_model_name":sales_by_model_name,
+              
+              }	
+    
+    return render(request,"manager/store-reports.html",contxt)
+    
+    
+
 
 
 

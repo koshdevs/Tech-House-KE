@@ -1,0 +1,101 @@
+{% extends 'ecommerce/base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+
+
+
+
+
+
+<div class="cart-box-main">
+    <div class="container">
+       
+        <div class="row" style="zoom:80%">
+            
+            <div class="col-4">
+
+                <h4>Stocks Summary</h4>
+                <table  class="table">
+
+                    <thead>
+
+                        <th>Item</th>
+                        <th>Count</th>
+
+                    </thead>
+
+                    <tbody>
+                      {% for model in by_model_name%}
+                        <tr>
+
+                            <td>{{model.model__name}}</td>
+                            <td>{{ model.model__name__count }}</td>
+
+                        <tr>
+                    {% endfor %}
+
+                    </tbody>
+
+
+
+                </table>
+
+            </div>
+            <div class="col-4">
+
+                <h4>Sales Summary</h4>
+                <table  class="table">
+
+                    <thead>
+
+                        <th>Item</th>
+                        <th>Count</th>
+
+                    </thead>
+
+                    <tbody>
+                      {% for model in sales_by_model_name%}
+                        <tr>
+
+                            <td>{{model.product__model__name}}</td>
+                            <td>{{ model.product__model__name__count }}</td>
+
+                        <tr>
+                    {% endfor %}
+
+                    </tbody>
+
+
+
+                </table>
+
+            </div>
+            <div class="col-4">
+
+                <h4>Finance Summary</h4>
+
+            </div>
+            
+           
+        </div>
+
+        
+
+        
+
+    </div>
+</div>
+
+<script>
+ 
+
+
+
+
+
+</script>
+{% endblock %}

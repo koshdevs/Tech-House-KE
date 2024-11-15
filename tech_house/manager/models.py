@@ -34,6 +34,7 @@ class CustomerDetails(models.Model):
 
 class DeliveryDetails(models.Model):
     
+    
     delivery_cost = models.DecimalField(max_digits=10, default=0.00,decimal_places=2, )
     delivery_address = models.TextField(null=True, blank=True)
     delivery_date = models.DateField(auto_now=True)

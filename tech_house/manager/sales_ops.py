@@ -56,6 +56,23 @@ def get_sales_by_status(status):
     
     return contxt
     
+def calculate_profit(sales,expenses): 
+    
+    cost = 0
+    price = 0
+    
+    for sale in sales: 
+        
+        cost+=sale.product.cost *sale.quantity
+        price+=sale.price*sale.quantity
+        
+        
+    profit = round(price - cost - expenses,2)
+    
+    contxt = {"cost":cost, "revenue":price,"profit":profit,"expenses":expenses}
+    
+    return contxt
+        
     
     
     

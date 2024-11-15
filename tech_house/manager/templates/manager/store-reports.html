@@ -4,10 +4,21 @@
 {% load humanize %}
 
 
+
 {% block content %}
 
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
+<style>
 
+    .line {
+        border-bottom: 4px double #333;
+       
+        padding: 10px 0;
+    }
+</style>
 
 
 
@@ -19,7 +30,7 @@
             <div class="col-4">
 
                 <h4>Stocks Summary</h4>
-                <table  class="table">
+                <table  class="table" id="stocksSummary">
 
                     <thead>
 
@@ -48,7 +59,7 @@
             <div class="col-4">
 
                 <h4>Sales Summary</h4>
-                <table  class="table">
+                <table  class="table" id="salesSummary">
 
                     <thead>
 
@@ -76,11 +87,98 @@
             </div>
             <div class="col-4">
 
-                <h4>Finance Summary</h4>
+                <h4 style="font-weight:bold">Finance Summary</h4>
+                <table  class="table">
+
+                    <thead>
+
+                        <th>Specific</th>
+                        <th>Amount</th>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Total Sales</td>
+                            <td>{{ finance_contxt.revenue|intcomma }}</td>
+                        <tr>
+                            <tr>
+                                <td>Total Cost</td>
+                                <td>{{ finance_contxt.cost|intcomma }}</td>
+                            <tr>
+                                <tr>
+                                    <td>Total Expenses</td>
+                                    <td>{{ finance_contxt.expenses|intcomma }}</td>
+                                <tr>
+                                    <tr>
+                                        
+                                        <td style="font-weight:bold">Total Profit</td>
+                                        <td style="font-weight:bold">{{ finance_contxt.profit|intcomma }}</td>
+
+                                        
+                                    <tr>
+                                        
+                    </tbody>
+
+
+                </table>
+                <div class="line">
+                </div>
+
 
             </div>
             
            
+        </div>
+            <br>
+        <div class="row">
+
+            <table  class="table" id="salesTab">
+
+                <thead>
+
+                    <th>#Serial</th>
+                    <th>Model Name </th>
+                    <th>Brand Name </th>
+                    <th>Category</th>
+                    <th>Origin</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Tax</th>
+                    <th>Status</th>
+                    <th>Sold by</th>
+                    <th>Date</th>
+
+                </thead>
+
+                <tbody>
+                      {% for sale in sales %}
+                    <tr>
+
+                        <td>{{sale.product.serial1}}</td>
+                        <td>{{sale.product.model.name}}</td>
+                        <td>{{sale.product.brand.name}}</td>
+                        <td>{{sale.product.category.name}}</td>
+                        <td>{{sale.product.origin.name}}</td>
+                        <td>{{sale.price}}</td>
+                        <td>{{sale.quantity}}</td>
+                        <td>{{sale.tax}}</td>
+                        <td>{{sale.status}}</td>
+                        <td>{{sale.created_by.username}}</td>
+                        <td>{{sale.date}}</td>
+
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+
+
+
+            </table>
+
+
+
         </div>
 
         
@@ -93,7 +191,9 @@
 <script>
  
 
+   var datatable = $('.table').DataTable();
 
+  
 
 
 

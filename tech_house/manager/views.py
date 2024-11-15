@@ -6,7 +6,7 @@ from django.core.cache import cache
 from django.db.models import Q,Sum,Count
 from ecommerce.models import ProductBuild 
 from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails
-from.sales_ops import get_sales_data,gen_order_docs,get_sales_by_status
+from.sales_ops import get_sales_data,gen_order_docs,get_sales_by_status,calculate_profit
 import datetime
 
 # Create your views here.
@@ -515,12 +515,16 @@ def store_generate_reports(request):
     
     sales_by_model_name = StoreSales.objects.filter(status="sold").values("product__model__name").annotate(Count('product__model__name'))	
     
-    print(sales_by_model_name)
+    sales = StoreSales.objects.all()
+    
+    finance_contxt = calculate_profit(StoreSales.objects.filter(status="sold"),0)
     
     contxt = {"by_model_name":by_model_name,
               "by_category_name":by_category_name,
               "by_brand_name":by_brand_name,
               "sales_by_model_name":sales_by_model_name,
+              "finance_contxt":finance_contxt,
+              "sales":sales
               
               }	
     

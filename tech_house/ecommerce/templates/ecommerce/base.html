@@ -29,7 +29,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+  
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -101,16 +101,15 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbar-menu" style="zoom:80%">
                     <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'eco-shop' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'eco-shop' %}" hx-boost="true" >Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
                         <li class="dropdown active">
                             <a href="#" class=" btn btn-primary nav-link dropdown-toggle arrow" data-toggle="dropdown">Store Management</a>
                             <ul class="dropdown-menu">
-								<li><a href="{% url 'manager-store-counter' %}">Counter</a></li>
-								<li><a href="{% url 'manager-list-invoices' %}">Sales</a></li>
-                                <li><a href="cart.html">Stocks</a></li>
-                                <li><a href="checkout.html">Dashboard</a></li>
-                                <li><a href="{% url 'manager-store-generate-reports' %}">Reports</a></li>
+								<li><a href="{% url 'manager-store-counter' %}" hx-boost="true">Counter</a></li>
+								<li><a href="{% url 'manager-list-invoices' %}" hx-boost="true">Invoiced</a></li>
+                            
+                                <li><a href="{% url 'manager-store-generate-reports' %}" hx-boost="true">Reports</a></li>
                                 
                             </ul>
                         </li>
@@ -228,10 +227,12 @@
             </div>
         </div>
     </div>
-
+    <div class="content-wrapper" id="respBody" hx-history-elt>
     {% block content %}
 
     {% endblock content %}
+
+    </div>
 
     <footer>
         <div class="footer-main"  id="mainFooter">
@@ -343,8 +344,7 @@
     <script src="{% static 'js/form-validator.min.js' %}"></script>
     <script src="{% static 'js/contact-form-script.js' %}"></script>
     <script src="{% static 'js/custom.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+ 
 </body>
 
 </html>

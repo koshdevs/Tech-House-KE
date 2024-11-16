@@ -80,10 +80,27 @@
 
 
 
-<div class="cart-box-main">
-    <div class="container">
-       
-        <div class="row" style="zoom:80%">
+<div class="cart-box-main" >
+    
+    <div class="container" id="newPage">
+        <!--
+        <div class="d-flex flex-row">
+           
+            <div class="p-2">
+                <a class="btn btn-light" hx-get="{% url 'manager-list-invoices' %}" hx-target="#salesPage">
+                    <img src="{% static 'images/navigate-icons/invoice.svg' %}" height="20px;">
+                    <i style="font-size:10px;">Invoiced</i>
+                </a>
+            </div>
+            <div class="p-2">
+                <a class="btn btn-light" hx-get="{% url 'manager-store-generate-reports' %}" hx-target="#salesPage">
+                    <img src="{% static 'images/navigate-icons/analysis.svg' %}" height="20px;">
+                    <i style="font-size:10px;">Reports</i>
+                </a>
+            </div>
+          </div>
+        -->
+        <div class="row" style="zoom:80px;"  id="salesPage">
             
             <div class="col-lg-6">
                 <div class="row">
@@ -141,7 +158,7 @@
                                     <p>status</p>
                                 </td>
                                 <td class="remove-pr">
-                                    <a class="btn btn-danger" hx-get="{% url 'manager-add-to-counter' item.pk %}" hx-target="#counterCart">
+                                    <a class="btn btn-danger" hx-get="{% url 'manager-add-to-counter' item.pk %}" hx-target="#salesPage">
                                 <i class="fas fa-plus"></i>
                             </a>
                                 </td>
@@ -222,10 +239,34 @@
                                 <a onclick="showInvoiceModal();" class="btn btn-outline">Invoice</a> 
                             </div>
                             <div class="col-6 d-flex shopping-box">
-                                <a onclick="genReceipt()" class="ml-auto btn hvr-hover">Checkout</a> 
+                                <a onclick="genReceipt()" class="ml-auto btn hvr-hover">D-Note</a> 
                             </div>
                     
                         </div>
+                        <br>
+                        <h4>Instant Sales </h4>
+                        <br>
+                        <div class="row">
+                           
+                              
+                                <div class="col-5 d-flex shopping-box">
+                                    <a onclick="genReceipt()" class="btn btn-primary" style="color:white;">Receipt</a> 
+                                </div>
+                                <div class="col-2 d-flex shopping-box">
+                                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                </div>
+                                <div class="col-5 d-flex shopping-box">
+                                    <a hx-get="{% url 'manager-complete-instant-sales' %}" hx-target="#salesPage" hx-indicator="#completeInstantSales"  class="btn btn-success" style="color:white;">
+                                        
+                                        Complete
+                                    
+                                    </a>
+                                    <div class="htmx-indicator" id="completeInstantSales">
+                                        <i class="fa fa-spinner fa-spin" style="font-size:24px color:blue"></i>
+                                    </div> 
+                                </div>
+                            
+                        </div>      
                     </div>
                 </div>
                 

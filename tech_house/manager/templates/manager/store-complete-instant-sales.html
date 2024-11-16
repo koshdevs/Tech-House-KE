@@ -1,0 +1,174 @@
+
+
+            
+    <div class="col-lg-6">
+        {{resp|safe}}
+        <div class="row">
+
+            <div class="col-lg-6">
+                <input hx-get="{% url 'manager-filter-products' %}" hx-trigger="keyup changed delay:1s" hx-target="#itemTab" hx-indicator="#productSearchIndicator"  class="form-control" name="scan" placeholder="Scan here or search by name" type="text">
+            </div>
+            
+             
+        </div>
+
+        <br>
+        <div class="htmx-indicator" id="productSearchIndicator">
+            <i class="fa fa-spinner fa-spin" style="font-size:24px color:blue"></i>
+        </div>
+        
+        
+        <div class="table-main table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Images</th>
+                        <th>Serial #</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                       
+                        <th>Status</th>
+                        <th>Sell</th>
+                    </tr>
+                </thead>
+                <tbody id="itemTab">
+                    {% for item in items %}
+                    <tr id="product{{item.product_id}}">
+                        <td class="thumbnail-img">
+                            <a href="#">
+                        <img class="img-fluid" src="{{item.images.first.image.url}}" alt="" />
+                    </a>
+                        </td>
+                        <td class="name-pr">
+                            
+                            {{item.serial1}}
+                        
+                            </td>
+                        <td class="name-pr">
+                            
+                        {{item.model.name}}
+                    
+                        </td>
+                        <td class="price-pr">
+                            <p>{{item.price}}</p>
+                        </td>
+
+                        
+                        <td class="total-pr">
+                            <p>status</p>
+                        </td>
+                        <td class="remove-pr">
+                            <a class="btn btn-danger" hx-get="{% url 'manager-add-to-counter' item.pk %}" hx-target="#salesPage">
+                        <i class="fas fa-plus"></i>
+                    </a>
+                        </td>
+                    </tr>
+                   {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6" style="zoom:80%">
+
+        <div class="row" id="counterCart">
+            
+            <div class="col-lg-8 col-sm-8">
+                <div class="row" style="overflow-y:auto; height:800px;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Name</th>
+                                <th>Qty</th>
+                                <th>Sub Total</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sale in sales %}
+                            <tr>
+                                <td>
+                                    {{sale.product.serial1}}
+                                </td>
+                                <td>
+                                    {{sale.product.model.name}}
+                                </td>
+                                <td class="quantity-box">
+                                    <div class="input-group">
+                                        
+                                        <input class="form-control" style="width:30px; font-size:12px;" value="{{sale.quantity}}" type="text" id="item_qty" >
+                                       
+                                        
+                                    </div>
+                                </td>
+                                <td>{{sale.price}}</td>
+                                <td>
+                                    <a hx-get="{% url 'manager-remove-from-counter' sale.pk %}" hx-target="#counterCart" class="btn btn-danger" >
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4">
+                <div class="order-box">
+                    <h3>Order summary</h3>
+                    {{msg | safe }}
+                    <div class="d-flex gr-total">
+                        <h5>Sub Total</h5>
+                        <div class="ml-auto h5"> {{totals.subtotal}}</div>
+                    </div>
+                    <hr class="my-1">
+                    
+                    <div class="d-flex">
+                        <h4>Tax</h4>
+                        <div class="ml-auto font-weight-bold">{{totals.tax}}</div>
+                    </div>
+                   
+                    <hr>
+                    <div class="d-flex gr-total">
+                        <h5>Grand Total</h5>
+                        <div class="ml-auto h5"> {{totals.total}}</div>
+                    </div>
+                    <hr> </div>
+            
+                <div class="row">
+                    <div class="col-6 d-flex shopping-box">
+                        <a onclick="showInvoiceModal();" class="btn btn-outline">Invoice</a> 
+                    </div>
+                    <div class="col-6 d-flex shopping-box">
+                        <a onclick="genReceipt()" class="ml-auto btn hvr-hover">D-Note</a> 
+                    </div>
+            
+                </div>
+                <br>
+                <h4>Instant Sales </h4>
+                <br>
+                <div class="row">
+                   
+                      
+                        <div class="col-5 d-flex shopping-box">
+                            <a onclick="genReceipt()" class="btn btn-primary" style="color:white;">Receipt</a> 
+                        </div>
+                        <div class="col-2 d-flex shopping-box">
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-5 d-flex shopping-box">
+                            <a hx-get="{% url 'manager-complete-instant-sales' %}" hx-target="#salesPage" hx-indicator="#completeInstantSales"  class="btn btn-success" style="color:white;">
+                                
+                                Complete
+                            
+                            </a>
+                            <div class="htmx-indicator" id="completeInstantSales">
+                                <i class="fa fa-spinner fa-spin" style="font-size:24px color:blue"></i>
+                            </div> 
+                        </div>
+                    
+                </div>      
+            </div>
+        </div>
+        
+    </div>

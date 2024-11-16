@@ -177,7 +177,7 @@
 				</div><!--End InvoiceBot-->
   </div>
   
-  <button onclick="completeSale()" style="margin-left:80px; background-color:greenyellow;"> Complete </button><!--End Invoice-->
+  <button onclick="completeSale()" style="margin-left:80px; background-color:greenyellow;"> Close </button><!--End Invoice-->
 <script>
 
   function printDiv() { 
@@ -191,22 +191,9 @@
 } 
         printDiv()
 
-    async function completeSale(){
-
-      const url = "{% url 'manager-complete-instant-sales' %}"
-
-      try {
-        const response =await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
-    
-        const resp = await response.json();
-        alert(resp)
-        window.close();
-      } catch (error) {
-        console.error(error.message);
-      }
+    function completeSale(){
+      
+      window.close();
 
      
     }

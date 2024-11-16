@@ -80,13 +80,14 @@ def add_to_counter(request,pk):
     product_by_serial.status = 'sold'
     product_by_serial.save()
     
+    items = ProductBuild.objects.filter(stage="in-stock")
     sales,totals = get_sales_data('cart')
     
     print(msg)
     
-    contxt = {"product":product,"sales":sales,"totals":totals,"msg":msg}	
+    contxt = {"product":product,"items":items,"sales":sales,"totals":totals,"msg":msg}	
     
-    return render(request, 'manager/shop-counter-change.html',contxt)
+    return render(request, 'manager/store-complete-instant-sales.html',contxt)
 
 
 def add_to_counter_non_scans(request,pk):
@@ -154,13 +155,20 @@ def complete_instant_sales(request):
             
             sale.save()
             sale.product.save()
-        resp+=f"Completed successfully"
+        resp+="<strong style='color:green'>Completed successfully</strong>"
         
     except Exception as e: 
         
-        resp = str(e)
+        resp += f"<strong style='color:red'>{str(e)}/strong>"
+        
+    items = ProductBuild.objects.filter(stage="in-stock")
+    
+    sales,totals = get_sales_data('cart')
+    
+    
+    contxt = {"items":items,"sales":sales,"totals":totals ,"resp":resp}
             
-    return JsonResponse(resp,safe=False)
+    return render(request, 'manager/store-complete-instant-sales.html',contxt)	
 
 def filter_products(request):
     

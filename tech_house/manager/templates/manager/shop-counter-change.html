@@ -65,16 +65,40 @@
             <div class="ml-auto h5"> {{totals.total}}</div>
         </div>
         <hr> </div>
-
         <div class="row">
             <div class="col-6 d-flex shopping-box">
                 <a onclick="showInvoiceModal();" class="btn btn-outline">Invoice</a> 
             </div>
             <div class="col-6 d-flex shopping-box">
-                <a onclick="genReceipt()" class="ml-auto btn hvr-hover">Checkout</a> 
+                <a onclick="genReceipt()" class="ml-auto btn hvr-hover">D-Note</a> 
             </div>
     
         </div>
+        <br>
+        <h4>Instant Sales </h4>
+        <br>
+        <div class="row">
+           
+              
+                <div class="col-5 d-flex shopping-box">
+                    <a onclick="genReceipt()" class="btn btn-primary" style="color:white;">Receipt</a> 
+                </div>
+                <div class="col-2 d-flex shopping-box">
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </div>
+                <div class="col-5 d-flex shopping-box">
+                    <a hx-get="{% url 'manager-complete-instant-sales' %}" hx-target="#salesPage" hx-indicator="#completeInstantSales"  class="btn btn-success" style="color:white;">
+                        
+                        Complete
+                    
+                    </a>
+                    <div class="htmx-indicator" id="completeInstantSales">
+                        <i class="fa fa-spinner fa-spin" style="font-size:24px color:blue"></i>
+                    </div> 
+                </div>
+            
+        </div>
+        
 </div>
 
 <script>

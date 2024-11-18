@@ -55,7 +55,7 @@
 
                         
                         <td class="total-pr">
-                            <p>status</p>
+                            <p>{{item.stage}}</p>
                         </td>
                         <td class="remove-pr">
                             <a class="btn btn-danger" hx-get="{% url 'manager-add-to-counter' item.pk %}" hx-target="#salesPage">

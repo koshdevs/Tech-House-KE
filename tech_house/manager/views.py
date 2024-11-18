@@ -50,7 +50,7 @@ def add_to_counter(request,pk):
 
     product = ProductBuild.objects.get(pk=pk)
     
-    sales_check = StoreSales.objects.filter(product__serial1=product.serial1,status='cart')
+    sales_check = StoreSales.objects.filter(product__serial1=product.serial1)
     
     msg = '' 
     if len(sales_check) == 0:
@@ -72,7 +72,7 @@ def add_to_counter(request,pk):
     
     else: 
         
-        msg+='<strong style="color:red">Item already Exists</strong>'
+        msg+=f'<strong style="color:red">Item already Exists in {sales_check[0].status}</strong>'
         
         
     
@@ -279,6 +279,7 @@ def customer_invoice_details(request):
         
         for sale in sales:
             
+            
             sale.status = 'invoiced'
             sale.save()
             
@@ -319,17 +320,39 @@ def list_invoices(request):
     
    
 
-    orders= StoreOrders.objects.raw("select * from manager_StoreOrders group by order_id")
+    orders= StoreOrders.objects.raw("select * from manager_StoreOrders group by order_id order by date desc")
         
     if len(orders)>10:
             
-        orders = StoreOrders.objects.raw("select * from manager_StoreOrders group by order_id limit 10")
+        orders = StoreOrders.objects.raw("select * from manager_StoreOrders group by order_id limit 10 order by date desc")
             
         
     
     contxt = {"orders":orders}
     
     return render(request, 'manager/shop-invoice-list.html',contxt)
+
+def remove_order_from_invoice(request,order_id):
+    
+    orders = StoreOrders.objects.filter(order_id=order_id)
+    
+    for order in orders:
+        
+        order.sales.staus = ""
+        order.sales.save()
+        
+        order.sales.product.stage = "in-stock"
+        order.sales.product.save()
+        
+        order.delete()
+        
+    orders = StoreOrders.objects.raw("select * from manager_StoreOrders group by order_id limit 10")
+    
+    contxt = {"orders":orders}
+        
+    return render(request, 'manager/shop-orders-search-results.html',contxt) 
+    
+    
 
 
 def filter_orders(request):

@@ -192,6 +192,7 @@
                                 <th>Print Invoice</th>
                                 <th>Print D-Note</th>
                                 <th>Complete </th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="orderTab">
@@ -239,6 +240,11 @@
 
                                     <a onclick="completeOrderModal('{{order.order_id}}')"><i class="fa fa-plus"></i></a>
 
+                                </td>
+                                <td class="remove-pr">
+                                    <a class="btn btn-danger" hx-get="{% url 'manager-remove-order-from-invoice' order.order_id %}" hx-target="#orderTab">
+                                <i class="fas fa-trash"></i>
+                            </a>
                                 </td>
                                
                             </tr>

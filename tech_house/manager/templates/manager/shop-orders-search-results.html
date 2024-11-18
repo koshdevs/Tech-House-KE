@@ -1,37 +1,53 @@
 {% for order in orders %}
-                            <tr id="product{{item.product_id}}">
-                                <td class="thumbnail-img">
-                                {{order.order_id}}
-                                </td>
+<tr id="product{{item.product_id}}">
+    <td class="thumbnail-img">
+    {{order.order_id}}
+    </td>
 
-                                <td>
+    <td>
 
-                                    {{order.date}}
+        {{order.date}}
 
-                                </td>
-                                <td>
+    </td>
+    <td>
 
-                                    <a><i class="fa fa-eye"></i></a>
+        <a><i class="fa fa-eye"></i></a>
 
-                                </td>
-                                <td>
+    </td>
+    <td>
 
-                                    <a><i class="fa fa-eye"></i></a>
+        <a><i class="fa fa-eye"></i></a>
 
-                                </td>
-                                <td>
-                                      {{order.sales.status}}
-                                </td>
-                                <td>
+    </td>
+    <td>
+          {{order.sales.status}}
+    </td>
+    <td>
+        {{order.delivery_details.status}}
+  </td>
+  <td>
+    {{order.delivery_details.paid_status}}
+</td>
+    <td>
 
-                                    <a href="{% url 'manager-generate-store-invoices' order.order_id %}" download><i class="fa fa-print"></i></a>
+        <a href="{% url 'manager-generate-store-invoices' order.order_id %}" download><i class="fa fa-print"></i></a>
 
-                                </td>
-                                <td>
+    </td>
+    <td>
 
-                                    <a><i class="fa fa-plus"></i></a>
+        <a href="{% url 'manager-store-generate-d-notes' order.order_id %}" download><i class="fa fa-print"></i></a>
 
-                                </td>
-                               
-                            </tr>
+    </td>
+    <td>
+
+        <a onclick="completeOrderModal('{{order.order_id}}')"><i class="fa fa-plus"></i></a>
+
+    </td>
+    <td class="remove-pr">
+        <a class="btn btn-danger" hx-get="{% url 'manager-remove-order-from-invoice' order.order_id %}" hx-target="#orderTab">
+    <i class="fas fa-trash"></i>
+</a>
+    </td>
+   
+</tr>
 {% endfor %}

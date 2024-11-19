@@ -196,6 +196,7 @@
                             </tr>
                         </thead>
                         <tbody id="orderTab">
+                            {% if user.is_authenticated %}
                             {% for order in orders %}
                             <tr id="product{{item.product_id}}">
                                 <td class="thumbnail-img">
@@ -249,6 +250,13 @@
                                
                             </tr>
                            {% endfor %}
+
+                           {% else %}
+                                  
+                           <h4 style="color:red; text-align:center;">To view Items in this Page Login is required!!!</h4>
+
+
+                           {% endif %}
                         </tbody>
                     </table>
                 </div>

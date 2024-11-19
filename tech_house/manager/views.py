@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_protect,csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 from django.core.cache import cache
 from django.db.models import Q,Sum,Count
 from ecommerce.models import ProductBuild 
@@ -10,7 +11,6 @@ from.sales_ops import get_sales_data,gen_order_docs,get_sales_by_status,calculat
 import datetime
 
 # Create your views here.
-
 
 def store_counter(request):
     
@@ -33,7 +33,7 @@ def store_counter(request):
     
     return render(request, 'manager/store_sales.html',contxt)
 
-@login_required
+
 def add_to_counter(request,pk): 
     
 
@@ -302,7 +302,6 @@ def customer_invoice_details(request):
     contxt = {"sales":sales,"totals":totals,"resp":resp}
     
     return render(request, 'manager/shop-counter-change.html',contxt)
-
 
 def list_invoices(request):
     

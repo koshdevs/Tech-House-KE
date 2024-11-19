@@ -1,11 +1,13 @@
-import unittest
-from django.test import Client
+from django.test import TestCase, Client
+from unittest.mock import patch, MagicMock
+from django.test import Client, RequestFactory
 from django.urls import reverse
 from tech_house.manager.views import store_counter
 from ecommerce.models import ProductBuild  
 from .models import *
+from .views import *
 
-class TestStoreCounterView(unittest.TestCase):
+class TestStoreCounterView(TestCase):
     def setUp(self):
         self.client = Client()
         self.url = reverse('store_counter')
@@ -29,7 +31,7 @@ class TestStoreCounterView(unittest.TestCase):
         self.assertEqual(len(response.context['items']), 0)
         
         
-class TestAddToCounterView(unittest.TestCase):
+class TestAddToCounterView(TestCase):
     def setUp(self):
         self.client = Client()
         self.product = ProductBuild.objects.create(
@@ -63,3 +65,63 @@ class TestAddToCounterView(unittest.TestCase):
         self.assertEqual(response.templates[0].name, 'manager/add_to_counter.html')
         self.assertEqual(response.context['product'], self.product)
         self.assertEqual(response.context['sales'], StoreSales.objects.all())
+        
+class TestRemoveFromCounterView(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.product = StoreSales.objects.create()
+
+    def test_product_removed_from_cart(self):
+        response = self.client.get(reverse('remove_from_counter', args=[self.product.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(StoreSales.objects.filter(pk=self.product.pk).exists())
+
+    def test_product_not_found_in_cart(self):
+        response = self.client.get(reverse('remove_from_counter', args=[999]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_invalid_product_id(self):
+        response = self.client.get(reverse('remove_from_counter', args=['abc']))
+        self.assertEqual(response.status_code, 404)
+
+    def test_request_method_is_get(self):
+        response = self.client.post(reverse('remove_from_counter', args=[self.product.pk]))
+        self.assertEqual(response.status_code, 405)
+
+    def test_template_rendered_correctly(self):
+        response = self.client.get(reverse('remove_from_counter', args=[self.product.pk]))
+        self.assertEqual(response.template_name, 'manager/shop-counter-change.html')
+
+    def test_context_passed_to_template_correctly(self):
+        response = self.client.get(reverse('remove_from_counter', args=[self.product.pk]))
+        self.assertIn('sales', response.context)
+        self.assertIn('totals', response.context)
+        
+        
+class TestGenInstantReceipt(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+        self.factory = RequestFactory()
+
+    def test_render_template(self):
+        response = self.client.get('/instant_receipt_url/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'manager/store-receipt.html')
+
+    @patch('tech_house.manager.views.get_sales_by_status')
+    def test_get_sales_by_status_called(self, mock_get_sales_by_status):
+        self.client.get('/instant_receipt_url/')
+        mock_get_sales_by_status.assert_called_once_with('cart')
+
+    def test_invalid_request(self):
+        request = MagicMock()
+        del request.method
+        with self.assertRaises(AttributeError):
+            gen_instant_receipt(request)
+
+    @patch('tech_house.manager.views.get_sales_by_status')
+    def test_exception_handling(self, mock_get_sales_by_status):
+        mock_get_sales_by_status.side_effect = Exception('Test exception')
+        response = self.client.get('/instant_receipt_url/')
+        self.assertEqual(response.status_code, 500)

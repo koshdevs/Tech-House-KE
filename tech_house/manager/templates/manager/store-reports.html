@@ -24,6 +24,8 @@
 
 <div class="cart-box-main">
     <div class="container">
+
+        {% if user.is_authenticated %}
        
         <div class="row" style="zoom:80%">
             
@@ -183,7 +185,13 @@
 
         
 
-        
+        {% else %}
+
+        <h4 style="color:red; text-align:center;">To view Items in this Page Login is required!!!</h4>
+
+
+        {% endif %}
+
 
     </div>
 </div>

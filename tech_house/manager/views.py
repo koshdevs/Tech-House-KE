@@ -120,6 +120,18 @@ def remove_from_counter(request,pk):
 
 def gen_instant_receipt(request): 
     
+
+    """
+    Generates an instant receipt for the user's cart items. The receipt will be rendered
+    in the store-receipt.html template and will contain the total cost, tax, and subtotal
+    of the items in the cart.
+    
+    :param request: The request object containing the user information.
+    :type request: django.http.HttpRequest
+    :return: An HttpResponse object with the rendered receipt.
+    :rtype: django.http.HttpResponse
+    """
+
     contxt = get_sales_by_status('cart')
     
     
@@ -350,6 +362,17 @@ def remove_order_from_invoice(request,order_id):
     contxt = {"orders":orders}
         
     return render(request, 'manager/shop-orders-search-results.html',contxt) 
+
+def list_invoice_items(request,order_id): 
+    
+    orders = StoreOrders.objects.filter(order_id=order_id)
+    
+    contxt = {"orders":orders}
+    
+    return render(request, 'manager/store-invoice-items.html',contxt)
+    
+    
+    
     
     
 

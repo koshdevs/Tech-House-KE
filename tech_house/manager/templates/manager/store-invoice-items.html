@@ -1,0 +1,81 @@
+{% load math_filters %}
+{% load humanize %}
+<div class="row" style="zoom:80px;"  id="salesPage">
+
+        <div class="row">
+
+            <div class="col-lg-6">
+                <input hx-get="{% url 'manager-filter-products' %}" hx-trigger="keyup changed delay:1s" hx-target="#itemTab" hx-indicator="#productSearchIndicator"  class="form-control" name="scan" placeholder="Scan here or search by name" type="text">
+            </div>
+            
+             
+        </div>
+
+        <br>
+        <div class="htmx-indicator" id="productSearchIndicator">
+            <i class="fa fa-spinner fa-spin" style="font-size:24px color:blue"></i>
+        </div>
+        
+        
+        <div class="table-main table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                       <th>Select</th>
+                        <th>Serial #</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                       
+                        <th>Tax</th>
+                        <th>Total</th>
+                        <th>Action
+                    </tr>
+                </thead>
+                <tbody id="itemTab">
+                    {% if user.is_authenticated %}
+                    {% for order in orders %}
+                    <tr>
+
+                        <td>
+                            <input type="checkbox" name="sales" value="{{order.sales.id}}">
+                        </td>
+                        <td>
+                        {{order.sales.product.serial1}}
+                      
+                        </td>
+                        <td class="name-pr">
+                            
+                            {{order.sales.product.model.name}}
+                        
+                            </td>
+                        <td class="name-pr">
+                            
+
+                            {{order.sales.price}}
+                    
+                        </td>
+                        <td class="price-pr">
+                            {{order.sales.price|multiply:order.sales.tax|multiply:0.01}} 
+                        </td>
+
+                        
+                        <td class="total-pr">
+                            {{order.sales.price|multiply:order.sales.tax|multiply:0.01 |add:order.sales.price|multiply:order.sales.quantity}}
+                        </td>
+                        <td class="remove-pr">
+                            
+                        <i class="fas fa-plus"></i>
+                    </a>
+                        </td>
+                    </tr>
+                   {% endfor %}
+                   {% else %}
+
+                   <h4 style="color:red; text-align:center;">To view Items in this Page Login is required!!! <a style="color:blue" href="/admin">login here</a></h4>
+                   {% endif %}
+                </tbody>
+            </table>
+        </div>
+  
+    
+</div>

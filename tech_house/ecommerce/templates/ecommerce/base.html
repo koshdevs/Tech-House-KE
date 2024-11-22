@@ -99,20 +99,23 @@
                 <!-- End Header Navigation -->
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="navbar-menu" style="zoom:80%">
+                <div class="collapse navbar-collapse" id="navbar-menu" style="zoom:80%" hx-boost="true">
                     <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'eco-shop' %}" hx-boost="true" >Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'eco-shop' %}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+
+                        {% if user.is_staff or user.is_superuser %}
                         <li class="dropdown active">
                             <a href="#" class=" btn btn-primary nav-link dropdown-toggle arrow" data-toggle="dropdown">Store Management</a>
                             <ul class="dropdown-menu">
-								<li><a href="{% url 'manager-store-counter' %}" hx-boost="true">Counter</a></li>
-								<li><a href="{% url 'manager-list-invoices' %}" hx-boost="true">Invoiced</a></li>
+								<li><a href="{% url 'manager-store-counter' %}">Counter</a></li>
+								<li><a href="{% url 'manager-list-invoices' %}" >Invoiced</a></li>
                             
-                                <li><a href="{% url 'manager-store-generate-reports' %}" hx-boost="true">Reports</a></li>
+                                <li><a href="{% url 'manager-store-generate-reports' %}" >Reports</a></li>
                                 
                             </ul>
                         </li>
+                        {% endif %}
                         <li class="dropdown active">
                             <a href="#" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">Laptops</a>
                             <ul class="dropdown-menu">

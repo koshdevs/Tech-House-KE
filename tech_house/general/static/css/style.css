@@ -151,7 +151,7 @@
      height: 32px;
      text-align: center;
      line-height: 5px;
-     background: #b0b435;
+     background:#1F51FF;
      color: #ffffff;
      cursor: pointer;
      border: 0;
@@ -335,6 +335,14 @@
      border: none;
      font-weight: 700;
      color: #ffffff;
+}
+
+@media screen and (max-width: 600px){
+
+    .sidebar-shop-left{
+
+        display: none;
+    }
 }
  @media (min-width: 1024px) {
     /* Navbar General ------*/

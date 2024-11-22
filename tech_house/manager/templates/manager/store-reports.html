@@ -19,7 +19,16 @@
         padding: 10px 0;
     }
 </style>
+<script>
+ 
 
+    var datatable = $('.table').DataTable();
+ 
+   
+ 
+ 
+ 
+ </script>
 
 
 <div class="cart-box-main">
@@ -187,7 +196,7 @@
 
         {% else %}
 
-        <h4 style="color:red; text-align:center;">To view Items in this Page Login is required!!!</h4>
+        <h4 style="color:red; text-align:center;">To view Items in this Page Login is required!!! <a style="color:blue" href="/admin">login here</a></h4>
 
 
         {% endif %}
@@ -196,14 +205,5 @@
     </div>
 </div>
 
-<script>
- 
 
-   var datatable = $('.table').DataTable();
-
-  
-
-
-
-</script>
 {% endblock %}

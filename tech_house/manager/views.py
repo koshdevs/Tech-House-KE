@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_protect,csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -7,7 +8,8 @@ from django.core.cache import cache
 from django.db.models import Q,Sum,Count
 from ecommerce.models import ProductBuild 
 from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails
-from.sales_ops import get_sales_data,gen_order_docs,get_sales_by_status,calculate_profit
+from.data_ops import get_sales_data,gen_order_docs,get_sales_by_status,\
+    calculate_profit,gen_order_items_docs,get_sales_by_id
 import datetime
 
 # Create your views here.
@@ -136,6 +138,23 @@ def gen_instant_receipt(request):
     
     
     return render(request, 'manager/store-receipt.html',contxt)
+
+def gen_receipt_for_selected_items(request): 
+    
+    
+    if request.method == 'POST':
+        
+        ids = request.POST.get('ids').split(',')
+        
+        contxt = get_sales_by_id(ids)
+        
+        resp = render_to_string('manager/store-receipt.html',contxt)
+               
+        return HttpResponse(resp)
+        
+    
+    
+
 
 def complete_instant_sales(request): 
     
@@ -315,6 +334,26 @@ def customer_invoice_details(request):
     
     return render(request, 'manager/shop-counter-change.html',contxt)
 
+def store_list_customer_details(request,order_id): 
+    
+
+    """
+    Retrieves and displays customer details associated with a given order id.
+
+    :param request: The HTTP request object.
+    :type request: django.http.HttpRequest
+    :param order_id: The id of the order to retrieve customer details for.
+    :type order_id: str
+    :return: The rendered shop-list-customer-details.html template with the customer details.
+    :rtype: django.http.HttpResponse
+    """
+
+    customer = CustomerDetails.objects.filter(order_id=order_id)
+    
+    contxt = {"customer":customer}
+    
+    return render(request, 'manager/store-list-customer-details.html',contxt)
+
 def list_invoices(request):
     
     
@@ -345,17 +384,31 @@ def list_invoices(request):
 
 def remove_order_from_invoice(request,order_id):
     
+
+    """
+    Removes all store orders associated with the given order id by resetting their sales status
+    and product stage, and deleting the store orders. It then retrieves and displays a limited
+    list of all store orders.
+
+    :param request: The request object.
+    :type request: django.http.HttpRequest
+    :param order_id: The order id to remove from the invoice.
+    :type order_id: str
+    :return: The rendered shop-orders-search-results.html template with updated store orders.
+    :rtype: django.http.HttpResponse
+    """
+
     orders = StoreOrders.objects.filter(order_id=order_id)
     
     for order in orders:
         
-        order.sales.staus = ""
-        order.sales.save()
+       
         
         order.sales.product.stage = "in-stock"
         order.sales.product.save()
         
-        order.delete()
+        order.sales.delete()
+        
         
     orders = StoreOrders.objects.raw("select * from manager_StoreOrders group by order_id limit 10")
     
@@ -365,16 +418,66 @@ def remove_order_from_invoice(request,order_id):
 
 def list_invoice_items(request,order_id): 
     
+    """
+    Retrieves and displays invoice items for a given order id.
+
+    :param request: The request object.
+    :type request: django.http.HttpRequest
+    :param order_id: The id of the order for which to list the invoice items.
+    :type order_id: str
+    :return: The rendered store-invoice-items.html template with the order items.
+    :rtype: django.http.HttpResponse
+    """
+
     orders = StoreOrders.objects.filter(order_id=order_id)
     
     contxt = {"orders":orders}
     
     return render(request, 'manager/store-invoice-items.html',contxt)
+
+
+def gen_invoice_for_selected_items(request): 
     
+    if request.method == 'POST':
+        
+        ids = request.POST.get('sales_ids').split(',')	
+        order_id = request.POST.get('order_id')
+        
+        contxt = gen_order_items_docs(order_id,ids)
+        
+        print(contxt)
+        
+        resp = render_to_string('manager/store-invoice.html',contxt) 
+              
+        return HttpResponse(resp)
     
+def rem_selected_items_from_orders(request):
     
+    if request.method == 'POST':
+        
+        ids = request.POST.get('sales_ids').split(',')	
+        order_id = request.POST.get('order_id')
+        
+        orders_filtered = StoreOrders.objects.filter(order_id=order_id,sales__pk__in=ids)
+        
+        for order in orders_filtered:
+            
+            order.sales.product.stage = "in-stock"
+            order.sales.product.save()
+            
+            order.sales.delete()
+            
+            
+        
+        
+        orders = StoreOrders.objects.filter(order_id=order_id)
+        
+        contxt = {"orders":orders}
     
-    
+        resp = render_to_string('manager/store-invoice-items.html',contxt)
+        
+        return HttpResponse(resp)
+     
 
 
 def filter_orders(request):

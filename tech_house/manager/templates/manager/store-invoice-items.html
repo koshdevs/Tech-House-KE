@@ -28,16 +28,16 @@
                        
                         <th>Tax</th>
                         <th>Total</th>
-                        <th>Action
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody id="itemTab">
-                    {% if user.is_authenticated %}
+                   
                     {% for order in orders %}
                     <tr>
 
                         <td>
-                            <input type="checkbox" name="sales" value="{{order.sales.id}}">
+                            <input type="checkbox" name="salesCheck" value="{{order.sales.pk}}">
                         </td>
                         <td>
                         {{order.sales.product.serial1}}
@@ -64,15 +64,12 @@
                         </td>
                         <td class="remove-pr">
                             
-                        <i class="fas fa-plus"></i>
+                        {{order.sales.status}}
                     </a>
                         </td>
                     </tr>
                    {% endfor %}
-                   {% else %}
-
-                   <h4 style="color:red; text-align:center;">To view Items in this Page Login is required!!! <a style="color:blue" href="/admin">login here</a></h4>
-                   {% endif %}
+                  
                 </tbody>
             </table>
         </div>

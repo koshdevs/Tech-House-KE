@@ -1,0 +1,70 @@
+{% load math_filters %}
+{% load humanize %}
+<div class="row" style="zoom:80px;"  id="salesPage">
+
+        
+        
+        <div class="table-main table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order Id </th>
+                       <th>Rep Name</th>
+                        <th>Company Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                       
+                        <th>Address</th>
+                        <th>Terms</th>
+                     
+                    </tr>
+                </thead>
+                <tbody id="itemTab">
+                   
+                    {% for customer in customer %}
+                    <tr>
+
+                        <td>
+                           {{customer.order_id}}
+                        </td>
+                        <td>
+                        {{customer.name}}
+                      
+                        </td>
+                        <td class="name-pr">
+                            
+                           {{customer.company_name}}
+                        
+                            </td>
+                        <td class="name-pr">
+                            
+                          
+                            <a>
+                                <i class="fa fa-envelope" style="color:blue"></i>
+                                {{customer.email}}
+                            </a>
+                        </td>
+                        <td class="price-pr">
+                           <a href="tel:{{customer.phone}}" class="btn btn-outline">
+                            <i class="fa fa-phone" style="color:blue"></i>
+                           </a>
+                        </td>
+
+                        
+                        <td class="total-pr">
+                           {{customer.address}}
+                        </td>
+                        <td class="remove-pr">
+                            
+                       {{customer.terms}}
+                    
+                        </td>
+                    </tr>
+                   {% endfor %}
+                  
+                </tbody>
+            </table>
+        </div>
+  
+    
+</div>

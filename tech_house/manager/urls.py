@@ -3,7 +3,9 @@ from . import views
 from .views import store_counter,add_to_counter,remove_from_counter,gen_store_invoices,\
     customer_invoice_details,list_invoices,filter_orders,filter_products,\
         store_complete_order,store_process_delivery,store_generate_d_notes,gen_instant_receipt,\
-            complete_instant_sales,store_generate_reports,remove_order_from_invoice,list_invoice_items
+            complete_instant_sales,store_generate_reports,remove_order_from_invoice,\
+                list_invoice_items,gen_invoice_for_selected_items,gen_receipt_for_selected_items,\
+                    rem_selected_items_from_orders,store_list_customer_details
 
 
 urlpatterns = [
@@ -24,5 +26,9 @@ urlpatterns = [
     path('store-generate-reports/', store_generate_reports, name="manager-store-generate-reports"),
     path('remove-order-from-invoice/<str:order_id>/', remove_order_from_invoice, name="manager-remove-order-from-invoice"),
     path('list-invoice-items/<str:order_id>/', list_invoice_items, name="manager-list-invoice-items"),
+    path('gen-invoice-for-selected-items/', gen_invoice_for_selected_items, name="manager-gen-invoice-for-selected-items"),
+    path('gen-receipt-for-selected-items/', gen_receipt_for_selected_items, name="manager-gen-receipt-for-selected-items"),
+    path('rem-selected-items-from-orders/', rem_selected_items_from_orders, name="manager-rem-selected-items-from-orders"),
+    path('store-list-customer-details/<str:order_id>/', store_list_customer_details, name="manager-store-list-customer-details"),
     
 ]

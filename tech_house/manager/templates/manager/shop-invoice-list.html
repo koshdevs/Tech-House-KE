@@ -97,7 +97,7 @@
                      </div>
                      <div class="form-group col-md-6">
                         <label for="InputPassword1" class="mb-0">Delivery Cost</label>
-                        <input type="text" class="form-control" name="dc"  placeholder="Delivery Cost" required>
+                        <input type="text" class="form-control" name="dc" id="dc"  placeholder="Delivery Cost">
                      </div>
 
                      <div class="form-group col-md-12">
@@ -152,6 +152,23 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="orderItemsModalTitle"></h5>
+              <div class="d-flex flex-row" id="actionBtns">
+                <div class="p-2">
+                    <button class="btn btn-light" onclick="generateInvoice();">
+                        <img src="{% static 'images/navigate-icons/invoice.svg' %}" height="20px"><span>Invoice</span>
+                    </button>
+                </div>
+                <div class="p-2">
+                    <button class="btn btn-light" onclick="generateReceipt();">
+                        <img src="{% static 'images/navigate-icons/receipt.svg' %}" height="20px"><span>Receipt</span>
+                    </button>
+                </div>
+                <div class="p-2">
+                    <button class="btn btn-light" onclick="removeItemsFromOrder();">
+                        <i class="fa fa-trash-alt"> </i><span>Remove</span>
+                    </button>
+                </div>
+              </div>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -168,26 +185,50 @@
         </div>
       </div>
 
+      <div class="modal fade" id="customerDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="customerDetailsModalTitle"></h5>
+             
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            
+            <div class="modal-body" id="customerDetailsModalBody" style="zoom:75%; margin:20px;">
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+
     
 <div class="cart-box-main">
     <div class="container">
         <div class="row">
             
-            <div class="col-lg-12">
+            <div class="col-lg-12 col-sm-12 col-12">
                 <form class="form" hx-post="{% url 'manager-filter-orders' %}" hx-target="#orderTab" hx-indicator="#searchOrder">
                     {% csrf_token %}
                 <div class="row">
                    
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 col-sm-12">
                         <input class="form-control" name="invoice_id" placeholder="Search by invoice Id..." type="text">
                     </div>
-                   
+                   &nbsp;
                     <div class="col-lg-2">
                         <input class="form-control" name="from_date" placeholder="Start date" type="date">
                     </div>
+                    &nbsp;
                     <div class="col-lg-2">
                         <input class="form-control" name="to_date" placeholder="end date" type="date">
                     </div>
+                    &nbsp;
                     <div class="col-lg-2">
                         <button type="submit" class="btn btn-light">
                             <i class="fa fa-search"></i>
@@ -236,8 +277,8 @@
 
                                 </td>
                                 <td>
-
-                                    <a><i class="fa fa-eye"></i></a>
+                                    <a style="display:none" hx-get="{% url 'manager-store-list-customer-details' order.order_id %}" hx-target="#customerDetailsModalBody" id="viewCustomerLink"></a>
+                                    <a onclick="showCustomerDetails('{{order.order_id}}')"><i class="fa fa-eye"></i></a>
 
                                 </td>
                                 <td>
@@ -366,11 +407,142 @@
 
         $('#orderItemsModal').modal('show');
 
+       
+
         $('#orderItemsModalTitle').html(orderId)
 
         document.getElementById('viewItemsLink').click();
 
 
+
+
+
+    }
+
+    function showCustomerDetails(orderId){
+
+        $('#customerDetailsModal').modal('show');
+
+       
+
+        $('#customerDetailsModalTitle').html(orderId)
+
+        document.getElementById('viewCustomerLink').click();
+
+
+
+
+
+    }
+
+    function generateInvoice(){
+      
+        let checked_ = []
+        $("input:checkbox[name=salesCheck]:checked").each(function(){
+            checked_.push($(this).val());
+            });
+        let all_checked = checked_.toString()
+
+        $.ajax({
+
+            url:"{% url 'manager-gen-invoice-for-selected-items' %}",
+            method:"POST",
+            data:{
+
+               'sales_ids':all_checked,
+               'order_id':$("#orderItemsModalTitle").html(),
+               csrfmiddlewaretoken: '{{ csrf_token }}',
+
+            },
+            beforeSend:function(data){
+
+            },
+
+            success:function(data){
+                var wnd = window.open("about:Invoice", "", "_blank");
+                 wnd.document.write(data);
+                
+            },
+
+            complete:function(data){
+
+            }
+        })
+
+
+
+    }
+
+    function generateReceipt(){
+
+        let checked_ = []
+        $("input:checkbox[name=salesCheck]:checked").each(function(){
+            checked_.push($(this).val());
+            });
+        let all_checked = checked_.toString()
+
+        $.ajax({
+
+            url:"{% url 'manager-gen-receipt-for-selected-items' %}",
+            method:"POST",
+            data:{
+
+               'ids':all_checked,
+               'order_id':$("#orderItemsModalTitle").html(),
+               csrfmiddlewaretoken: '{{ csrf_token }}',
+
+            },
+            beforeSend:function(data){
+
+            },
+
+            success:function(data){
+                var wnd = window.open("about:Receipt", "", "_blank");
+                 wnd.document.write(data);
+                
+            },
+
+            complete:function(data){
+
+            }
+        })
+
+    }
+
+    function removeItemsFromOrder(){
+
+
+        
+        let checked_ = []
+        $("input:checkbox[name=salesCheck]:checked").each(function(){
+            checked_.push($(this).val());
+            });
+        let all_checked = checked_.toString()
+
+        $.ajax({
+
+            url:"{% url 'manager-rem-selected-items-from-orders' %}",
+            method:"POST",
+            data:{
+
+               'sales_ids':all_checked,
+               'order_id':$("#orderItemsModalTitle").html(),
+               csrfmiddlewaretoken: '{{ csrf_token }}',
+
+            },
+            beforeSend:function(data){
+
+            },
+
+            success:function(data){
+                
+                $("#orderItemsModalBody").html(data);
+            },
+
+            complete:function(data){
+
+            }
+        })
 
 
 

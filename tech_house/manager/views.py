@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 from django.core.cache import cache
 from django.db.models import Q,Sum,Count
+from django.db.models.functions import TruncMonth
 from ecommerce.models import ProductBuild 
 from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails
 from.data_ops import get_sales_data,gen_order_docs,get_sales_by_status,\
@@ -662,27 +663,59 @@ def store_generate_reports(request):
     
     
     # stocks
-    
+
+    """
+    Generates and renders a report of store data, including stock summaries,
+    sales summaries, and financial summaries.
+
+    :param request: The request object.
+    :type request: django.http.HttpRequest
+    :return: The rendered store-reports.html template with data on stocks,
+             sales, and financial context.
+    :rtype: django.http.HttpResponse
+    """
+
     by_model_name = ProductBuild.objects.values("model__name").annotate(Count('model__name'))
     by_category_name = ProductBuild.objects.values("category__name").annotate(Count('category__name'))
     by_brand_name = ProductBuild.objects.values("brand__name").annotate(Count('brand__name'))
     
+    stocks_model_names = [item['model__name'] for item in by_model_name]
+    stocks_qty = [item['model__name__count'] for item in by_model_name]
+    
+ 
     # sales
     
-    sales_by_model_name = StoreSales.objects.filter(status="sold").values("product__model__name").annotate(Count('product__model__name'))	
+    sales_by_model_name = StoreSales.objects.filter(status="sold").values("product__model__name").annotate(Sum('quantity'))
+    sales_by_date = StoreSales.objects.filter(status="sold").annotate(month=TruncMonth('date')).values("month").annotate(qty=Sum('quantity'))
+    
+    sales_name = [item['product__model__name'] for item in sales_by_model_name]
+    sales_qty = [item['quantity__sum'] for item in sales_by_model_name]	
+    sales_date = [item['month'].strftime("%d:%b") for item in sales_by_date] 
+    sales_by_date_qty = [item["qty"] for item in sales_by_date]
     
     sales = StoreSales.objects.all()
     
     finance_contxt = calculate_profit(StoreSales.objects.filter(status="sold"),0)
+    
+    print(sales_date)
     
     contxt = {"by_model_name":by_model_name,
               "by_category_name":by_category_name,
               "by_brand_name":by_brand_name,
               "sales_by_model_name":sales_by_model_name,
               "finance_contxt":finance_contxt,
-              "sales":sales
+              "sales":sales,
+              "stocks_model_names":stocks_model_names,
+              "stocks_qty":stocks_qty,
+              "sales_qty":sales_qty,
+              "sales_name":sales_name,
+              "sales_date":sales_date,
+              "sales_by_date_qty":sales_by_date_qty
+              }
               
-              }	
+              
+              
+            
     
     return render(request,"manager/store-reports.html",contxt)
     

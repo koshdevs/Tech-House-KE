@@ -1,40 +1,62 @@
 {% extends 'ecommerce/base.html' %}
 
+
 {% load static %}
 {% load humanize %}
+{% block banner %}
 
+{% endblock banner %}
 
 
 {% block content %}
 
-<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-
 <style>
-
-    .line {
-        border-bottom: 4px double #333;
-       
-        padding: 10px 0;
-    }
-</style>
-<script>
- 
-
-    var datatable = $('.table').DataTable();
- 
    
- 
- 
- 
- </script>
+    
+    .columns {
+        float: left;
+        width: 50%;
+        padding: 10px;
+        height: 300px;
+        overflow-y:hidden;
+        scrollbar-width: none;
+       /* Should be removed. Only for demonstration */
+      }
+      
+      /* Clear floats after the columns */
+      .rows:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+</style>
+
+
+
+
 
 
 <div class="cart-box-main">
     <div class="container">
 
         {% if user.is_authenticated %}
+        <div class="rows">
+        <div class="columns" id="stocksPlot">
+            
+
+        </div>
+        <div class="columns" id="salesPlot">
+            
+
+        </div>
+    </div>
+    <div class="rows" id="salesTrend">
+
+
+
+    </div>
+
        
         <div class="row" style="zoom:80%">
             
@@ -204,6 +226,75 @@
 
     </div>
 </div>
+<script>
 
+   // create bar chart to visualise stocks level
+    var data = [
+        {
+          x:{{stocks_model_names | safe}},
+          y: {{stocks_qty | safe}},
+          type: 'bar',
+          marker:{
+
+            color: 'rgba(255, 153, 0, 0.5)',
+            
+          }
+          
+        }
+        
+      ];
+
+    var layout =  {
+
+        title: {
+            text: 'Stocks level'
+          },
+    }
+      
+      Plotly.newPlot('stocksPlot', data,layout);
+
+
+      // create charts to visualise sales by produvt name
+
+      var data = [
+        {
+          x:{{sales_name | safe}},
+          y: {{sales_qty | safe}},
+          type: 'bar'
+        }
+      ];
+
+    var layout =  {
+
+        title: {
+            text: 'Monthly Sales level'
+          },
+    }
+      
+      Plotly.newPlot('salesPlot', data,layout);
+
+    // visulaisation of sales trend
+
+      var sales_by_month = {
+        x: {{sales_date | safe }},
+        y: {{sales_by_date_qty | safe }},
+        type: 'scatter',
+        title: {
+            text: 'Sales QTY Trend'
+          },
+      };
+
+      var layout = {
+          
+        title: {
+            text: 'Sales QTY Trend'
+          },
+      }
+
+      var sales_by_date_data = [sales_by_month];
+
+       Plotly.newPlot('salesTrend', sales_by_date_data,layout);
+
+</script>
 
 {% endblock %}

@@ -1,0 +1,128 @@
+
+{% load static %}
+{% load humanize %}
+{% load math_filters %}
+{% if user.is_authenticated %}
+<tr style="background-color:grey; color:yellow; font-weight:bold;">
+    <td>
+        Total:
+    </td>
+    <td>
+     
+    </td>
+ 
+    </td>
+    <td>
+       
+    </td>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+    <td>
+        {{qty}}
+    </td>
+    <td>
+        {{subtotal}}
+    </td>
+    <td>
+        {{tax}}
+    </td>
+    <td>
+        {{total}}
+    </td>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+    <td>
+        
+    </td>
+
+<tr>
+                            {% for sale in sales %}
+                            <tr>
+
+                                
+                                    <td>
+                                        <input type="checkbox" name="salesCheck" value="{{sale.pk}}">
+                                    </td>
+                                
+
+                                <td>
+                                   {{sale.product.serial1}}
+                                </td>
+                                <td>
+                                    {{sale.product.serial2}}
+                                 </td>
+                                 <td>
+                                    {{sale.product.model.name}}
+                                 </td>
+                                 <td>
+                                    {{sale.product.brand.name}}
+                                 </td>
+                                 <td>
+                                    {{sale.quantity}}
+                                 </td>
+                                 <td>
+                                    {{sale.product.price}}
+                                 </td>
+                                 <td>
+                                    {{sale.product.tax|multiply:0.01|multiply:sale.product.price}}
+                                 </td>
+                                 <td>
+                                    {{sale.product.tax|multiply:0.01|multiply:sale.product.price|add:sale.product.price}}
+                                 </td>
+                                 <td>
+
+                                    {{sale.product.stage}}
+
+                                 </td>
+                                 <td>
+
+                                    {{sale.status}}
+
+                                 </td>
+
+                                <td>
+
+                                    {{sale.date}}
+
+                                </td>
+                                <td>
+
+                                    <i class="fa fa-user"><i>
+
+                                    {{sale.created_by}}
+
+                                </td>
+
+                               <td>
+                                
+                                <a clas="btn btn-light">
+                                <i class="fa fa-eye"><i>
+
+                                </a>
+
+                        </td>
+
+                            </tr>
+                                
+                           {% endfor %}
+
+                           {% else %}
+                                  
+                           <h4 style="color:red; text-align:center;">To view Items in this Page Login is required!!! <a style="color:blue" href="/admin">login here</a></h4>
+
+
+                           {% endif %}

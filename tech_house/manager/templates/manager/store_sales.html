@@ -77,7 +77,48 @@
     </div>
   </div>
 
-
+  <div class="modal fade" id="confirmSale" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      <div class="modal-content">
+      
+        <div class="order-box" style="margin:20px; zoom:80%">
+            <h3>Order summary</h3>
+            <div class="d-flex gr-total">
+                <h5>Sub Total</h5>
+                <div class="ml-auto h5"> {{totals.subtotal}}</div>
+            </div>
+            <hr class="my-1">
+            
+            <div class="d-flex">
+                <h4>Tax</h4>
+                <div class="ml-auto font-weight-bold">{{totals.tax}}</div>
+            </div>
+           
+            <hr>
+            <div class="d-flex gr-total">
+                <h5>Grand Total</h5>
+                <div class="ml-auto h5"> {{totals.total}}</div>
+            </div>
+            <hr> </div>
+ 
+        <a hx-get="{% url 'manager-complete-instant-sales' %}" hx-target="#salesPage" hx-indicator="#completeInstantSales"  class="btn btn-success" style="margin:40px;color:white;">
+                                        
+            Confirm
+        
+        </a>
+        <div class="htmx-indicator" id="completeInstantSales">
+            <i class="fa fa-spinner fa-spin" style="font-size:24px color:blue"></i>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            
+          </div>
+      </div>
+    </div>
+  </div>
 
 
 <div class="cart-box-main" >
@@ -120,7 +161,7 @@
                 
                 <div class="table-main table-responsive">
                     <table class="table">
-                        <thead>
+                        <thead style="background-color:blue;color:white;font-size:8px;">
                             <tr>
                                 <th>Images</th>
                                 <th>Serial #</th>
@@ -258,17 +299,12 @@
                                     <a onclick="genReceipt()" class="btn btn-primary" style="color:white;">Receipt</a> 
                                 </div>
                                 <div class="col-2 d-flex shopping-box">
-                                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    <i class="fa fa-arrow-right" style="margin-top:50%" aria-hidden="true"></i>
                                 </div>
                                 <div class="col-5 d-flex shopping-box">
-                                    <a hx-get="{% url 'manager-complete-instant-sales' %}" hx-target="#salesPage" hx-indicator="#completeInstantSales"  class="btn btn-success" style="color:white;">
-                                        
-                                        Complete
-                                    
-                                    </a>
-                                    <div class="htmx-indicator" id="completeInstantSales">
-                                        <i class="fa fa-spinner fa-spin" style="font-size:24px color:blue"></i>
-                                    </div> 
+                                  
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirmSale">Complete</button>
+                                     
                                 </div>
                             
                         </div>      
@@ -301,6 +337,11 @@
             
         let url = "{% url 'manager-gen-instant-receipt' %}";
         myWin = window.open(url,"Receipt Page", 'height=600,width=400,toolbar=yes,resizable=yes,scrollbars=yes,top=100,left=1000');
+
+    }
+
+    function confirm_sale(){
+
 
     }
    

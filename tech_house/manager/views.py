@@ -6,11 +6,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 from django.core.cache import cache
 from django.db.models import Q,Sum,Count
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncMonth,TruncDay
 from ecommerce.models import ProductBuild 
 from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails
 from.data_ops import get_sales_data,gen_order_docs,get_sales_by_status,\
-    calculate_profit,gen_order_items_docs,get_sales_by_id
+    calculate_profit,gen_order_items_docs,get_sales_by_id,get_sales_summary_data
 import datetime
 
 # Create your views here.
@@ -417,6 +417,108 @@ def remove_order_from_invoice(request,order_id):
         
     return render(request, 'manager/shop-orders-search-results.html',contxt) 
 
+def list_on_sales_items(request):
+    
+    """
+    Retrieves and displays a list of all store sales.
+
+    :param request: The request object.
+    :type request: django.http.HttpRequest
+    :return: The rendered store-on-sale-items.html template with all store sales.
+    :rtype: django.http.HttpResponse
+    """
+    
+    
+    sales = cache.get('items-on-sale')
+    
+    if sales is None:
+        
+        sales = StoreSales.objects.all()
+        
+        cache.set('items-on-sale', sales)
+        
+   
+    
+    contxt  = get_sales_summary_data(sales)
+    
+    return render(request, 'manager/store-sales-items.html',contxt)
+
+def filter_on_sales_items(request): 
+    
+    if request.method == 'POST':
+        serial = request.POST.get('serial')
+        from_date = request.POST.get('from_date')
+        to_date = request.POST.get('to_date')
+        
+     
+        
+        if serial == '':	  
+            
+            sales = StoreSales.objects.filter(date__range=[from_date, to_date])
+        
+        else:
+            
+            sales = StoreSales.objects.filter(product__serial1=serial, date__range=[from_date, to_date])
+            
+            
+        
+        
+        contxt  = get_sales_summary_data(sales)
+        
+        return render(request, 'manager/store-filter-on-sales-items.html',contxt) 
+    
+    
+def sales_as_delivered(request): 
+    
+    if request.method == 'POST':
+        
+        sales_ids = request.POST.get('pks').split(',')
+        dnote_string = request.POST.get('dnote_string')
+        payment_status = request.POST.get('payment_status')
+        
+        delivery_details = DeliveryDetails(
+            
+            status='delivered',
+            paid_status = payment_status,
+            delivery_note_image = dnote_string,
+            
+            
+            
+        )
+        
+        delivery_details.save()
+        
+        
+        
+        sales_selected = StoreSales.objects.filter(pk__in=sales_ids)
+        
+        for sale in sales_selected:
+            
+            sale.status = 'Sold & Delivered'
+            sale.save()
+            sale.product.stage = 'sold'
+            sale.product.save()
+            
+        
+        sales = StoreSales.objects.all()
+        
+        contxt = {"sales":sales}
+        
+        return render(request, 'manager/store-filter-on-sales-items.html',contxt)
+
+def sales_as_returned(request):
+    
+    pass 
+
+def sales_as_invoiced(request): 
+    
+    pass 
+
+    
+    
+    
+    
+
 def list_invoice_items(request,order_id): 
     
     """
@@ -686,18 +788,18 @@ def store_generate_reports(request):
     # sales
     
     sales_by_model_name = StoreSales.objects.filter(status="sold").values("product__model__name").annotate(Sum('quantity'))
-    sales_by_date = StoreSales.objects.filter(status="sold").annotate(month=TruncMonth('date')).values("month").annotate(qty=Sum('quantity'))
+    sales_by_date = StoreSales.objects.filter(status="sold").annotate(month=TruncDay('date')).values("date").annotate(qty=Sum('quantity'))
     
     sales_name = [item['product__model__name'] for item in sales_by_model_name]
     sales_qty = [item['quantity__sum'] for item in sales_by_model_name]	
-    sales_date = [item['month'].strftime("%d:%b") for item in sales_by_date] 
+    sales_date = [item['date'].strftime("%d:%b") for item in sales_by_date] 
     sales_by_date_qty = [item["qty"] for item in sales_by_date]
     
-    sales = StoreSales.objects.all()
+    sales = StoreSales.objects.all().order_by('-date')[0:10]
     
     finance_contxt = calculate_profit(StoreSales.objects.filter(status="sold"),0)
     
-    print(sales_date)
+    print(sales_by_date)
     
     contxt = {"by_model_name":by_model_name,
               "by_category_name":by_category_name,

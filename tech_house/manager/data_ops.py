@@ -114,6 +114,21 @@ def get_sales_by_id(ids_list):
     contxt = {"sales":sales, "total":total,"tax":tax,"subtotal":subtotal,"org_details":org_details,"date":date}
     
     return contxt
+
+def get_sales_summary_data(sales):
+    
+    qty = sum([sale.quantity for sale in sales])
+    subtotal = round(sum([i.price for i in sales]),2)
+    tax = round((subtotal*sales[0].tax)/100 if len(sales) > 0 else 0.00,2)
+    total = tax  + subtotal
+    total = round(total,2)
+    
+    contxt = {"sales":sales, "total":total,"tax":tax,"subtotal":subtotal,"qty":qty}
+    
+    return contxt
+    
+    
+
     
     
 

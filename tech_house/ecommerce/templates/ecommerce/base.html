@@ -44,7 +44,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-					<div class="custom-select-box">
+					<div class="custom-select-box" style="background-color:blue;">
                         <select id="basic" class="selectpicker show-tick form-control" data-placeholder="$ USD">
 							<option>KES</option>
 							<option>$ USD</option>
@@ -100,7 +100,7 @@
                 <!-- End Header Navigation -->
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="navbar-menu" style="zoom:80%" hx-boost="true">
+                <div class="collapse navbar-collapse" id="navbar-menu" style="zoom:80%; color:blue;" hx-boost="true">
                     <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
                         <li class="nav-item"><a class="nav-link" href="{% url 'eco-shop' %}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
@@ -111,6 +111,7 @@
                             <ul class="dropdown-menu">
 								<li><a href="{% url 'manager-store-counter' %}">Counter</a></li>
 								<li><a href="{% url 'manager-list-invoices' %}" >Invoiced</a></li>
+                                <li><a href="{% url 'manager-list-on-sales-items' %}" >On-Sale</a></li>
                             
                                 <li><a href="{% url 'manager-store-generate-reports' %}" >Reports</a></li>
                                 
@@ -242,7 +243,7 @@
     {% endblock content %}
 
     </div>
-
+   {% block footer %}
     <footer>
         <div class="footer-main"  id="mainFooter">
             <div class="container">
@@ -324,12 +325,14 @@
             </div>
         </div>
     </footer>
+
+    {% endblock footer %}
     <!-- End Footer  -->
 
     <!-- Start copyright  -->
     <div class="footer-copyright">
-        <p class="footer-company">All Rights Reserved. &copy; 2018 <a href="#">ThewayShop</a> Design By :
-            <a href="https://html.design/">html design</a></p>
+        <p class="footer-company">All Rights Reserved. &copy; 2024
+            <a href="koshtech.site">KoshTech</a></p>
     </div>
     <!-- End copyright  -->
 

@@ -1,0 +1,352 @@
+{% extends 'ecommerce/base.html' %}
+
+{% load static %}
+{% load humanize %}
+{% load math_filters %}
+
+{% block banner %}
+{% endblock banner %}
+
+{% block content %}
+
+<style type="text/css">
+    .htmx-indicator{
+        opacity:0;
+        transition: opacity 500ms ease-in;
+    }
+    .htmx-request .htmx-indicator{
+        opacity:1;
+    }
+    .htmx-request.htmx-indicator{
+        opacity:1;
+    }
+    </style>
+
+ 
+    <div class="modal fade" id="salesDeliveredeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Delivery Confirmation</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div id="customerDetailsResp"></div>
+                <form hx-post="{% url 'manager-sales-as-delivered' %}" hx-target="#salesTab" hx-indicatot="#deliveryIndicator">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6" style="display:none">
+                            <label for="InputName" class="mb-0">Selected Items</label>
+                            <input type="text" class="form-control" name="pks" id="pks"  required> </div>
+                        <div class="form-group col-md-6">
+                            <label for="InputLastname" class="mb-0">Upload Signed D-Note</label>
+                            <input type="file" class="form-control" multiple accept="image/*" name="dnote_image" id="dnote_image" onchange="dnoteImageToString()" placeholder="D-NOTE"> </div>
+                            
+                            <div class="form-group col-md-6">
+                                <label for="InputName" class="mb-0">Payment Status</label>
+
+                                <select class="form-control" id="payment_status" name="payment_status">
+
+                                    <option>------</option>
+                                    <option value="paid & delivered">paid & delivered</option>
+                                    <option value="not paid & delivered">not paid & delivered</option>
+
+                                </select>
+                               
+                            </div>
+                        <div class="form-group col-md-6" style="display:none">
+                            <label for="InputEmail1" class="mb-0">D-note Image</label>
+                            <textarea class="form-control" id="dnote_string" name="dnote_string"></textarea>
+                             </div>
+                        
+                    </div>
+    
+                    <button type="submit" class="btn hvr-hover" style="margin:20px;">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+
+    
+<div class="cart-box-main">
+    <div class="container">
+        <div class="row">
+            
+            <div class="col-lg-12 col-sm-12 col-12">
+                <form class="form" hx-post="{% url 'manager-filter-on-sales-items' %}" hx-target="#salesTab" hx-indicator="#searchSales">
+                    {% csrf_token %}
+                <div class="row">
+                   
+                    <div class="col-lg-3 col-sm-12">
+                        <input class="form-control" name="serial" placeholder="Search by Serial..." type="text">
+                    </div>
+                   &nbsp;
+                    <div class="col-lg-2">
+                        <input class="form-control" name="from_date" placeholder="Start date" type="date">
+                    </div>
+                    &nbsp;
+                    <div class="col-lg-2">
+                        <input class="form-control" name="to_date" placeholder="end date" type="date">
+                    </div>
+                    &nbsp;
+                    <div class="col-lg-2">
+                        <button type="submit" class="btn btn-light">
+                            <i class="fa fa-search"></i>
+                            <span class="htmx-indicator" id="searchSales" >searching..</span>
+                        </button>
+                    </div>
+                    
+                
+                </div>
+            </form>
+
+            <div class="row">
+              
+                <div class="d-flex flex-row" id="actionBtns">
+                <div class="col-lg-3 col-sm-4 col-3">
+
+                    <button class="btn btn-light" onclick="saleAsDelivered();">
+                        <i class="fa fa-motorcycle" aria-hidden="true"></i>
+                        <small>Delivered</small>
+                    </button>
+
+                </div>
+                
+                <div class="col-lg-3 col-sm-4 col-3">
+
+                    <button class="btn btn-light">
+                        <i class="fa fa-retweet" aria-hidden="true"></i>
+                        <small>Return</small>
+                    </button>
+
+                </div>
+                <div class="col-lg-3 col-sm-4 col-3">
+
+                    <button class="btn btn-light">
+                        <i class="fa fa-book" aria-hidden="true"></i>
+                        <small>Invoiced</small>
+                    </button>
+
+                </div>
+                
+               
+              
+
+            </div>
+                <br>
+                <div class="table-main table-responsive" style="zoom:80%;">
+                    <table class="table">
+                        <thead style="background-color:blue">
+                            <tr>
+
+                                <th>
+                                    Select
+                                </th>
+                                <th>Serial 1</th>
+                                <th>Serial 2</th>
+                                <th>Name</th>
+                                <th> Brand </th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Tax</th>
+                                <th>Total</th>
+                                <th>Stock Status</th>
+                                <th>Sales Status</th>
+                                <th>Date</th>
+                                <th>Created By</th>
+                                
+                                <th>Customer Details</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="salesTab">
+                            {% if user.is_authenticated %}
+
+                            <tr style="background-color:grey; color:yellow; font-weight:bold;">
+                                <td>
+                                    Total:
+                                </td>
+                                <td>
+                                 
+                                </td>
+                             
+                                </td>
+                                <td>
+                                   
+                                </td>
+                                <td>
+                                    
+                                </td>
+                                <td>
+                                    
+                                </td>
+                                <td>
+                                    {{qty}}
+                                </td>
+                                <td>
+                                    {{subtotal}}
+                                </td>
+                                <td>
+                                    {{tax}}
+                                </td>
+                                <td>
+                                    {{total}}
+                                </td>
+                                <td>
+                                    
+                                </td>
+                                <td>
+                                    
+                                </td>
+                                <td>
+                                    
+                                </td>
+                                <td>
+                                    
+                                </td>
+                                <td>
+                                    
+                                </td>
+
+                            <tr>
+                            {% for sale in sales %}
+                            <tr>
+
+                                
+                                    <td>
+                                        <input type="checkbox" name="salesCheck" value="{{sale.pk}}">
+                                    </td>
+                                
+
+                                <td>
+                                   {{sale.product.serial1}}
+                                </td>
+                                <td>
+                                    {{sale.product.serial2}}
+                                 </td>
+                                 <td>
+                                    {{sale.product.model.name}}
+                                 </td>
+                                 <td>
+                                    {{sale.product.brand.name}}
+                                 </td>
+                                 <td>
+                                    {{sale.quantity}}
+                                 </td>
+                                 <td>
+                                    {{sale.product.price}}
+                                 </td>
+                                 <td>
+                                    {{sale.product.tax|multiply:0.01|multiply:sale.product.price}}
+                                 </td>
+                                 <td>
+                                    {{sale.product.tax|multiply:0.01|multiply:sale.product.price|add:sale.product.price}}
+                                 </td>
+                                 <td>
+
+                                    {{sale.product.stage}}
+
+                                 </td>
+                                 <td>
+
+                                    {{sale.status}}
+
+                                 </td>
+
+                                <td>
+
+                                    {{sale.date}}
+
+                                </td>
+                                <td>
+
+                                    <i class="fa fa-user"><i>
+
+                                    {{sale.created_by}}
+
+                                </td>
+
+                               <td>
+                                
+                                <a clas="btn btn-light">
+                                <i class="fa fa-eye"><i>
+
+                                </a>
+
+                        </td>
+
+                            </tr>
+                                
+                           {% endfor %}
+
+                           {% else %}
+                                  
+                           <h4 style="color:red; text-align:center;">To view Items in this Page Login is required!!! <a style="color:blue" href="/admin">login here</a></h4>
+
+
+                           {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+       
+
+        
+
+    </div>
+</div>
+
+<script>
+
+    function saleAsDelivered() {
+
+        let checked_ = []
+        $("input:checkbox[name=salesCheck]:checked").each(function(){
+            checked_.push($(this).val());
+            });
+        let all_checked = checked_.toString()
+        $("#pks").val(all_checked)
+
+        $("#salesDeliveredeModal").modal("show");
+
+    }
+
+    function dnoteImageToString(){
+
+        let base64String = "";
+
+        var dnote_image_file = document.getElementById('dnote_image').files[0];
+        let reader = new FileReader();
+            console.log("next");
+
+            reader.onload = function () {
+                base64String = reader.result.replace("data:", "")
+                    .replace(/^.+,/, "");
+
+                imageBase64Stringsep = base64String;
+
+                // alert(imageBase64Stringsep);
+                document.getElementById("dnote_string").value = imageBase64Stringsep
+            }
+            reader.readAsDataURL(dnote_image_file);
+
+
+    }
+
+</script>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock footer %}

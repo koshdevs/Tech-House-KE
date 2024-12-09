@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -46,18 +46,21 @@ INSTALLED_APPS = [
     'manager',
     'rest_framework',
     'django_htmx',
+    'debug_toolbar', 
     
     
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'tech_house.urls'
@@ -82,6 +85,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'tech_house.wsgi.application'
 
 USE_THOUSAND_SEPARATOR = True
+
+INTERNAL_IPS = [                                               # <-- NEW
+    '127.0.0.1',                                               # <-- NEW
+]                                                              # <-- NEW
+
+def show_toolbar(request):                                     # <-- NEW
+    return True                                                # <-- NEW 
+
+DEBUG_TOOLBAR_CONFIG = {                                       # <-- NEW
+    "SHOW_TOOLBAR_CALLBACK" : show_toolbar,                    # <-- NEW
+}                                                              # <-- NEW
+
+if DEBUG:                                                      # <-- NEW
+    import mimetypes                                           # <-- NEW          
+    mimetypes.add_type("application/javascript", ".js", True)
 
 
 # Database
@@ -132,6 +150,8 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'general/static')
 STATIC_URL = '/static/'
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 

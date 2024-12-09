@@ -8,7 +8,7 @@ from django.core.cache import cache
 from django.db.models import Q,Sum,Count
 from django.db.models.functions import TruncMonth,TruncDay
 from ecommerce.models import ProductBuild 
-from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails
+from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails,Expenses
 from.data_ops import get_sales_data,gen_order_docs,get_sales_by_status,\
     calculate_profit,gen_order_items_docs,get_sales_by_id,get_sales_summary_data
 import datetime
@@ -147,7 +147,15 @@ def gen_receipt_for_selected_items(request):
         
         ids = request.POST.get('ids').split(',')
         
-        contxt = get_sales_by_id(ids)
+        try:
+            contxt = get_sales_by_id(ids)
+        except: 
+            
+            sales = StoreSales.objects.filter(product__serial1__in=ids)
+            ids_list = [sale.pk for sale in sales]
+            contxt = get_sales_by_id(ids_list)
+            
+            
         
         resp = render_to_string('manager/store-receipt.html',contxt)
                
@@ -472,7 +480,7 @@ def sales_as_delivered(request):
     
     if request.method == 'POST':
         
-        sales_ids = request.POST.get('pks').split(',')
+        sales_ids = request.POST.get('serial1_delivered').split(',')
         dnote_string = request.POST.get('dnote_string')
         payment_status = request.POST.get('payment_status')
         
@@ -490,29 +498,78 @@ def sales_as_delivered(request):
         
         
         
-        sales_selected = StoreSales.objects.filter(pk__in=sales_ids)
+        sales_selected = StoreSales.objects.filter(product__serial1__in=sales_ids)
+        
+        
         
         for sale in sales_selected:
             
             sale.status = 'Sold & Delivered'
             sale.save()
-            sale.product.stage = 'sold'
+            sale.product.stage = 'sold'                         
             sale.product.save()
             
         
         sales = StoreSales.objects.all()
+        #sales = get_sales_summary_data(sales)
         
-        contxt = {"sales":sales}
+        contxt = {"sales":sales,"success":"Process completed successfully."} 
         
         return render(request, 'manager/store-filter-on-sales-items.html',contxt)
 
 def sales_as_returned(request):
     
-    pass 
-
-def sales_as_invoiced(request): 
+     if request.method == 'POST':
+        
+        sales_ids = request.POST.get('serial1_returned').split(',')
+        
+        sales_selected = StoreSales.objects.filter(product__serial1__in=sales_ids)
+        
+        for sale in sales_selected:
+            
+            sale.status = 'returned'
+            sale.price = 0.0
+            sale.quantity = 0
+            sale.tax = 0.0
+            sale.date = datetime.datetime.now()
+            sale.save()
+            sale.product.stage = 'in-stock'                         
+            sale.product.save()
+            
+        
+        sales = StoreSales.objects.all()
+        #sales = get_sales_summary_data(sales)
+        
+        contxt = {"sales":sales,"success":"Process completed successfully."} 
+        
+        return render(request, 'manager/store-filter-on-sales-items.html',contxt)
     
-    pass 
+    
+
+def sales_as_invoiced(request):
+    
+    if request.method == 'POST':
+        
+        sales_ids = request.POST.get('serial1_invoices').split(',')
+        
+        sales_selected = StoreSales.objects.filter(product__serial1__in=sales_ids)
+
+        
+        for sale in sales_selected:
+            
+            sale.status = 'invoiced'
+            sale.save()
+            
+        sales = StoreSales.objects.all()
+        #sales = get_sales_summary_data(sales)
+        
+        contxt = {"sales":sales,"success":"Process completed successfully."} 
+        
+        return render(request, 'manager/store-filter-on-sales-items.html',contxt)
+            
+        
+    
+     
 
     
     
@@ -797,7 +854,11 @@ def store_generate_reports(request):
     
     sales = StoreSales.objects.all().order_by('-date')[0:10]
     
-    finance_contxt = calculate_profit(StoreSales.objects.filter(status="sold"),0)
+    expenses = sum([amount for amount in Expenses.objects.all().values_list("amount",flat=True)])
+    
+    finance_contxt = calculate_profit(StoreSales.objects.filter(status="sold"),expenses)
+    
+     #StoreSales.objects.
     
     print(sales_by_date)
     

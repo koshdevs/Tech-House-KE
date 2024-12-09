@@ -36,8 +36,8 @@
     <td>
         
     </td>
-    <td>
-        
+    <td style="color:green;">
+        {{success}}
     </td>
     <td>
         
@@ -54,69 +54,70 @@
                             <tr>
 
                                 
-                                    <td>
-                                        <input type="checkbox" name="salesCheck" value="{{sale.pk}}">
-                                    </td>
+                                <td>
+                                    <input type="checkbox" name="salesCheck" value="{{sale.product.serial1}}">
+                                </td>
                                 
+                            
 
-                                <td>
-                                   {{sale.product.serial1}}
-                                </td>
-                                <td>
-                                    {{sale.product.serial2}}
-                                 </td>
-                                 <td>
-                                    {{sale.product.model.name}}
-                                 </td>
-                                 <td>
-                                    {{sale.product.brand.name}}
-                                 </td>
-                                 <td>
-                                    {{sale.quantity}}
-                                 </td>
-                                 <td>
-                                    {{sale.product.price}}
-                                 </td>
-                                 <td>
-                                    {{sale.product.tax|multiply:0.01|multiply:sale.product.price}}
-                                 </td>
-                                 <td>
-                                    {{sale.product.tax|multiply:0.01|multiply:sale.product.price|add:sale.product.price}}
-                                 </td>
-                                 <td>
+                            <td>
+                               {{sale.product.serial1}}
+                            </td>
+                            <td>
+                                {{sale.product.serial2}}
+                             </td>
+                             <td>
+                                {{sale.product.model.name}}
+                             </td>
+                             <td>
+                                {{sale.product.brand.name}}
+                             </td>
+                             <td>
+                                {{sale.quantity}}
+                             </td>
+                             <td>
+                                {{sale.price}}
+                             </td>
+                             <td>
+                                {{sale.tax|multiply:0.01|multiply:sale.price}}
+                             </td>
+                             <td>
+                                {{sale.tax|multiply:0.01|multiply:sale.price|add:sale.price}}
+                             </td>
+                             <td>
 
-                                    {{sale.product.stage}}
+                                {{sale.product.stage}}
 
-                                 </td>
-                                 <td>
+                             </td>
+                             <td>
 
-                                    {{sale.status}}
+                                {{sale.status}}
 
-                                 </td>
+                             </td>
 
-                                <td>
+                            <td>
 
-                                    {{sale.date}}
+                                {{sale.date}}
 
-                                </td>
-                                <td>
+                            </td>
+                            <td>
 
-                                    <i class="fa fa-user"><i>
+                                <i class="fa fa-user"><i>
 
-                                    {{sale.created_by}}
+                                {{sale.created_by}}
 
-                                </td>
+                            </td>
 
-                               <td>
-                                
-                                <a clas="btn btn-light">
-                                <i class="fa fa-eye"><i>
+                           <td>
+                            
+                            <a clas="btn btn-light">
+                            <i class="fa fa-eye"><i>
 
-                                </a>
+                            </a>
 
-                        </td>
+                    </td>
 
-                            </tr>
+                        </tr>
                                 
                            {% endfor %}
 

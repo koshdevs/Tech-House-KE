@@ -39,10 +39,10 @@
                     <div class="form-row">
                         <div class="form-group col-md-6" style="display:none">
                             <label for="InputName" class="mb-0">Selected Items</label>
-                            <input type="text" class="form-control" name="pks" id="pks"  required> </div>
+                            <input type="text" class="form-control" name="serial1_delivered" id="serial1_delivered"  required> </div>
                         <div class="form-group col-md-6">
                             <label for="InputLastname" class="mb-0">Upload Signed D-Note</label>
-                            <input type="file" class="form-control" multiple accept="image/*" name="dnote_image" id="dnote_image" onchange="dnoteImageToString()" placeholder="D-NOTE"> </div>
+                            <input type="file" class="form-control" multiple accept="image/*" name="dnote_image" id="dnote_image" onchange="dnoteImageToString()" placeholder="D-NOTE" required> </div>
                             
                             <div class="form-group col-md-6">
                                 <label for="InputName" class="mb-0">Payment Status</label>
@@ -73,6 +73,45 @@
           </div>
         </div>
       </div>
+
+      <div class="modal fade" id="salesReturnedeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Return Confirmation</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div id="customerDetailsResp"></div>
+                <div id="item_names"></div>
+                <form hx-post="{% url 'manager-sales-as-return' %}" hx-target="#salesTab" hx-indicatot="#deliveryIndicator">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6" style="display:none">
+                            <label for="InputName" class="mb-0">Selected Items</label>
+                            <input type="text" class="form-control" name="serial1_returned" id="serial1_returned"  required> </div>
+                        
+                            
+                           
+                       
+                        
+                    </div>
+    
+                    <button type="submit" class="btn hvr-hover" style="margin:20px;">Confirm</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+   
 
     
 
@@ -123,7 +162,7 @@
                 
                 <div class="col-lg-3 col-sm-4 col-3">
 
-                    <button class="btn btn-light">
+                    <button class="btn btn-light" onclick="returnItems()">
                         <i class="fa fa-retweet" aria-hidden="true"></i>
                         <small>Return</small>
                     </button>
@@ -131,9 +170,9 @@
                 </div>
                 <div class="col-lg-3 col-sm-4 col-3">
 
-                    <button class="btn btn-light">
+                    <button class="btn btn-light" onclick="generateReceipt()">
                         <i class="fa fa-book" aria-hidden="true"></i>
-                        <small>Invoiced</small>
+                        <small>Receipt</small>
                     </button>
 
                 </div>
@@ -223,8 +262,9 @@
 
                                 
                                     <td>
-                                        <input type="checkbox" name="salesCheck" value="{{sale.pk}}">
+                                        <input type="checkbox" name="salesCheck" value="{{sale.product.serial1}}">
                                     </td>
+                                    
                                 
 
                                 <td>
@@ -243,13 +283,13 @@
                                     {{sale.quantity}}
                                  </td>
                                  <td>
-                                    {{sale.product.price}}
+                                    {{sale.price}}
                                  </td>
                                  <td>
-                                    {{sale.product.tax|multiply:0.01|multiply:sale.product.price}}
+                                    {{sale.tax|multiply:0.01|multiply:sale.price}}
                                  </td>
                                  <td>
-                                    {{sale.product.tax|multiply:0.01|multiply:sale.product.price|add:sale.product.price}}
+                                    {{sale.tax|multiply:0.01|multiply:sale.price|add:sale.price}}
                                  </td>
                                  <td>
 
@@ -316,9 +356,19 @@
             checked_.push($(this).val());
             });
         let all_checked = checked_.toString()
-        $("#pks").val(all_checked)
+        $("#serial1_delivered").val(all_checked)
 
-        $("#salesDeliveredeModal").modal("show");
+        if($("#serial1_delivered").val()=="") {
+
+            alert("Please select Delivered Items");
+            
+
+        }else{
+
+            $("#salesDeliveredeModal").modal("show");
+        }
+
+       
 
     }
 
@@ -343,6 +393,79 @@
 
 
     }
+
+function returnItems() {
+
+    let checked_ = []
+    $("input:checkbox[name=salesCheck]:checked").each(function(){
+        checked_.push($(this).val());
+        });
+    let all_checked = checked_.toString()
+    $("#serial1_returned").val(all_checked)
+
+    for(let i = 0; i < checked_.length; i++){
+
+        $("#item_names").append("<p><i class='fa fa-check' style='color:green'></i> Serial 1: "+checked_[i]+" </p>");
+
+         
+    }
+    
+
+    if($("#serial1_returned").val()=="") {
+
+        alert("Please select Delivered Items");
+        
+
+    }else{
+
+        $("#salesReturnedeModal").modal("show");
+    }
+
+   
+
+
+
+}
+
+
+
+function generateReceipt(){
+
+    let checked_ = []
+    $("input:checkbox[name=salesCheck]:checked").each(function(){
+        checked_.push($(this).val());
+        });
+    let all_checked = checked_.toString()
+
+    $.ajax({
+
+        url:"{% url 'manager-gen-receipt-for-selected-items' %}",
+        method:"POST",
+        data:{
+
+           'ids':all_checked,
+           
+           csrfmiddlewaretoken: '{{ csrf_token }}',
+
+        },
+        beforeSend:function(data){
+
+        },
+
+        success:function(data){
+            var wnd = window.open("about:Receipt", "", "_blank");
+             wnd.document.write(data);
+            
+        },
+
+        complete:function(data){
+
+        }
+    })
+
+}
+
+
 
 </script>
 {% endblock %}

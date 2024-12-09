@@ -24,6 +24,8 @@ class ProductOriginAdmin(admin.ModelAdmin):
 
 @admin.register(ProductBuild)
 class ProductBuildAdmin(admin.ModelAdmin):
+    list_display = ["serial1", "category", "brand", "model", "origin","cost","price","tax","stage","status","updated_on","created_on"]
+    search_fields = ("serial1","category__name","brand__name","model__name","origin__name",)
     filter_horizontal = ("features",)
     autocomplete_fields = ["brand","category","model","origin"]	
     

@@ -31,22 +31,22 @@
         border-bottom: 1px solid #EEE;
       }
       
-      #top{min-height: 100px;}
+      #top{min-height: 30px;}
       #mid{min-height: 80px;} 
       #bot{ min-height: 50px;}
       
       #top .logo{
         //float: left;
-          height: 60px;
+          height: 25px;
           width: 60px;
-          background: url(http://michaeltruong.ca/images/logo1.png) no-repeat;
+          
           background-size: 60px 60px;
       }
       .clientlogo{
         float: left;
           height: 60px;
           width: 60px;
-          background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
+          
           background-size: 60px 60px;
         border-radius: 50px;
       }
@@ -101,15 +101,18 @@
 
 
 <div id="invoice-POS">
+  
     
     <div id="top">
-      <div class="logo"></div>
+      <div class="logo">
+        <img style="height:30px;" src="{{org_details.logo.url}}">
+      </div>
       <div class="info"> 
-        <h4>{{org_details.name}}</h4>
+        <h6>{{org_details.name}}</h6>
       </div><!--End Info-->
     </div><!--End InvoiceTop-->
     
-    <div id="mid">
+    <div id="mid" style="margin-top:1px;">
       <div class="info">
         
         <strong style="font-size:10px;">
@@ -170,8 +173,9 @@
 					</div><!--End Table-->
           <hr class="dashed">     
 					<div id="legalcopy">
-						<p class="legal"><strong>Thank you for</strong> {{org_details.terms}}
+						<p class="legal"><strong>Thank you</strong> 
 						</p>
+            <strong style="font-size:8px;"> {{org_details.terms}}</strong>
 					</div>
 
 				</div><!--End InvoiceBot-->

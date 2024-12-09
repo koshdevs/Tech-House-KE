@@ -81,7 +81,15 @@ class OrgDetails(models.Model):
         
         verbose_name_plural = "Org Details"
         
+class Expenses(models.Model):
+    
+    name = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField(auto_now_add=True)
         
+    class Meta: 
+        
+        verbose_name_plural = "Expenses"
         
     
     

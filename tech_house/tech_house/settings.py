@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -94,7 +94,7 @@ def show_toolbar(request):                                     # <-- NEW
     return True                                                # <-- NEW 
 
 DEBUG_TOOLBAR_CONFIG = {                                       # <-- NEW
-    "SHOW_TOOLBAR_CALLBACK" : show_toolbar,                    # <-- NEW
+    "SHOW_TOOLBAR_CALLBACK" : lambda r: False,                    # <-- NEW
 }                                                              # <-- NEW
 
 if DEBUG:                                                      # <-- NEW
@@ -146,12 +146,22 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
+STORAGES = {
+    # ...
+    "default":{
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+    "mediafiles": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+}
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'general/static')
 STATIC_URL = '/static/'
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
@@ -161,4 +171,6 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = ['https://tech-house-ke-production.up.railway.app/','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://tech-house-ke-production.up.railway.app']
+
+CSRF_FAILURE_VIEW = 'ecommerce.views.csrf_failure_403'

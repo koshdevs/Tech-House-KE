@@ -26,15 +26,6 @@ def shop_view(request):
     
     ''' Pagination '''
   
-    paginator = Paginator(products, 6)
-    
-    page = request.GET.get("page")
-    try:
-        page_obj = paginator.get_page(page)
-    except PageNotAnInteger:
-        page_obj = paginator.page(1)
-    except EmptyPage:
-        page_obj = paginator.page(paginator.num_pages)
         
         
     cart = ShopCart(request)
@@ -44,7 +35,7 @@ def shop_view(request):
     
   
   
-    contxt = {"products":products,"page_obj":page_obj} | items
+    contxt = {"products":products} | items
 
     return render(request,'ecommerce/shop.html',contxt)
 
@@ -167,5 +158,28 @@ def shop_rem_cart_view(request,pk):
     contxt = {"product":product,"pk":pk} | items
     
     return render(request,'ecommerce/shop-add-to-cart.html',contxt)
+
+
+
+def csrf_failure_403(request,reason="Error as a result of cross forgery protection"): 
+    
+    
+    """
+    Handles CSRF failure and returns a 403 Forbidden error page.
+    
+    :param request: The request object.
+    :type request: django.http.HttpRequest
+    :param reason: The reason for the CSRF failure.
+    :type reason: str    
+    :return: The rendered 403 Forbidden error page.
+    :rtype: django.http.HttpResponse
+    """
+    
+    
+    contxt = {"reason":reason}
+    
+    
+
+    return render(request,'403_csrf_failure.html',contxt,status=403)
 
    

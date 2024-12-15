@@ -1,0 +1,69 @@
+<div role="tabpanel" class="tab-pane fade show active" id="grid-view">
+    <div class="row">
+        {% for product in products %}
+        <div class="col-sm-6 col-md-6 col-lg-6 col-xl-4 col-6">
+            <div class="products-single fix border shadow" style="border-radius:30px;">
+                <div class="box-img-hover" style="margin:10px;">
+                    <div class="type-lb">
+                        <p class="sale">Sale</p>
+                    </div>
+               
+
+                    <img src="{{product.images.first.image.url}}" class="img-fluid h-50" alt="Image">
+                    <div class="mask-icon">
+                        <ul>
+                            <li><a href="{% url 'eco-shop-details' product.pk %}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
+                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                        </ul>
+                        <a class="cart" hx-get="{% url 'eco-shop-add-to-cart' product.pk %}" hx-target="#sideCart">Add to Cart</a>
+                    </div>
+                </div>
+                <div style="margin:30px;">
+                    <h4 style="font-weight:bold; color:blue">{{product.brand.name}} - {{product.model}}</h4>
+                    <h5> <del>Ksh {{product.was}}</del></h5>
+                    <h6 style="font-weight:bold;"> Ksh {{product.price}}</h6>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div role="tabpanel" class="tab-pane fade" id="list-view">
+    <div class="list-view-box">
+        {% for product in products %}
+        <div class="row">
+            
+            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                <div class="products-single fix" >
+                    <div class="box-img-hover" >
+                        <div class="type-lb">
+                            <p class="new">New</p>
+                        </div>
+                        <img src="{{product.images.first.image.url}}" class="img-fluid h-50" alt="Image">
+                        <div class="mask-icon">
+                            <ul>
+                                <li><a href="{% url 'eco-shop-details' product.pk %}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
+                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
+                <div class="why-text full-width">
+                    <h4>{{product.brand}} - {{product.model}}</h4>
+                    <h5> <del>Ksh {{product.was}}</del>{{product.price}}</h5>
+                    <p>{{product.overview | truncatechars:300}}</p>
+                    <a class="btn hvr-hover" href="#">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+   
+   
+</div>

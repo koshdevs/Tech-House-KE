@@ -1,7 +1,8 @@
 from django.shortcuts import render,get_object_or_404
 from django.core.cache import cache
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import ProductBuild
+from django.db.models import Q
+from .models import ProductBuild,ProductCategory
 from .cart import ShopCart,display_cart_items,cart_render
 
 #Create your views here.
@@ -17,14 +18,22 @@ def shop_view(request):
     """
     
 
-    products = cache.get('products')
+    products = cache.get('eco-products')
+    categories = cache.get('eco-categories')
     
     if products is None:
         
         products = ProductBuild.objects.all()
-        cache.set('products', products, timeout=2400)
+        cache.set('eco-products', products, timeout=2400)
     
     ''' Pagination '''
+    
+    if categories is None:
+        
+        categories = ProductCategory.objects.all()
+        cache.set('eco-categories', categories, timeout=2400)
+        
+   
   
         
         
@@ -35,7 +44,7 @@ def shop_view(request):
     
   
   
-    contxt = {"products":products} | items
+    contxt = {"products":products,"categories":categories} | items
 
     return render(request,'ecommerce/shop.html',contxt)
 
@@ -181,5 +190,54 @@ def csrf_failure_403(request,reason="Error as a result of cross forgery protecti
     
 
     return render(request,'403_csrf_failure.html',contxt,status=403)
+
+
+def filter_products_by_brand(request,brand_id):
+    
+    products = ProductBuild.objects.filter(brand__pk=brand_id)
+    
+    if len(products) > 10: 
+        
+        products = products[:10]
+        
+    else: 
+        
+        products  = products 
+        
+        
+    
+    return render(request,'ecommerce/shop-filter-by-brand.html',{"products":products})
+
+
+def search_products(request):
+    
+
+    """
+    Searches for products based on a query parameter. If the query parameter is provided, it filters products
+    whose category name, brand name, model name, or feature specifications contain the query value. If the query
+    parameter is empty, it renders all products. The result is rendered as shop-products-search-results.html.
+    
+    :param request: The HTTP request object.
+    :type request: django.http.HttpRequest
+    :return: The rendered shop-products-search-results.html template with filtered products.
+    :rtype: django.http.HttpResponse
+    """
+
+    query = request.GET.get('query')
+    
+    products = ProductBuild.objects.filter(
+    Q(category__name__contains=query) |
+            Q(brand__name__contains=query) |  
+                Q(model__name__contains=query) | 
+                    Q(features__specifications__contains=query))
+    
+    
+    print(products)
+    
+    return render(request,'ecommerce/shop-products-search-results.html',{"products":products})
+    
+    
+    
+    
 
    

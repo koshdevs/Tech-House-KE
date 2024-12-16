@@ -229,10 +229,9 @@ def search_products(request):
     Q(category__name__contains=query) |
             Q(brand__name__contains=query) |  
                 Q(model__name__contains=query) | 
-                    Q(features__specifications__contains=query))
+                    Q(features__specifications__contains=query)).distinct()
     
-    
-    print(products)
+   
     
     return render(request,'ecommerce/shop-products-search-results.html',{"products":products})
     

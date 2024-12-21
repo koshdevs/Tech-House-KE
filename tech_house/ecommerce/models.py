@@ -137,6 +137,10 @@ class ProductMemory(models.Model):
     
     def __str__(self):
         return self.memory
+    
+    class Meta:
+        
+        verbose_name_plural = "Product Memory"
         
         
 class ProductBuild(models.Model):
@@ -187,6 +191,10 @@ class OrgProfile(models.Model):
     logo = models.ImageField(default='',upload_to="org_pics") 
     name = models.CharField(max_length=100)
     others = models.TextField()
+    
+    class Meta:
+        
+        verbose_name_plural = "Org Profile"
     
     
     

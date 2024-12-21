@@ -10,6 +10,12 @@ admin.site.register(ProductImages)
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):
     search_fields = ["name"]
+    
+@admin.register(ProductSubCategory)
+class ProductSubCategoryAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    
+
 @admin.register(ProductBrand)
 class ProductBrandAdmin(admin.ModelAdmin):
     search_fields = ["name"]
@@ -21,6 +27,18 @@ class ProductModelAdmin(admin.ModelAdmin):
 @admin.register(ProductOrigin)
 class ProductOriginAdmin(admin.ModelAdmin): 
     search_fields = ["name"]
+    
+@admin.register(ProductProcessor)
+class ProductProcessorAdmin(admin.ModelAdmin):
+    search_fields = ["processor"]
+    
+@admin.register(ProductGeneration)
+class ProductGenerationAdmin(admin.ModelAdmin):
+    search_fields = ["generation"]
+    
+@admin.register(ProductMemory)
+class ProductMemoryAdmin(admin.ModelAdmin):
+    search_fields = ["memory"]
 
 @admin.register(ProductBuild)
 class ProductBuildAdmin(admin.ModelAdmin):

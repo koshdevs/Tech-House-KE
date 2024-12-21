@@ -67,7 +67,76 @@ class ProductFeatures(models.Model):
 class ProductImages (models.Model):
     
     angle = models.CharField(max_length=100)
+    tag_name = models.CharField(max_length=100,null=True)
     image = models.ImageField(default='default.jpg', upload_to="products_pics")
+    
+    def __str__(self): 
+        
+        return self.angle + " " + self.tag_name
+    
+    class Meta:
+        
+        verbose_name_plural = 'Product Images'
+    
+
+class ProductPriceRange(models.Model):
+    
+    range = models.CharField(max_length=100, blank=True,null=True)
+    
+    def __str__(self): 
+        
+        return self.range
+    
+    class Meta:
+        
+        verbose_name_plural = 'Product Price Range'
+    
+class ProductSubCategory(models.Model):
+    
+    name = models.CharField(max_length=100,blank=True,null=True)
+    decscription = models.TextField(blank=True,null=True)
+    
+    def __str__(self): 
+        
+        return self.name
+    
+    class Meta:
+        
+        verbose_name_plural = 'Product Sub Category'
+    
+class ProductProcessor(models.Model):
+    
+    processor = models.CharField(max_length=100,blank=True,null=True)
+    decsription = models.TextField(blank=True,null=True)
+    
+    def __str__(self): 
+        
+        return self.processor
+    
+    class Meta:
+        
+        verbose_name_plural = 'Product Processor'
+    
+class ProductGeneration(models.Model):
+    
+     generation = models.CharField(max_length=100,blank=True,null=True)
+     decsription = models.TextField(blank=True,null=True)
+     
+     def __str__(self): 
+        
+        return self.generation
+     
+     class Meta:
+        
+        verbose_name_plural = 'Product Generation'
+    
+class ProductMemory(models.Model):
+    
+    memory = models.CharField(max_length=100,blank=True,null=True)
+    decsription = models.TextField(blank=True,null=True)
+    
+    def __str__(self):
+        return self.memory
         
         
 class ProductBuild(models.Model):
@@ -75,10 +144,14 @@ class ProductBuild(models.Model):
     serial1 = models.CharField(max_length=100)
     serial2 = models.CharField(max_length=100,null=True,blank=True)
     category = models.ForeignKey(ProductCategory,on_delete=models.CASCADE)
+    sub_category = models.ForeignKey(ProductSubCategory,on_delete=models.CASCADE,blank=True,null=True)
     brand = models.ForeignKey(ProductBrand,on_delete=models.CASCADE)
     model = models.ForeignKey(ProductModel,on_delete=models.CASCADE)
     origin = models.ForeignKey(ProductOrigin,on_delete=models.CASCADE)
     features = models.ManyToManyField(ProductFeatures)
+    processor = models.ForeignKey(ProductProcessor,on_delete=models.CASCADE,blank=True,null=True)
+    generation = models.ForeignKey(ProductGeneration,on_delete=models.CASCADE,blank=True,null=True)
+    memory = models.ForeignKey(ProductMemory,on_delete=models.CASCADE,blank=True,null=True)
     images = models.ManyToManyField(ProductImages)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     price = models.DecimalField(max_digits=10, decimal_places=2)

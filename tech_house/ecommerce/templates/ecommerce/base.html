@@ -39,13 +39,14 @@
 
     <style>
         .my-indicator{
-            display:none;
+            opacity:0;
+            transition: opacity 500ms ease-in;
         }
         .htmx-request .my-indicator{
-            display:inline;
+            opacity:1;
         }
         .htmx-request.my-indicator{
-            display:inline;
+            opacity:1;
         }
     </style>
   
@@ -123,11 +124,11 @@
                         <li class="dropdown active">
                             <a href="#" class=" btn btn-primary nav-link dropdown-toggle arrow" data-toggle="dropdown">Store Management</a>
                             <ul class="dropdown-menu">
-								<li><a href="{% url 'manager-store-counter' %}">Counter</a></li>
-								<li><a href="{% url 'manager-list-invoices' %}" >Invoiced</a></li>
-                                <li><a href="{% url 'manager-list-on-sales-items' %}" >On-Sale</a></li>
+								<li><a href="{% url 'manager-store-counter' %}" hx-indicator="#pageSpinner">Counter</a></li>
+								<li><a href="{% url 'manager-list-invoices' %}" hx-indicator="#pageSpinner">Invoiced</a></li>
+                                <li><a href="{% url 'manager-list-on-sales-items' %}" hx-indicator="#pageSpinner">On-Sale</a></li>
                             
-                                <li><a href="{% url 'manager-store-generate-reports' %}" >Reports</a></li>
+                                <li><a href="{% url 'manager-store-generate-reports' %}" hx-indicator="#pageSpinner">Reports</a></li>
                                 
                             </ul>
                         </li>

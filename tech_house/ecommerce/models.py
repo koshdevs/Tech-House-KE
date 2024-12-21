@@ -172,4 +172,27 @@ class ProductBuild(models.Model):
         
         verbose_name_plural = "Create Product"
         
+        
+class OrgProfile(models.Model):
+    
+    fb_link = models.CharField(max_length=100)
+    x_link = models.CharField(max_length=100)
+    ig_link = models.CharField(max_length=100)
+    wa_link = models.CharField(max_length=100)
+    pi_link =models.CharField(max_length=100)
+    th_link = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
+    email = models.EmailField()
+    address = models.TextField()
+    logo = models.ImageField(default='',upload_to="org_pics") 
+    name = models.CharField(max_length=100)
+    others = models.TextField()
+    
+    
+    
+    
+    
+    
+   
+        
     

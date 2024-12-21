@@ -47,5 +47,7 @@ class ProductBuildAdmin(admin.ModelAdmin):
     filter_horizontal = ("features",)
     autocomplete_fields = ["brand","category","model","origin"]	
     
+admin.site.register(OrgProfile)
+    
 
 

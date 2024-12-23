@@ -209,6 +209,83 @@ def filter_products_by_brand(request,brand_id):
     return render(request,'ecommerce/shop-filter-by-brand.html',{"products":products})
 
 
+def filter_by_sub_category(request,sub_category_id):
+    
+    products = ProductBuild.objects.filter(sub_category__pk=sub_category_id)
+    
+    if len(products) > 10: 
+        
+        products = products[:10]
+        
+    else: 
+        
+        products  = products 
+        
+        
+    return render(request,'ecommerce/shop-filter-by-brand.html',{"products":products})
+
+def filter_by_price_range(request):
+    
+    if request.method == "POST":
+    
+        price = request.POST.get('price')
+        
+        min = int(price.split('-')[0])
+        max = int(price.split('-')[1])
+        
+        
+        print(max)
+        
+        products = ProductBuild.objects.filter(price__range=(min,max)).order_by('-price')
+        
+        if len(products) > 10: 
+            
+            products = products[:10]
+            
+        else: 
+            
+            products  = products 
+            
+            
+        return render(request,'ecommerce/shop-filter-by-brand.html',{"products":products})
+    
+def sort_products(request):
+    
+    sort_by =  request.GET.get('basic')
+    
+    
+    
+    if sort_by == "1":
+        
+        products = ProductBuild.objects.order_by('price')
+    
+    elif sort_by == "2":
+        
+        products = ProductBuild.objects.order_by('-price') 
+        
+    elif sort_by == "3":
+        
+        products = ProductBuild.objects.order_by('price')
+        
+    else: 
+        
+        products = ProductBuild.objects.all()
+        
+    if len(products) > 10: 
+            
+        products = products[:10]
+            
+    else: 
+            
+        products  = products    
+    
+        
+    
+    return render(request,'ecommerce/shop-filter-by-brand.html',{"products":products})         
+    
+    
+
+
 def search_products(request):
     
 

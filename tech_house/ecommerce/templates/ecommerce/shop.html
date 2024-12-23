@@ -55,12 +55,12 @@
                         <div class="col-9 col-sm-8 text-center text-sm-left">
                             <div class="toolbar-sorter-right">
                                 <span>Sort by </span>
-                                <select id="basic" class="selectpicker show-tick form-control" data-placeholder="$ USD">
-                                <option data-display="Select">Nothing</option>
+                                <select id="basic" name="basic" hx-get="{% url 'eco-shop-sort-products' %}" hx-trigger="change" hx-target="#productsContent" hx-indicator="#pageCatSpinner" class="selectpicker show-tick form-control" data-placeholder="$ USD">
+                               
                                 <option value="1">Popularity</option>
                                 <option value="2">High Price → High Price</option>
                                 <option value="3">Low Price → High Price</option>
-                                <option value="4">Best Selling</option>
+                               
                             </select>
                             </div>
                             
@@ -157,7 +157,7 @@
                     
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 col-12 sidebar-shop-left">
+            <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 col-12 sidebar-shop-left" style="zoom:70%">
                 <div class="product-categori">
                     <div class="search-product" >
                         <form action="#">
@@ -170,6 +170,20 @@
                             <h3>Categories & Sub-Catgories</h3>
                         </div>
                         <div class="list-group list-group-collapse list-group-sm list-group-tree" id="list-group-men" data-children=".sub-men">
+                            <div class="row my-indicator" id="pageCatSpinner" style="disp">
+    
+                                <div class="col-md-3 col-xl-3 col=sm-3 col-3">
+                        
+                            </div>
+                            <div class="col-md-3 col-xl-3 col=sm-3 col-3">
+                            <img src="{% static 'images/navigate-icons/page-spinner.svg' %}" height="40px">
+                            </div>
+                        
+                            <div class="col-md-3 col-xl-3 col=sm-3 col-3">
+                        
+                            </div>
+                        
+                            </div>
                            {% for category in categories %}
                             <div class="list-group-collapse sub-men">
                                 <a class="list-group-item list-group-item-action" href="#sub-menu{{category.pk}}" data-toggle="collapse" aria-expanded="true" aria-controls="sub-men1"> {{category.name}} <small class="text-muted"></small>
@@ -178,7 +192,7 @@
                                     <div class="list-group">
                                         {% for product in products %}
                                             {% if product.category == category %} 
-                                                <a href="#" class="list-group-item list-group-item-action active"> {{product.brand.name}} <small class="text-muted">{{product.brand.count}}</small></a>
+                                                <a hx-get="{% url 'eco-shop-filter-by-sub-category' product.sub_category.pk %}" class="list-group-item list-group-item-action active" hx-target="#productsContent" hx-indicator="#pageCatSpinner"> {{product.sub_category.name}} <small class="text-muted">{{product.brand.count}}</small></a>
                                                
                                             
                                             {% endif %}
@@ -198,8 +212,13 @@
                         <div class="price-box-slider">
                             <div id="slider-range"></div>
                             <p>
-                                <input type="text" id="amount" readonly style="border:0; color:#fbb714; font-weight:bold;">
-                                <button class="btn hvr-hover" type="submit">Filter</button>
+                                <form method="post" hx-post="{% url 'eco-shop-filter-by-price-range' %}" hx-target="#productsContent" hx-indicator="#pageSpinner">
+                                
+                                     {% csrf_token %}
+                                <input  type="text" id="amount" name="price"  style="border:0; color:#fbb714; font-weight:bold;">
+                                <button type="submit" class="btn btn-success">Filter</button>
+
+                                </form>
                             </p>
                         </div>
                     </div>
@@ -221,78 +240,7 @@
                 </div>
             </div>
         </div>
-        <div class="item">
-            <div class="ins-inner-box">
-                <img src="images/instagram-img-02.jpg" alt="" />
-                <div class="hov-in">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="ins-inner-box">
-                <img src="images/instagram-img-03.jpg" alt="" />
-                <div class="hov-in">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="ins-inner-box">
-                <img src="images/instagram-img-04.jpg" alt="" />
-                <div class="hov-in">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="ins-inner-box">
-                <img src="images/instagram-img-05.jpg" alt="" />
-                <div class="hov-in">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="ins-inner-box">
-                <img src="images/instagram-img-06.jpg" alt="" />
-                <div class="hov-in">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="ins-inner-box">
-                <img src="images/instagram-img-07.jpg" alt="" />
-                <div class="hov-in">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="ins-inner-box">
-                <img src="images/instagram-img-08.jpg" alt="" />
-                <div class="hov-in">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="ins-inner-box">
-                <img src="images/instagram-img-09.jpg" alt="" />
-                <div class="hov-in">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="item">
-            <div class="ins-inner-box">
-                <img src="images/instagram-img-05.jpg" alt="" />
-                <div class="hov-in">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </div>
 

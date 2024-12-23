@@ -72,7 +72,7 @@ class ProductImages (models.Model):
     
     def __str__(self): 
         
-        return self.angle + " " + self.tag_name
+        return self.tag_name if not "None"  else self.angle
     
     class Meta:
         
@@ -195,6 +195,16 @@ class OrgProfile(models.Model):
     class Meta:
         
         verbose_name_plural = "Org Profile"
+        
+        
+class advert(models.Model): 
+    
+    name = models.CharField(max_length=100)
+    image = models.ImageField(default='default.jpg', upload_to="advert_pics")
+    link = models.CharField(max_length=100)
+    content = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
     
     
     

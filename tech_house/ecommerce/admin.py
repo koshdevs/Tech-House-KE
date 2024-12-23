@@ -48,6 +48,7 @@ class ProductBuildAdmin(admin.ModelAdmin):
     autocomplete_fields = ["brand","category","model","origin"]	
     
 admin.site.register(OrgProfile)
+admin.site.register(advert)
     
 
 

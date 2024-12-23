@@ -10,8 +10,9 @@ def cart(request):
     
 def show_products(request):  
     
-    products = ProductBuild.objects.raw("select *from ecommerce_ProductBuild group by model__name")
+    products = ProductBuild.objects.raw("select *from ecommerce_ProductBuild group by serial2")
     
+    print(products)
     category = ProductCategory.objects.all()
     
     contxt = {

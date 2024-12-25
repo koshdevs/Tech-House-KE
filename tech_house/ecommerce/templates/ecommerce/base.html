@@ -29,6 +29,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -144,7 +145,7 @@
                                 {% for product in products %}
 
                                    {% if product.category.pk == category.pk%}
-								        <li><a hx-get="{% url 'eco-shop-filter-by-brand' product.brand.pk %}" hx-target="#productsContent" hx-indicator="#pageSpinner">{{product.brand.name}}</a></li>
+								        <li><a href="{% url 'eco-shop-filter-by-sub-category' product.sub_category.pk %}"  hx-indicator="#pageSpinner" hx-boost="true">{{product.sub_category.name}}</a></li>
 
                                     {% endif %}
 

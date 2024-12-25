@@ -212,6 +212,7 @@ def filter_products_by_brand(request,brand_id):
 def filter_by_sub_category(request,sub_category_id):
     
     products = ProductBuild.objects.filter(sub_category__pk=sub_category_id)
+    categories = cache.get("eco-categories")
     
     if len(products) > 10: 
         
@@ -221,8 +222,21 @@ def filter_by_sub_category(request,sub_category_id):
         
         products  = products 
         
+    if categories is None:
         
-    return render(request,'ecommerce/shop-filter-by-brand.html',{"products":products})
+        categories = ProductCategory.objects.all()
+        cache.set('eco-categories', categories, timeout=2400)
+        
+    cart = ShopCart(request)
+    
+    items = cart_render(cart)
+    
+    
+  
+  
+    contxt = {"products":products,"categories":categories} | items
+        
+    return render(request,'ecommerce/shop-sub-category.html',contxt)
 
 def filter_by_price_range(request):
     

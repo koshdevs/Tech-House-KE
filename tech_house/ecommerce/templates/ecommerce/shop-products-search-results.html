@@ -56,6 +56,7 @@
             <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
                 <div class="why-text full-width">
                     <h4>{{product.brand}} - {{product.model}}</h4>
+                    <h6>{{product.processor.processor}} {{product.generation.generation}} {{product.memory.memory}}</h6>
                     <h5> <del>Ksh {{product.was}}</del>{{product.price}}</h5>
                     <p>{{product.overview | truncatechars:300}}</p>
                     <a class="btn hvr-hover" href="#">Add to Cart</a>

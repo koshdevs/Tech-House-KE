@@ -2,6 +2,10 @@
 {% load static %}
 {% load humanize %}
 
+
+
+
+
 {% block cartButton %}
 <div class="attr-nav">
     <ul>
@@ -24,7 +28,6 @@
         <li>
             <a href="{% url 'eco-shop-details' item.product_id %}" class="photo"><img src="{{item.image}}" class="cart-thumb" alt="" /></a>
             <h6><a href="{% url 'eco-shop-details' item.product_id %}">{{item.product_name}} </a></h6>
-            
             <p>{{item.quantity}}x - 
                  <span class="price">{{item.total_price}}</span></p>
         </li>
@@ -37,17 +40,42 @@
         </ul>
     </li>
 </div>
-{% endblock %}
+{% endblock sideCart %}
 
+{% block banner %}
+
+{% endblock banner %}
 
 {% block content %}
 
+<style>
+    .modal.fade:not(.in).right .modal-dialog {
+        -webkit-transform: translate3d(25%, 0, 0);
+        transform: translate3d(25%, 0, 0);
+      }
 
+      .modal-backdrop {
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.5); /* adjust opacity to your liking */
+      }
+      
+      /* Add translucency to modal content */
+      .modal-content {
+        opacity: 0.9;
+      }
+      
+      /* Layering and depth */
+      .modal-dialog {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+     
+</style>
 
 
   <!-- Start Shop Page  -->
-  <div class="shop-box-inner">
-    <div class="container">
+  
+    <div class="container" style="margin-top:0px;">
+        
         <div class="row">
             
             <div class="col-xl-9 col-lg-6 col-sm-12 col-xs-12 col-12">
@@ -56,32 +84,28 @@
                         <div class="col-9 col-sm-8 text-center text-sm-left">
                             <div class="toolbar-sorter-right">
                                 <span>Sort by </span>
-                                <select id="basic" name="basic" hx-get="{% url 'eco-shop-sort-products' %}" hx-trigger="change" hx-target="#productsContent" hx-indicator="#pageCatSpinner" class="selectpicker show-tick form-control" data-placeholder="$ USD">
+                                <select id="basic" name="basic" hx-get="{% url 'eco-shop-sort-products' %}" hx-trigger="change" hx-target="#productsContent" hx-indicator="#pageCatSpinner" class="selectpicker show-tick form-control" style="width:40px;">
                                
                                 <option value="1">Popularity</option>
                                 <option value="2">High Price → High Price</option>
                                 <option value="3">Low Price → High Price</option>
                                
                             </select>
+                            &nbsp;&nbsp;
+                           
                             </div>
-                            
+                           
                         </div>
                         &nbsp;
-                        <div class="col-9 col-sm-4 text-center text-sm-right" style="margin-top:20px;">
-                            <ul class="nav nav-tabs ml-auto">
-                                <li>
-                                    <a class="nav-link active" href="#grid-view" data-toggle="tab"> <i class="fa fa-th"></i> </a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" href="#list-view" data-toggle="tab"> <i class="fa fa-list-ul"></i> </a>
-                                </li>
-                            </ul>
-                        </div>
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom" onclick="filterModal()">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
                     </div>
 
                     <div class="product-categorie-box">
                         <div class="tab-content" id="productsContent">
                             <div role="tabpanel" class="tab-pane fade show active" id="grid-view">
+                                
                                 <div class="row">
                                     {% for product in products %}
                                     <div class="col-sm-6 col-md-6 col-lg-6 col-xl-4 col-6"  style="margin-top:20px;">
@@ -111,48 +135,13 @@
                                         </div>
                                     </div>
                                     {% endfor %}
+                                  
+                                     
 
                                 </div>
                             </div>
                        
-                            <div role="tabpanel" class="tab-pane fade" id="list-view">
-                                <div class="list-view-box">
-                                    {% for product in products %}
-                                    <div class="row" >
-                                        
-                                        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4" style="margin-top:10px;">
-                                            <div class="products-single fix">
-                                                <div class="box-img-hover" >
-                                                    <div class="type-lb">
-                                                        <p class="new">New</p>
-                                                    </div>
-                                                    <img src="{{product.images.first.image.url}}" class="img-fluid h-50" alt="Image">
-                                                    <div class="mask-icon">
-                                                        <ul>
-                                                            <li><a href="{% url 'eco-shop-details' product.pk %}" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
-                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                                            <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
-                                                        </ul>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-6 col-lg-8 col-xl-8">
-                                            <div class="why-text full-width">
-                                                <h4>{{product.brand}} - {{product.model}}</h4>
-                                                <h6>{{product.processor.processor}} {{product.generation.generation}} {{product.memory.memory}}</h6>
-                                                <h5> <del>Ksh {{product.was}}</del>{{product.price}}</h5>
-                                                <p>{{product.overview | truncatechars:300}}</p>
-                                                <a class="btn hvr-hover" href="#">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                               
-                               
-                            </div>
+                           
                            
                         </div>
                         
@@ -227,24 +216,23 @@
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
-</div>
+
 <!-- End Shop Page -->
 
 <!-- Start Instagram Feed  -->
-<div class="instagram-box">
-    <div class="main-instagram owl-carousel owl-theme">
-        <div class="item">
-            <div class="ins-inner-box">
-                <img src="images/instagram-img-01.jpg" alt="" />
-                <div class="hov-in">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-</div>
+<script>
+
+
+
+    function filterModal() {
+
+        alert("Under development")
+
+    }
+
+</script>
 
 {% endblock content %}

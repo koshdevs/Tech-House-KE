@@ -923,7 +923,7 @@
  .products-single {
      overflow: hidden;
      position: relative;
-     margin-bottom: 30px;
+     margin-bottom: 10px;
 }
  .products-single .box-img-hover{
      overflow: hidden;

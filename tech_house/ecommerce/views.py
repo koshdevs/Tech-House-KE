@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from django.core.cache import cache
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from .models import ProductBuild,ProductCategory
+from .models import ProductBuild,ProductCategory,ProductReview
 from .cart import ShopCart,display_cart_items,cart_render
 
 #Create your views here.
@@ -69,8 +69,10 @@ def shop_details_view(request,pk):
     
     items = cart_render(cart)
     
+    reviews = ProductReview.objects.filter(product__pk=pk).order_by('-updated_on')
     
-    contxt = {"product":product} | items
+    
+    contxt = {"product":product,"reviews":reviews} | items
     
     return render(request,'ecommerce/shop-details.html',contxt)
 
@@ -170,26 +172,7 @@ def shop_rem_cart_view(request,pk):
 
 
 
-def csrf_failure_403(request,reason="Error as a result of cross forgery protection"): 
-    
-    
-    """
-    Handles CSRF failure and returns a 403 Forbidden error page.
-    
-    :param request: The request object.
-    :type request: django.http.HttpRequest
-    :param reason: The reason for the CSRF failure.
-    :type reason: str    
-    :return: The rendered 403 Forbidden error page.
-    :rtype: django.http.HttpResponse
-    """
-    
-    
-    contxt = {"reason":reason}
-    
-    
 
-    return render(request,'403_csrf_failure.html',contxt,status=403)
 
 
 def filter_products_by_brand(request,brand_id):
@@ -325,6 +308,66 @@ def search_products(request):
    
     
     return render(request,'ecommerce/shop-products-search-results.html',{"products":products})
+
+def csrf_failure_403(request,reason="Error as a result of cross forgery protection"): 
+    
+    
+    """
+    Handles CSRF failure and returns a 403 Forbidden error page.
+    
+    :param request: The request object.
+    :type request: django.http.HttpRequest
+    :param reason: The reason for the CSRF failure.
+    :type reason: str    
+    :return: The rendered 403 Forbidden error page.
+    :rtype: django.http.HttpResponse
+    """
+    
+    
+    contxt = {"reason":reason}
+    
+    
+
+    return render(request,'403_csrf_failure.html',contxt,status=403)
+
+
+
+def create_product_review(request): 
+    
+    if request.method == 'POST': 
+        
+        id = request.POST.get('product_id') #product_id
+        review=request.POST.get('review')
+        rating = request.POST.get('rating')
+        
+        
+        if request.user.is_authenticated:
+        
+            review = ProductReview(
+                
+                user=request.user,product_id=id,review=review,rating=rating	
+                
+                )
+            
+            review.save()
+            
+            msg = "<strong style='color:green'>Review updated successfully</strong>"
+            
+        else: 
+            
+            msg = "<strong style='color:red'>User not logged in</strong>"
+            #return redirect('eco-login')
+            
+            
+        
+        reviews = ProductReview.objects.filter(product__pk=id).order_by('-updated_on')
+        
+        contxt = {"reviews": reviews,"msg": msg}
+        
+        return render(request,'ecommerce/shop-products-review.html',contxt)
+        
+        
+        
     
     
     

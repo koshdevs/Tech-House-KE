@@ -207,6 +207,20 @@ class advert(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     
     
+class ProductReview(models.Model):
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductBuild, on_delete=models.CASCADE)
+    review = models.TextField()
+    rating = models.IntegerField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        
+        verbose_name_plural = "Product Review"
+    
+    
     
     
     

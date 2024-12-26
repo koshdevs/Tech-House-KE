@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 from .views import shop_view,shop_details_view,shop_add_to_cart_view,\
     shop_minus_to_cart_view,shop_cart_view,shop_rem_cart_view,filter_products_by_brand,\
-    filter_by_sub_category,filter_by_price_range,search_products,sort_products
+    filter_by_sub_category,filter_by_price_range,search_products,sort_products,\
+        create_product_review
 
 urlpatterns = [
     
@@ -17,5 +18,6 @@ urlpatterns = [
              path('filter-products-by-price-range/', views.filter_by_price_range, name="eco-shop-filter-by-price-range"),
              path('sort-products', views.sort_products, name="eco-shop-sort-products"),
              path('search-products/', views.search_products, name="eco-shop-search-products"),
+             path('create-review/', create_product_review, name="eco-create-review"),
 ]
 

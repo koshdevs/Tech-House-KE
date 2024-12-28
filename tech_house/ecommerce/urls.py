@@ -1,15 +1,16 @@
 from django.urls import path
 from . import views
-from .views import shop_view,shop_details_view,shop_add_to_cart_view,\
+from .views import shop_view,shop_details_view,shop_add_to_cart_view,shop_plus_to_cart,\
     shop_minus_to_cart_view,shop_cart_view,shop_rem_cart_view,filter_products_by_brand,\
     filter_by_sub_category,filter_by_price_range,search_products,sort_products,\
-        create_product_review
+        create_product_review,edit_product_review,delete_product_review
 
 urlpatterns = [
     
              path('',views.shop_view,name='eco-shop'),
              path('shop-details/<int:pk>/',views.shop_details_view,name="eco-shop-details"),
              path('add-to-cart/<int:pk>/', views.shop_add_to_cart_view, name="eco-shop-add-to-cart"),
+             path('plus-to-cart/<int:pk>/', views.shop_plus_to_cart, name="eco-shop-plus-to-cart"),
              path('minus-to-cart/<int:pk>/', views.shop_minus_to_cart_view, name="eco-shop-minus-to-cart"),
              path('cart/', views.shop_cart_view, name="eco-shop-cart"),
              path('remove-from-cart/<int:pk>/', views.shop_rem_cart_view, name="eco-shop-remove-cart"),
@@ -19,5 +20,7 @@ urlpatterns = [
              path('sort-products', views.sort_products, name="eco-shop-sort-products"),
              path('search-products/', views.search_products, name="eco-shop-search-products"),
              path('create-review/', create_product_review, name="eco-create-review"),
+             path('edit-review/', edit_product_review, name="eco-edit-review"),
+             path('delete-review/', delete_product_review, name="eco-delete-review"),
 ]
 

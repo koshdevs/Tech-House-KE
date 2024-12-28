@@ -46,6 +46,17 @@
         .checked {
           color: orange;
         }
+
+        .my-indicator{
+            opacity:0;
+            transition: opacity 500ms ease-in;
+        }
+        .htmx-request .my-indicator{
+            opacity:1;
+        }
+        .htmx-request.my-indicator{
+            opacity:1;
+        }
  
 
 </style>
@@ -55,6 +66,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle">Review</h5>
+          <div class="my-indicator" id="createReviewSpinner">
+            <img src="{% static 'images/navigate-icons/page-spinner.svg' %}" height="60px">
+            </div>
           
           <div id="reviewResp">
 
@@ -66,7 +80,7 @@
           
         </div>
         <div class="modal-body">
-          <form hx-post="{% url 'eco-create-review' %}" hx-target="#reviewBody" >
+          <form hx-post="{% url 'eco-create-review' %}" hx-target="#reviewBody" hx-indicator="#createReviewSpinner">
             
             {% csrf_token %}
 
@@ -87,6 +101,86 @@
               </select>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="reviewEditModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Edit Review</h5>
+          
+          <div class="my-indicator" id="editReviewSpinner">
+            <img src="{% static 'images/navigate-icons/page-spinner.svg' %}" height="60px">
+            </div>
+          
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeEditReviewModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          
+        </div>
+        <div class="modal-body">
+          <form hx-post="{% url 'eco-edit-review' %}" hx-target="#reviewBody" hx-indicator="#editReviewSpinner">
+            
+            {% csrf_token %}
+
+            <input type="hidden" name="product_edit_id" id="product_edit_id" value="{{ product.pk }}">
+            <input type="hidden" name="review_edit_id" id="review_edit_id">
+            <div class="form-group">
+              <label for="review">Review</label>
+              <textarea class="form-control" id="review_edit" rows="3" name="review_edit" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="rating">Rating (1-5)</label>
+              <select class="form-control" id="rating_edit" name="rating_edit" required>
+                <option selected disabled>Choose...</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="reviewDeleteModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Delete Review</h5>
+          
+          <div class="my-indicator" id="deleteReviewSpinner">
+            <img src="{% static 'images/navigate-icons/page-spinner.svg' %}" height="60px">
+            </div>
+          
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeDeleteReviewModal();">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          
+        </div>
+        <div class="modal-body">
+          <form hx-post="{% url 'eco-delete-review' %}" hx-target="#reviewBody" hx-indicator="#deleteReviewSpinner">
+            
+            {% csrf_token %}
+
+            <input type="hidden" name="product_delete_id" id="product_delete_id" value="{{ product.pk }}">
+            <input type="hidden" name="review_delete_id" id="review_delete_id">
+
+            <div id="showReview">
+
+            </div>
+           
+            <button type="submit" class="btn btn-danger">Confirm Deleting</button>
           </form>
         </div>
        
@@ -181,6 +275,9 @@
             <div class="card card-outline-secondary my-4">
                 <div class="card-header">
                     <h2>Product Reviews</h2>
+                    <div id="reviewMsg">
+
+                    </div>
                 </div>
                 <div class="card-body" id="reviewBody">
                     {% for review in reviews %}
@@ -244,9 +341,32 @@
     </div>
     <div class="media-body">
         <p>{{review.review}}</p>
-        <strong style="color:blue;" class="text-muted">Posted by {{review.user.username}} on {{review.updated_on}}</strong>
+        <strong style="color:blue;" class="text-muted">Posted by <small style="color:green">{{review.user.username}}</small> on {{review.updated_on}}</strong>
+        
     </div>
+    
 </div>
+{% if request.user.username == review.user.username %}
+
+<div style="margin-right:10px;">
+                <button class="btn btn-primary" onclick="reviewEdit('{{review.review}}','{{review.rating}}','{{review.pk}}')">
+
+                    <i class="fa fa-edit"></i>Edit
+
+                </button>
+                &nbsp;
+                <button class="btn btn-danger" onclick="reviewDel('{{review.review | truncatechars:30}}','{{review.pk}}')">
+
+                    <i class="fa fa-times"></i>Delete
+
+                </button>
+
+</div>
+
+        {% endif %}
+
+        <br>
+
 
 {% endfor %}
                     <a class="btn hvr-hover" onclick="reviewModal()">Leave a Review</a>
@@ -278,7 +398,7 @@
                             </div>
                             <div class="why-text">
                                 <h4></h4>
-                                <h5> $9.79</h5>
+                                <h5> </h5>
                             </div>
                         </div>
                     </div>
@@ -300,9 +420,43 @@
         $("#reviewModalCenter").modal('show');
     }
 
+    function reviewEdit(review,rating,pk){
+
+
+         $("#reviewEditModalCenter").modal('show');
+
+
+          $("#review_edit_id").val(pk);
+          $("#review_edit").val(review);
+          $("#rating_edit").val(rating);
+
+        
+
+    }
+
+    function reviewDel(review,id){
+
+        $("#reviewDeleteModalCenter").modal('show');
+
+        $("#review_delete_id").val(id);
+         $("#showReview").html(review);
+
+      
+
+    }
+
     function closeReviewModal(){
 
         $("#reviewModalCenter").modal('hide');
+    }
+    function closeEditReviewModal(){
+
+        $("#reviewEditModalCenter").modal('hide');
+    }
+
+    function closeDeleteReviewModal(){
+
+        $("#reviewDeleteModalCenter").modal('hide');
     }
 
 </script>

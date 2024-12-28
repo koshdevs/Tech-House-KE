@@ -84,7 +84,7 @@ def shop_cart_view(request):
     
     contxt = items
     
-    
+    print(contxt)
     
     return render(request,'ecommerce/shop-cart.html',contxt)
 
@@ -114,6 +114,25 @@ def shop_add_to_cart_view(request,pk):
     
     return render(request,'ecommerce/shop-add-to-cart.html',contxt)
 
+
+def shop_plus_to_cart(request,pk): 
+    
+    cart = ShopCart(request)
+    
+    product = get_object_or_404(ProductBuild,pk=pk)
+
+    cart.add(product=product,qty=1)
+    
+    
+    items =cart_render(cart)
+    
+    contxt = {"product":product} | items
+    
+    return render(request,'ecommerce/shop-cart-page-change.html',contxt)
+    
+    
+
+
 def shop_minus_to_cart_view(request,pk):
     
 
@@ -140,7 +159,7 @@ def shop_minus_to_cart_view(request,pk):
     contxt = {"product":product} | items
    
     
-    return render(request,'ecommerce/shop-add-to-cart.html',contxt)
+    return render(request,'ecommerce/shop-cart-page-change.html',contxt)
 
 
 def shop_rem_cart_view(request,pk):
@@ -330,10 +349,25 @@ def csrf_failure_403(request,reason="Error as a result of cross forgery protecti
 
     return render(request,'403_csrf_failure.html',contxt,status=403)
 
-
+#=====================Reviews Management ======================
 
 def create_product_review(request): 
     
+
+    """
+    Creates a product review.
+    
+    If the request is a POST, it creates a product review based on the POST data. If the user is authenticated, it creates a new
+    ProductReview object with the user, product_id, review, and rating. If the user is not authenticated, it sets a message
+    indicating that the user must be logged in to create a review. Finally, it renders the shop-products-review.html template
+    with the reviews and message.
+    
+    :param request: The HTTP request object.
+    :type request: django.http.HttpRequest
+    :return: The rendered shop-products-review.html template with the reviews and message.
+    :rtype: django.http.HttpResponse
+    """
+
     if request.method == 'POST': 
         
         id = request.POST.get('product_id') #product_id
@@ -365,6 +399,56 @@ def create_product_review(request):
         contxt = {"reviews": reviews,"msg": msg}
         
         return render(request,'ecommerce/shop-products-review.html',contxt)
+    
+    
+def edit_product_review(request): 
+    
+    if request.method == 'POST':
+        
+        product_id = request.POST.get('product_edit_id')
+        review_id = request.POST.get('review_edit_id')
+        review=request.POST.get('review_edit')
+        rating = request.POST.get('rating_edit')
+        
+        
+        review_ = ProductReview.objects.get(pk=review_id)
+        
+        review_.review = review
+        review_.rating = rating
+        
+        review_.save()
+        
+        msg = "<strong style='color:green'>Review updated successfully</strong>"
+        
+        reviews = ProductReview.objects.filter(product__pk=product_id).order_by('-updated_on')
+        
+        contxt = {"reviews": reviews,"msg": msg}
+        
+        return render(request,'ecommerce/shop-products-review.html',contxt)
+
+
+def delete_product_review(request): 
+    
+    if request.method == 'POST':
+        
+        review_id = request.POST.get('review_delete_id')
+        print(review_id)
+        product_id = request.POST.get('product_delete_id')
+        
+        review_ = ProductReview.objects.get(pk=review_id)
+        
+        review_.delete()
+        
+        msg = "<strong style='color:green'>Review deleted successfully</strong>"
+        
+        reviews = ProductReview.objects.filter(product__pk=product_id).order_by('-updated_on')
+        
+        contxt = {"reviews": reviews,"msg": msg}
+        
+        return render(request,'ecommerce/shop-products-review.html',contxt)
+    
+    
+
         
         
         

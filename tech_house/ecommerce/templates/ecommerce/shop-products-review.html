@@ -51,7 +51,7 @@
 
 {% endif %}
 
-<p id="msg">{{msg|safe}}</p>
+<p id="msg" style="display:none">{{msg|safe}}</p>
 
 <div class="media mb-3" >
     <div class="mr-2"> 
@@ -62,6 +62,26 @@
         <strong class="text-muted">Posted by {{review.user.username}} on {{review.updated_on}}</strong>
     </div>
 </div>
+{% if request.user.username == review.user.username %}
+
+<div style="margin-right:10px;">
+                <button class="btn btn-primary" onclick="reviewEdit('{{review.review}}','{{review.rating}}','{{review.pk}}')">
+
+                    <i class="fa fa-edit"></i>Edit
+
+                </button>
+                &nbsp;
+                <button class="btn btn-danger" onclick="reviewDel('{{review.review | truncatechars:30}}','{{review.pk}}')">
+
+                    <i class="fa fa-times"></i>Delete
+
+                </button>
+
+</div>
+
+        {% endif %}
+
+        <br>
 
 {% endfor %}
 
@@ -70,6 +90,6 @@
 
     let msg = document.getElementById('msg').innerHTML
 
-    document.getElementById('reviewResp').innerHTML = msg
+    document.getElementById('reviewMsg').innerHTML = msg
 
 </script>

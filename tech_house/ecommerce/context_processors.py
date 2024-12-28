@@ -1,4 +1,4 @@
-from .cart import ShopCart
+from .cart import ShopCart,cart_render
 from .models import ProductBuild,ProductCategory
 
 def cart(request):
@@ -23,3 +23,5 @@ def show_products(request):
     
     
     return contxt
+
+

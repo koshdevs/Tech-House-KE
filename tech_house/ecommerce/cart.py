@@ -20,7 +20,7 @@ class ShopCart():
     def add(self,product,qty):
         product_id = str(product.pk)
         if product_id not in self.cart:
-            self.cart[product_id] = {'qty':1,"price":str(product.price)}
+            self.cart[product_id] = {'qty':1,"price":str(product.price),"tax":str(product.tax)}
         else:
             self.cart[product_id]['qty'] += qty
             
@@ -36,8 +36,10 @@ class ShopCart():
             cart[str(product.pk)]['product'] = ProductBuildSerializer(product).data
             
         for item in cart.values():
+            
             item["price"] = item["price"]
             item['total_price'] = item['qty'] * float(item['price'])
+            item['total_tax'] = (float(item['tax'])/100) * float(item['price'])*float(item['qty'])
             yield item
         
         
@@ -67,6 +69,15 @@ class ShopCart():
         
         return sum(item["total_price"] for item in self.cart.values())
     
+    def total_tax(self): 
+        
+        return sum(item["total_tax"] for item in self.cart.values())
+    
+    def total_amount(self): 
+        
+        
+        return self.total_tax() + self.sub_total_price()
+    
 
 def display_cart_items(items): 
   
@@ -77,6 +88,8 @@ def display_cart_items(items):
             'quantity': item['qty'],
             'price': item['price'],
             'total_price': item['qty']*Decimal(item['price']),
+            'total_tax':item["total_tax"],
+            'total_amount':( item['qty']*Decimal(item['price']))+Decimal(item["total_tax"]),
             'image': ProductImages.objects.get(pk=item['product']['images'][0]).image.url,	
         }
             
@@ -107,7 +120,10 @@ def cart_render(cart):
 
     items = display_cart_items(cart.get_items())
     item_no = cart.__len__()
-    total = cart.sub_total_price()
-    return {"items":items,"item_no":item_no,"total":total}
+    sub_total = cart.sub_total_price()
+    tax = cart.total_tax()
+    total = cart.total_amount()
+    
+    return {"items":items,"item_no":item_no,"sub_total":sub_total,"tax":tax,"total":total}    
     
     

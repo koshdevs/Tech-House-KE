@@ -1,9 +1,13 @@
 from django.shortcuts import render,get_object_or_404
+from django.utils.crypto import get_random_string
+from django.shortcuts import redirect
+from django.http import HttpResponse,JsonResponse
 from django.core.cache import cache
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from .models import ProductBuild,ProductCategory,ProductReview
 from .cart import ShopCart,display_cart_items,cart_render
+from .pesapal import payment_request_page,register_ipn
 
 #Create your views here.
 def shop_view(request):
@@ -447,6 +451,76 @@ def delete_product_review(request):
         
         return render(request,'ecommerce/shop-products-review.html',contxt)
     
+
+def shop_checkout_details(request): 
+    
+    cart = ShopCart(request)
+    
+    items = cart_render(cart)
+    
+    contxt = items
+    
+    print(contxt)
+    
+    
+    
+    
+    return render(request,'ecommerce/shop-checkout-form.html',contxt)
+    
+    
+    
+    
+'''
+=====================PESAPAL PROCESSING ================
+'''
+
+def shop_pesapal_payment_page(request): 
+    
+    ORDER_ID = get_random_string(8)
+    
+    data = {
+    "id": ORDER_ID,
+    "currency": "KES",
+    "amount": 100.00,
+    "description": "Payment description goes here",
+    "callback_url": "http://192.168.1.3:8080/response-page",
+    "redirect_mode": "",
+    "notification_id": register_ipn(),
+    "branch": "tech-house-ke",
+    "billing_address": {
+        "email_address": "john.doe@example.com",
+        "phone_number": "0712110972",
+        "country_code": "KE",
+        "first_name": "John",
+        "middle_name": "",
+        "last_name": "Doe",
+        "line_1": "Pesapal Limited",
+        "line_2": "",
+        "city": "",
+        "state": "",
+        "postal_code": "",
+        "zip_code": ""
+    }
+    } 
+    
+    response = payment_request_page(data)
+    print(response)
+    
+    return redirect(response["redirect_url"])
+    
+    
+
+def shop_pesapal_response_page(request):
+    
+    return JsonResponse("Respose Page",safe=False)
+
+def shop_get_pesapal_ipn_id(request):
+    
+    return JsonResponse("get ipn page",safe=False)
+    
+    
+    
+
     
 
         

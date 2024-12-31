@@ -176,6 +176,21 @@ class ProductBuild(models.Model):
         
         verbose_name_plural = "Create Product"
         
+
+class DeliveryCategory(models.Model):
+    
+    name = models.CharField(max_length=100)
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField()
+    
+    def __str__(self):
+        
+        return self.name
+    
+    class Meta:
+        
+        verbose_name_plural = "Delivery Categories"
+        
         
 class OrgProfile(models.Model):
     

@@ -1,3 +1,4 @@
+from django.utils.crypto import get_random_string
 from .models import ProductBuild,ProductImages,ProductModel
 from ecommerce.ecommerce_api.serializers import ProductBuildSerializer
 from decimal import Decimal
@@ -7,9 +8,12 @@ class ShopCart():
         
         self.session = request.session
         cart = self.session.get('cart_session_key')
+        order_id = self.session.get('order_id')
         if not cart:
             cart = self.session['cart_session_key'] = {}
+            order_id = self.session['order_id'] = get_random_string(8,allowed_chars='0123456789')
         self.cart = cart
+        self.order_id = order_id
         
     def save(self):
         
@@ -59,6 +63,11 @@ class ShopCart():
         for key in list(self.cart.keys()):
             del self.cart[key]
         self.save()
+        
+        del self.order_id
+        
+    def get_order_id(self):
+        return self.order_id
     
     
     def __len__(self):
@@ -123,7 +132,8 @@ def cart_render(cart):
     sub_total = cart.sub_total_price()
     tax = cart.total_tax()
     total = cart.total_amount()
+    order_id = cart.get_order_id()
     
-    return {"items":items,"item_no":item_no,"sub_total":sub_total,"tax":tax,"total":total}    
+    return {"items":items,"item_no":item_no,"sub_total":sub_total,"tax":tax,"total":total,"order_id":order_id}    
     
     

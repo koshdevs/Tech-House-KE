@@ -50,6 +50,7 @@ class ProductBuildAdmin(admin.ModelAdmin):
 admin.site.register(OrgProfile)
 admin.site.register(advert)
 admin.site.register(ProductReview)
+admin.site.register(DeliveryCategory)
     
 
 

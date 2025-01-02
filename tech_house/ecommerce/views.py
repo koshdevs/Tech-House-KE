@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from django.utils.crypto import get_random_string
 from django.shortcuts import redirect
 from django.http import HttpResponse,JsonResponse
+from django.urls import reverse
 from django.core.cache import cache
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
@@ -123,7 +124,7 @@ def shop_plus_to_cart(request,pk):
     
     cart = ShopCart(request)
     
-    product = get_object_or_404(ProductBuild,pk=pk)
+    product = ProductBuild.objects.get(pk=pk)
 
     cart.add(product=product,qty=1)
     
@@ -154,7 +155,7 @@ def shop_minus_to_cart_view(request,pk):
 
     cart = ShopCart(request)
     
-    product = get_object_or_404(ProductBuild,pk=pk)
+    product = ProductBuild.objects.get(pk=pk)
 
     cart.add(product=product,qty=-1)
     
@@ -474,41 +475,84 @@ def shop_checkout_details(request):
 =====================PESAPAL PROCESSING ================
 '''
 
-def shop_pesapal_payment_page(request): 
-    
-    ORDER_ID = get_random_string(8)
-    
-    data = {
-    "id": ORDER_ID,
-    "currency": "KES",
-    "amount": 100.00,
-    "description": "Payment description goes here",
-    "callback_url": "http://192.168.1.3:8080/response-page",
-    "redirect_mode": "",
-    "notification_id": register_ipn(),
-    "branch": "tech-house-ke",
-    "billing_address": {
-        "email_address": "john.doe@example.com",
-        "phone_number": "0712110972",
-        "country_code": "KE",
-        "first_name": "John",
-        "middle_name": "",
-        "last_name": "Doe",
-        "line_1": "Pesapal Limited",
-        "line_2": "",
-        "city": "",
-        "state": "",
-        "postal_code": "",
-        "zip_code": ""
-    }
-    } 
-    
-    response = payment_request_page(data)
-    print(response)
-    
-    return redirect(response["redirect_url"])
+
+def shop_pesapal_payment_post(request): 
     
     
+    if request.method == 'POST':
+        
+        ORDER_ID = request.POST.get('order_id')
+        
+        fname = request.POST.get('firstname')
+        sname = request.POST.get('secondname')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        address1 = request.POST.get('adrress1')
+        address2 = request.POST.get('adrress2')
+        postal_code = request.POST.get('postal_code')
+        country = request.POST.get('country')
+        city = request.POST.get('city')
+        zip = request.POST.get('zip')
+        
+        same_address = request.POST.get('same_address')
+        save_info = request.POST.get('save_info')
+        
+        address1 = address1 if same_address == 'on' else ""
+        address2 = address2 if same_address == 'on' else ""
+        country_code = "KE"  if country == 'kenya'  else ""
+        
+        cart = ShopCart(request)
+    
+        items = cart_render(cart)
+        
+        
+    
+        amount = float(items["total"])
+        
+       
+
+    
+        data = {
+        "id": ORDER_ID,
+        "currency": "KES",
+        "amount": amount,
+        "description": "Payment for order:"+str(ORDER_ID),
+        "callback_url": "http://192.168.1.3:8080/response-page",
+        "redirect_mode": "",
+        "notification_id": register_ipn(),
+        "branch": "tech-house-ke",
+        "billing_address": {
+            "email_address": email,
+            "phone_number": phone,
+            "country_code": country_code,
+            "first_name": fname,
+            "middle_name": "",
+            "last_name": sname,
+            "line_1": address1,
+            "line_2":address2,
+            "city":city,
+            "state": "",
+            "postal_code":postal_code,
+            "zip_code":zip
+        }
+        } 
+        
+        response = payment_request_page(data)
+        
+        url = response["redirect_url"]
+        
+        
+        
+        print(url)
+        
+       
+        
+        return render(request,'ecommerce/shop-payment-page.html',{"url":url})
+    
+
+
+    
+
 
 def shop_pesapal_response_page(request):
     

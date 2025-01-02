@@ -4,7 +4,7 @@ from .views import shop_view,shop_details_view,shop_add_to_cart_view,shop_plus_t
     shop_minus_to_cart_view,shop_cart_view,shop_rem_cart_view,filter_products_by_brand,\
     filter_by_sub_category,filter_by_price_range,search_products,sort_products,\
         create_product_review,edit_product_review,delete_product_review,shop_checkout_details,\
-            shop_pesapal_payment_page,shop_pesapal_response_page,shop_get_pesapal_ipn_id
+            shop_pesapal_payment_post,shop_pesapal_response_page,shop_get_pesapal_ipn_id
 
 urlpatterns = [
     
@@ -25,8 +25,9 @@ urlpatterns = [
              path('delete-review/', delete_product_review, name="eco-delete-review"),
              path('checkout_details/',shop_checkout_details,name="eco-shop-checkout-details"),
              
-             # PESAPAL LINKS 
-             path('pesapal-payment-page/', shop_pesapal_payment_page, name="eco-pesapal-payment-page"),
+             # PESAPAL LINKS
+             path('pesapa-payment-post/',shop_pesapal_payment_post,name="eco-pesapal-payment-post"),
+
              path('response-page/', shop_pesapal_response_page, name="eco-pesapal-response-page"),
              path('ipn/',shop_get_pesapal_ipn_id,name="eco-pesapal-ipn-id"),	
              

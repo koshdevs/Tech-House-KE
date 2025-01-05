@@ -1,1 +1,1 @@
-web: gunicorn 'tech_house.wsgi' --timeout 480
+web: gunicorn 'tech_house.wsgi' --timeout 48000

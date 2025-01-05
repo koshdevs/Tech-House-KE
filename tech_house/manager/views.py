@@ -8,7 +8,7 @@ from django.core.cache import cache
 from django.db.models import Q,Sum,Count
 from django.db.models.functions import TruncMonth,TruncDay
 from ecommerce.models import ProductBuild 
-from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails,Expenses
+from .models import StoreSales,CustomerDetails,StoreOrders,OrgDetails,DeliveryDetails,Expenses,FileTransfer
 from.data_ops import get_sales_data,gen_order_docs,get_sales_by_status,\
     calculate_profit,gen_order_items_docs,get_sales_by_id,get_sales_summary_data
 import datetime
@@ -881,6 +881,15 @@ def store_generate_reports(request):
             
     
     return render(request,"manager/store-reports.html",contxt)
+
+
+def file_transfer(request):
+    
+    files = FileTransfer.objects.all()
+    
+    contxt = {"files":files}
+    
+    return render(request, 'manager/file_transfer.html', contxt)
     
     
 

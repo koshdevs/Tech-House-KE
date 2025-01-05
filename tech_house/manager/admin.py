@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import OrgDetails,StoreSales,Expenses
+from .models import OrgDetails,StoreSales,Expenses ,FileTransfer
 # Register your models here.
 
 @admin.register(OrgDetails)
@@ -16,4 +16,5 @@ class ExpensesAdmin(admin.ModelAdmin):
     list_display = ['name','amount','date']
     search_fields = ('name',)
     
-    
+
+admin.site.register(FileTransfer)

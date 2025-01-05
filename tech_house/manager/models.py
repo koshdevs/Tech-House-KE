@@ -91,6 +91,19 @@ class Expenses(models.Model):
         
         verbose_name_plural = "Expenses"
         
+        
+class FileTransfer(models.Model):
+    
+    name = models.CharField(max_length=1000)
+    description = models.TextField()
+    file = models.FileField(upload_to="transfer_files")
+    date = models.DateField(auto_now_add=True)
+    
+    
+    class Meta: 
+        
+        verbose_name_plural = "File Transfer"
+        
     
     
     

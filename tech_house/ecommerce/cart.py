@@ -134,6 +134,9 @@ def cart_render(cart):
     total = cart.total_amount()
     order_id = cart.get_order_id()
     
-    return {"items":items,"item_no":item_no,"sub_total":sub_total,"tax":tax,"total":total,"order_id":order_id}    
+    return {"items":items,"item_no":item_no,"sub_total":sub_total,"tax":tax,"total":total,"order_id":order_id} 
+
+
+   
     
     

@@ -6,7 +6,7 @@ from .views import store_counter,add_to_counter,remove_from_counter,gen_store_in
             complete_instant_sales,store_generate_reports,remove_order_from_invoice,\
                 list_invoice_items,gen_invoice_for_selected_items,gen_receipt_for_selected_items,\
                     rem_selected_items_from_orders,store_list_customer_details,list_on_sales_items,\
-                        filter_on_sales_items,sales_as_delivered,sales_as_returned,sales_as_invoiced
+                        filter_on_sales_items,sales_as_delivered,sales_as_returned,sales_as_invoiced,file_transfer
 
 
 urlpatterns = [
@@ -37,5 +37,7 @@ urlpatterns = [
     path('sales-as-delivered/', sales_as_delivered, name="manager-sales-as-delivered"),
     path('sales-as-return/', sales_as_returned, name="manager-sales-as-return"),
     path('sales-as-invoiced/', sales_as_invoiced, name="manager-sales-as-invoiced"),
+    
+    path('file-transfer/', file_transfer, name="manager-file-transfer"),
     
 ]

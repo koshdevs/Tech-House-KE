@@ -78,6 +78,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'ecommerce.context_processors.cart',
                 'ecommerce.context_processors.show_products',
+                'ecommerce.context_processors.show_org_profile',
             ],
         },
     },

@@ -54,6 +54,103 @@
 </head>
 
 <body>
+
+    <!-- ==========show information modal ======-->
+
+    <div class="modal fade" id="showInfoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Info</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-row" style="margin-left:0px; zoom:45%;">
+                    <ul class="nav nav-tabs ml-auto">
+                        <li>
+                            <a class="btn btn-primary" href="#about-view" data-toggle="tab">About Us</a>
+                        </li>
+                        &nbsp;&nbsp;
+                        <li>
+                            <a class="btn btn-success" href="#customer-view" data-toggle="tab"> Customer Service</a>
+                        </li>
+                        &nbsp;&nbsp;
+                        <li>
+                            <a class="btn btn-info" href="#terms-view" data-toggle="tab"> Terms & Condition </a>
+                        </li>
+                        &nbsp;&nbsp;
+                        <li>
+                            <a class="btn btn-warning" href="#privacy-view" data-toggle="tab"> Privacy Policy </a>
+                        </li>
+                        &nbsp;&nbsp;
+                        <li>
+                            <a class="btn btn-secondary" href="#delivery-view" data-toggle="tab"> Delivery Policy </a>
+                        </li>
+                        &nbsp;&nbsp;
+                        <li>
+                            <a class="btn btn-dark" href="#faqs-view" data-toggle="tab"> Faqs</a>
+                        </li>
+                        &nbsp;&nbsp;
+                    </ul>
+                </div>
+                <div class="product-categorie-box" style="height:500px; overflow-y:scroll;">
+            <div class="tab-content" >
+                <div role="tabpanel" class="tab-pane fade show active" id="about-view">
+                    <div class="row" style="margin:10px;">
+                      {{profile.about}}
+                    </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade show active" id="customer-view">
+                <div class="row" style="margin:10px;">
+                       {{profile.customer_service}}
+                </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade show active" id="terms-view">
+            <div class="row" style="margin:10px;">
+
+                {{profile.terms}}
+
+            </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade show active" id="privacy-view">
+        <div class="row" style="margin:10px;">
+
+            {{profile.privacy_policy}}
+
+        </div>
+</div>
+
+<div role="tabpanel" class="tab-pane fade show active" id="delivery-view">
+    <div class="row" style="margin:10px;">
+
+        {{profile.delivery}}
+
+    </div>
+</div>
+<div role="tabpanel" class="tab-pane fade show active" id="faqs-view">
+    <div class="row" style="margin:10px;">
+
+        {{profile.faqs}}
+
+    </div>
+</div>
+</div> 
+</div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- =======================================-->
    
     <!-- Start Main Top -->
     <div class="main-top">
@@ -128,6 +225,7 @@
 								<li><a href="{% url 'manager-store-counter' %}" hx-indicator="#pageSpinner">Counter</a></li>
 								<li><a href="{% url 'manager-list-invoices' %}" hx-indicator="#pageSpinner">Invoiced</a></li>
                                 <li><a href="{% url 'manager-list-on-sales-items' %}" hx-indicator="#pageSpinner">On-Sale</a></li>
+                                <li><a href="{% url 'manager-scan-mobile-items' %}" hx-indicator="#pageSpinner">Mobile Scan</a></li>
                             
                                 <li><a href="{% url 'manager-store-generate-reports' %}" hx-indicator="#pageSpinner">Reports</a></li>
                                 
@@ -259,13 +357,11 @@
 							<h3>Social Media</h3>
 							
 							<ul>
-                                <li><a href="#"><i class="fab fa-facebook" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-google-plus" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-pinterest-p" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fab fa-whatsapp" aria-hidden="true"></i></a></li>
+                                <li><a href="{{profile.fb_link}}"><i class="fab fa-facebook" aria-hidden="true"></i></a></li>
+                                <li><a href="{{profile.x_link}}"><i class="fab fa-twitter" aria-hidden="true"></i></a></li>
+                                <li><a href="{{profile.ig_link}}"><i class="fab fa-instagram" aria-hidden="true"></i></a></li>
+                                <li><a href="{{profile.pi_link}}"><i class="fab fa-pinterest-p" aria-hidden="true"></i></a></li>
+                                <li><a href="{{profile.wa_link}}"><i class="fab fa-whatsapp" aria-hidden="true"></i></a></li>
                             </ul>
 						</div>
 					</div>
@@ -282,12 +378,12 @@
                         <div class="footer-link">
                             <h4>Information</h4>
                             <ul>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Customer Service</a></li>
-                                <li><a href="#">Our Sitemap</a></li>
-                                <li><a href="#">Terms &amp; Conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Delivery Information</a></li>
+                                <li><a onclick="showInfo('{{profile.logo.url}}')">About Us</a></li>
+                                <li><a onclick="showInfo('{{profile.logo.url}}')">Customer Service</a></li>
+
+                                <li><a onclick="showInfo('{{profile.logo.url}}')">Terms &amp; Conditions</a></li>
+                                <li><a onclick="showInfo('{{profile.logo.url}}')">Privacy Policy</a></li>
+                                <li><a onclick="showInfo('{{profile.logo.url}}')">Delivery Information</a></li>
                             </ul>
                         </div>
                     </div>
@@ -296,13 +392,13 @@
                             <h4>Contact Us</h4>
                             <ul>
                                 <li>
-                                    <p><i class="fas fa-map-marker-alt"></i>Address:  <br><br>  </p>
+                                    <p><i class="fas fa-map-marker-alt"></i>Address: {{profile.address}} <br><br>  </p>
                                 </li>
                                 <li>
-                                    <p><i class="fas fa-phone-square"></i>Phone:<a href="tel:+1-888705770"></a></p>
+                                    <p><i class="fas fa-phone-square"></i>Phone:{{profile.phone}}<a href="tel:{{profile.phone}}"></a></p>
                                 </li>
                                 <li>
-                                    <p><i class="fas fa-envelope"></i>Email: <a href="mailto:contactinfo@gmail.com"></a></p>
+                                    <p><i class="fas fa-envelope"></i>Email:{{profile.email}} <a href="mailto:{{profile.email}}"></a></p>
                                 </li>
                             </ul>
                         </div>
@@ -345,6 +441,18 @@
 
     <!--Start of Tawk.to Script-->
 <script type="text/javascript">
+
+    function showInfo(logo){
+
+        $("#showInfoModal").modal('show')
+     }
+
+     function closeModal(){
+
+        $("#showInfoModal").modal('hide')
+
+     }
+
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
     (function(){
     var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
@@ -354,6 +462,9 @@
     s1.setAttribute('crossorigin','*');
     s0.parentNode.insertBefore(s1,s0);
     })();
+
+     
+
     </script>
     <!--End of Tawk.to Script-->
  

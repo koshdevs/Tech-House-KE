@@ -99,8 +99,16 @@ def get_sales_by_status(status):
     return contxt
 
 def get_sales_by_id(ids_list): 
+    """
+    Retrieves a list of sales with the given IDs, filters out unsold items, calculates the subtotal, tax, and total, and includes organizational details.
+
+    :param ids_list: A list of sales IDs to retrieve.
+    :type ids_list: list
+    :return: A dictionary containing the filtered sales, total, tax, subtotal, organizational details, and date.
+    :rtype: dict
+    """
     
-    sales = StoreSales.objects.filter(pk__in = ids_list)
+    sales = StoreSales.objects.filter(pk__in = ids_list,status="sold")
     
     subtotal = round(sum([i.price for i in sales]),2)
     tax = round((subtotal*sales[0].tax)/100 if len(sales) > 0 else 0.00,2)
@@ -114,6 +122,7 @@ def get_sales_by_id(ids_list):
     contxt = {"sales":sales, "total":total,"tax":tax,"subtotal":subtotal,"org_details":org_details,"date":date}
     
     return contxt
+
 
 def get_sales_summary_data(sales):
     

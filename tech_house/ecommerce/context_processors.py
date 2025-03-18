@@ -1,5 +1,7 @@
+from django.core.cache import cache
 from .cart import ShopCart,cart_render
-from .models import ProductBuild,ProductCategory
+from .models import ProductBuild,ProductCategory,OrgProfile
+
 
 def cart(request):
     
@@ -23,5 +25,29 @@ def show_products(request):
     
     
     return contxt
+
+
+def show_org_profile(request): 
+    
+    
+    profile = cache.get('org-profile')
+    
+    if profile is None:
+        
+        profile = OrgProfile.objects.all()
+        
+        cache.set('org-profile', profile, timeout=2400)
+    
+    if len(profile) > 0: 
+        
+        profile = profile[0] 
+    
+    contxt = {
+        
+        'profile':profile
+    }
+    
+    return contxt
+    
 
 

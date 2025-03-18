@@ -6,7 +6,8 @@ from .views import store_counter,add_to_counter,remove_from_counter,gen_store_in
             complete_instant_sales,store_generate_reports,remove_order_from_invoice,\
                 list_invoice_items,gen_invoice_for_selected_items,gen_receipt_for_selected_items,\
                     rem_selected_items_from_orders,store_list_customer_details,list_on_sales_items,\
-                        filter_on_sales_items,sales_as_delivered,sales_as_returned,sales_as_invoiced,file_transfer
+                        filter_on_sales_items,sales_as_delivered,sales_as_returned,sales_as_invoiced,file_transfer,\
+                            scan_mobile_items
 
 
 urlpatterns = [
@@ -33,6 +34,7 @@ urlpatterns = [
     path('gen-receipt-for-selected-items/', gen_receipt_for_selected_items, name="manager-gen-receipt-for-selected-items"),
     path('rem-selected-items-from-orders/', rem_selected_items_from_orders, name="manager-rem-selected-items-from-orders"),
     path('store-list-customer-details/<str:order_id>/', store_list_customer_details, name="manager-store-list-customer-details"),
+    path('scan-mobile-items/',scan_mobile_items,name="manager-scan-mobile-items"),
     
     path('sales-as-delivered/', sales_as_delivered, name="manager-sales-as-delivered"),
     path('sales-as-return/', sales_as_returned, name="manager-sales-as-return"),

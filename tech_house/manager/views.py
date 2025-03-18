@@ -53,10 +53,13 @@ def add_to_counter(request,pk):
 
     product = ProductBuild.objects.get(pk=pk)
     
-    sales_check = StoreSales.objects.filter(product__serial1=product.serial1)
+    sales_check = StoreSales.objects.filter(product__serial1=product.serial1,status="cart")
+    
+    
     
     msg = '' 
     if len(sales_check) == 0:
+        
     
         sales = StoreSales( 
                         
@@ -72,6 +75,9 @@ def add_to_counter(request,pk):
         sales.save()
         
         msg+='<strong style="color:green">Added to cart</strong>'	
+        
+        
+        
     
     else: 
         
@@ -675,6 +681,12 @@ def filter_orders(request):
         return render(request, 'manager/shop-orders-search-results.html',contxt) 
     
     
+def scan_mobile_items(request): 
+    
+    return render(request,"manager/scan-mobile-items.html")
+
+    
+    
 def store_complete_order(request, order_id): 
     
     
@@ -834,9 +846,9 @@ def store_generate_reports(request):
     :rtype: django.http.HttpResponse
     """
 
-    by_model_name = ProductBuild.objects.values("model__name").annotate(Count('model__name'))
-    by_category_name = ProductBuild.objects.values("category__name").annotate(Count('category__name'))
-    by_brand_name = ProductBuild.objects.values("brand__name").annotate(Count('brand__name'))
+    by_model_name = ProductBuild.objects.filter(stage="in-stock").values("model__name").annotate(Count('model__name'))
+    by_category_name = ProductBuild.objects.filter(stage="in-stock").values("category__name").annotate(Count('category__name'))
+    by_brand_name = ProductBuild.objects.filter(stage="in-stock").values("brand__name").annotate(Count('brand__name'))
     
     stocks_model_names = [item['model__name'] for item in by_model_name]
     stocks_qty = [item['model__name__count'] for item in by_model_name]
@@ -890,6 +902,7 @@ def file_transfer(request):
     contxt = {"files":files}
     
     return render(request, 'manager/file_transfer.html', contxt)
+
     
     
 

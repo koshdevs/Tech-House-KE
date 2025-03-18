@@ -11,7 +11,7 @@ class StoreSales(models.Model):
     tax= models.DecimalField(max_digits=10,default=16.00, decimal_places=2)   
     date = models.DateField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.CharField(max_length=200,choices=(('cart','cart'),('ínvoiced','invoiced'),('sold','sold'),('returned','returned'),('delivered','delivered'),('Sold & Delivered','Sold & Delivered')))
+    status = models.CharField(max_length=200,choices=(('cart','cart'),('ínvoiced','invoiced'),('sold','sold'),('in-stock','in-stock'),('returned','returned'),('delivered','delivered'),('Sold & Delivered','Sold & Delivered')))
     
     
     class Meta:  

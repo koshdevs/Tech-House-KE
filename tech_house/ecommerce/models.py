@@ -159,6 +159,7 @@ class ProductBuild(models.Model):
     images = models.ManyToManyField(ProductImages)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    disty_price = models.DecimalField(max_digits=10, decimal_places=2,default=0.0)
     was = models.DecimalField(max_digits=10, decimal_places=2,null=True,blank=True)
     tax= models.DecimalField(max_digits=10,default=16.00, decimal_places=2) 
     status = models.CharField(max_length=200,choices=(('in-stock','in-stock'),('out-stock','out-stock'),('low','low')))
@@ -194,18 +195,24 @@ class DeliveryCategory(models.Model):
         
 class OrgProfile(models.Model):
     
-    fb_link = models.CharField(max_length=100)
-    x_link = models.CharField(max_length=100)
-    ig_link = models.CharField(max_length=100)
-    wa_link = models.CharField(max_length=100)
-    pi_link =models.CharField(max_length=100)
-    th_link = models.CharField(max_length=100)
+    fb_link = models.CharField(max_length=100,null=True,blank=True)
+    x_link = models.CharField(max_length=100,null=True,blank=True)
+    ig_link = models.CharField(max_length=100,null=True,blank=True)
+    wa_link = models.CharField(max_length=100,null=True,blank=True)
+    pi_link =models.CharField(max_length=100,null=True,blank=True)
+    th_link = models.CharField(max_length=100,null=True,blank=True)
     phone = models.CharField(max_length=100)
     email = models.EmailField()
     address = models.TextField()
     logo = models.ImageField(default='',upload_to="org_pics") 
     name = models.CharField(max_length=100)
-    others = models.TextField()
+    about = models.TextField(null=True,blank=True)
+    customer_service = models.TextField(null=True,blank=True)
+    terms = models.TextField(null=True,blank=True) 
+    privacy_policy = models.TextField(null=True,blank=True) 
+    delivery = models.TextField(null=True,blank=True)
+    faqs = models.TextField(null=True,blank=True)
+    others = models.TextField(null=True,blank=True)
     
     class Meta:
         
@@ -234,6 +241,10 @@ class ProductReview(models.Model):
     class Meta:
         
         verbose_name_plural = "Product Review"
+        
+        
+    
+    
     
     
     

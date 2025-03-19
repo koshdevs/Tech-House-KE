@@ -20,7 +20,9 @@
 <div class="cart-box-main">
     <div class="container">
 
-        <div id="Scanner" style="width:100%">
+        <strong>Scan Barcode</strong>
+
+        <div class="border border-primary" id="Scanner" style="width:100%;">
 
 
         </div>
@@ -51,7 +53,18 @@
             }
         },
         decoder: {
-            readers: ['code_128_reader']
+            readers: [
+                        'code_128_reader',
+                        "ean_reader",
+                        "ean_8_reader",
+                        "code_39_reader",
+                        "code_39_vin_reader",
+                        "codabar_reader",
+                        "upc_reader",
+                        "upc_e_reader",
+                        "i2of5_reader"
+                
+                ]
         },
     }
 

@@ -57,7 +57,7 @@
                                     <div class="input-group">
                                         <a class="btn btn-danger" hx-get="{% url 'eco-shop-minus-to-cart' item.product_id %}" hx-target="#cartResp">-</a>
                                         &nbsp &nbsp &nbsp
-                                        <input class="form-control" style="width:30px; font-size:12px; border-width:1px;" value="{{item_no}}" type="text" id="item_qty" >
+                                        <input class="form-control" style="width:30px; font-size:12px; border-width:0px;" value="{{item_no}}" type="text" id="item_qty" >
                                         &nbsp &nbsp &nbsp
                                         <a class="btn btn-success" hx-get="{% url 'eco-shop-plus-to-cart' item.product_id %}" hx-target="#cartResp">+</a>
                                     </div>

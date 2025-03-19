@@ -213,10 +213,10 @@
                 <!-- End Header Navigation -->
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="navbar-menu" style="zoom:70%; color:blue;" hx-boost="true">
+                <div class="collapse navbar-collapse" id="navbar-menu" style="zoom:100%; color:blue;" hx-boost="true">
                     <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
                         <li class="nav-item"><a class="nav-link" href="{% url 'eco-shop' %}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+                       
 
                         {% if user.is_staff or user.is_superuser %}
                         <li class="dropdown active">

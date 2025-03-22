@@ -41,6 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'ecommerce',
     'general',
     'manager',
@@ -61,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'tech_house.urls'
@@ -68,7 +74,7 @@ ROOT_URLCONF = 'tech_house.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,"templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,10 +85,18 @@ TEMPLATES = [
                 'ecommerce.context_processors.cart',
                 'ecommerce.context_processors.show_products',
                 'ecommerce.context_processors.show_org_profile',
+                
             ],
         },
     },
 ]
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+	  'allauth.account.auth_backends.AuthenticationBackend',
+    ]
+
 
 WSGI_APPLICATION = 'tech_house.wsgi.application'
 
@@ -191,3 +205,35 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = ['https://tech-house-ke-production.up.railway.app']
 
 CSRF_FAILURE_VIEW = 'ecommerce.views.csrf_failure_403'
+
+
+LOGIN_REDIRECT_URL = 'eco-shop'
+LOGOUT_REDIRECT_URL = 'eco-shop'
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    
+    'google': {
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('GOOLGE_SECRET_KEY'),
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+    
+}
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+SITE_ID = 1
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_LOGIN_METHOD = 'email'

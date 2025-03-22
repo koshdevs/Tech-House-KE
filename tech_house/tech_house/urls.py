@@ -26,7 +26,9 @@ urlpatterns = [
     path('',include('ecommerce.urls')),
     path('ecommerce/ecommerce_api/',include('ecommerce.ecommerce_api.urls')),
     path('store/',include('manager.urls')),
-    path('__debug__/', include(debug_toolbar.urls))
+    path('__debug__/', include(debug_toolbar.urls)),
+    path('accounts/', include('allauth.urls')),
+    path('accounts/', include('allauth.socialaccount.urls')),
 ]
 
 if settings.DEBUG:

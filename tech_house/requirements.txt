@@ -1,9 +1,12 @@
 asgiref==3.8.1
 certifi==2024.7.4
+cffi==1.17.1
 charset-normalizer==3.3.2
 crispy-bootstrap5==2024.2
+cryptography==44.0.2
 Django==5.1.2
 django-admin-interface==0.28.8
+django-allauth==65.6.0
 django-ckeditor==6.7.1
 django-colorfield==0.11.0
 django-cors-headers==4.4.0
@@ -26,6 +29,8 @@ pandas==2.2.2
 pillow==10.4.0
 psycopg==3.2.3
 psycopg2-binary==2.9.10
+pycparser==2.22
+PyJWT==2.10.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python-slugify==8.0.4

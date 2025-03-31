@@ -561,6 +561,27 @@ def shop_pesapal_response_page(request):
 def shop_get_pesapal_ipn_id(request):
     
     return JsonResponse("get ipn page",safe=False)
+
+def error_403(request,exception): 
+    
+    return render(request,'ecommerce/403_error.html',status=500)
+
+
+def error_404(request,exception): 
+    
+    
+    return render(request,'ecommerce/404_error.html',status=404)
+
+def error_500(request,exception=None): 
+    
+    
+    return render(request,'ecommerce/500_error.html',status=500)
+
+
+    
+    
+    
+    
     
     
     

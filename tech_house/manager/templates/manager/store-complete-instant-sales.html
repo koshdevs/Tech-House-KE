@@ -3,14 +3,26 @@
             
     <div class="col-lg-6">
         {{resp|safe}}
-        <div class="row">
+        <div class="row" >
 
             <div class="col-lg-6">
                 <input hx-get="{% url 'manager-filter-products' %}" hx-trigger="keyup changed delay:1s" hx-target="#itemTab" hx-indicator="#productSearchIndicator"  class="form-control" name="scan" placeholder="Scan here or search by name" type="text">
             </div>
-            
+          
+            <div class="col-lg-6">
+
+                <button class="btn btn-light" onclick="setPrice()">
+                    
+                    Price
+                    <i class="fa fa-cogs"></i>
+               
+                </button>
+            </div>
              
         </div>
+
+        
+        
 
         <br>
         <div class="htmx-indicator" id="productSearchIndicator">

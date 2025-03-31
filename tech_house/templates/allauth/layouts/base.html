@@ -23,11 +23,23 @@
             </div>
 
         <div class="col-sm-6 col-sm-offset-3">
-
+           
+            <div class="row">
+                <div class="col-sm-6">
             <a class="btn btn-success" href="/admin">
                 <i class="fa fa-user-plus"></i>
                 Admin
             </a>
+        </div>
+        <div class="col-sm-6">
+            <a class="btn btn-primary" href="/">
+
+                <i class="fa fa-home"></i>
+                Home
+            </a>
+        </div>
+
+        </div>
             <br>
         {% block body %}
             {% if messages %}
@@ -101,5 +113,15 @@
         {% endblock extra_body %}
 
         </div></div></div>
+        <script>
+
+            let labels = document.getElementsByTagName("label");
+        
+            for(label of labels){
+        
+                 label.style.display = "none"
+        
+            }
+        </script>
     </body>
 </html>

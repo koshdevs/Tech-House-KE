@@ -141,13 +141,127 @@
             </div>
           </div>
         -->
-        <div class="row" style="zoom:80px;"  id="salesPage">
+        <div class="modal fade" id="setPriceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Configure Prices</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="setPriceClose()">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" style="zoom:80%">
+
+                    <strong><i class="fa fa-cog"></i> <small style="color:orange;">{{price_category}}</small></strong>
+                    <br>
+                    {% if user.is_authenticated and user.is_staff %}
+                    <form hx-post="{% url 'manager-store-conf-price' %}" hx-target="#priceChange">
+
+                        {% csrf_token %}
+
+                        <div class="row">
+
+                            <div class="col-6">
+                        <div class="form-group col-md-9">
+                            <label for="InputName" class="mb-0">Select Price Category</label>
+                            <select name="setPrice" class="form-control"> 
+
+                                <option value="Retail">Retail</option>
+                                <option value="disty">Wholesale/Distributor</option>
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="col-3">
+
+                        <button type="submit" class="btn hvr-hover">Set Price</button>
+
+                    </div>
+
+                    </div>
+
+                    </form>
+
+                    {% endif %}
+
+                    <div id="priceChange">
+
+                    </div>
+
+                    <div class="table-main table-responsive" style="height:200px; overflow-y:auto;">
+                        <table class="table">
+                            <thead style="background-color:blue;color:white;font-size:8px;">
+                                <tr>
+                                    <th>Serial #</th>
+                                    <th>Product Name</th>
+                                    <th>Retail Price</th>
+                                   
+                                    <th>Wholesale Price</th>
+                                  
+                                </tr>
+                            </thead>
+                            <tbody id="itemTab">
+                                {% if user.is_authenticated and user.is_staff %}
+                                {% for item in items %}
+                                <tr id="product{{item.product_id}}">
+                                   
+                                    <td class="name-pr">
+                                        
+                                        {{item.serial1}}
+                                    
+                                        </td>
+                                    <td class="name-pr">
+                                        
+                                    {{item.model.name}}
+                                
+                                    </td>
+                                    <td class="price-pr">
+                                        <p>{{item.price}}</p>
+                                    </td>
+    
+                                    
+                                    <td class="total-pr">
+                                        <p>{{item.disty_price}}</p>
+                                    </td>
+                                   
+                                </tr>
+                               {% endfor %}
+                               {% else %}
+    
+                               <h4 style="color:red; text-align:center;">To view Items in this Page Login is required!!! <a style="color:blue" href="/admin">login here</a></h4>
+                               {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                  
+                </div>
+                <div class="modal-footer">
+                 
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        <div class="row" style="zoom:80%;"  id="salesPage">
             
             <div class="col-lg-6">
                 <div class="row">
 
                     <div class="col-lg-6">
-                        <input hx-get="{% url 'manager-filter-products' %}" hx-trigger="keyup changed delay:1s" hx-target="#itemTab" hx-indicator="#productSearchIndicator"  class="form-control" name="scan" placeholder="Scan here or search by name" type="text">
+                        <input hx-get="{% url 'manager-filter-products' %}" hx-trigger="keyup changed delay:1s" hx-target="#itemTab" hx-indicator="#productSearchIndicator"  class="form-control" name="scan" placeholder="Scan here or search by name" type="text" style="width:80%">
+                    </div>
+                <br>
+                    <div class="col-lg-6">
+
+                        <button class="btn btn-light" onclick="setPrice()">
+                            
+                            Price
+                            <i class="fa fa-cogs"></i>
+                       
+                        </button>
                     </div>
                     
                      
@@ -353,7 +467,18 @@
     let year = obj.getFullYear(); 
 
     document.getElementById("ordernum").value ="INV" + year.toString() +month.toString()+day.toString() + (Math.random().toString(36).substring(2,7)).toUpperCase();
+      
+    function setPrice() { 
 
+       
+
+        $("#setPriceModal").modal('show')
+    }
+
+    function setPriceClose(){
+
+        $("#setPriceModal").modal('hide')
+    }
 
 
 </script>

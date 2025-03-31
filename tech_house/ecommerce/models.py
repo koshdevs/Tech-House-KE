@@ -169,6 +169,8 @@ class ProductBuild(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     
+    designation = models.CharField(max_length=20,null=True,default="All",choices=(("All","All"),("Ecommerce","Ecommerce"),("Store","Store")))
+    
     def __str__(self):
         
         return self.model.name

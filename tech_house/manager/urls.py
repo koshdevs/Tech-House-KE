@@ -7,13 +7,14 @@ from .views import store_counter,add_to_counter,remove_from_counter,gen_store_in
                 list_invoice_items,gen_invoice_for_selected_items,gen_receipt_for_selected_items,\
                     rem_selected_items_from_orders,store_list_customer_details,list_on_sales_items,\
                         filter_on_sales_items,sales_as_delivered,sales_as_returned,sales_as_invoiced,file_transfer,\
-                            scan_mobile_items
+                            scan_mobile_items,store_conf_price
 
 
 urlpatterns = [
     
     path('store-counter/', store_counter,name="manager-store-counter"),
     path('add-to-counter/<int:pk>/', add_to_counter,name="manager-add-to-counter"),
+    path('store_conf_price/',store_conf_price,name="manager-store-conf-price"),
     path('remove-from-counter/<int:pk>/', remove_from_counter,name="manager-remove-from-counter"),
     path('generate-store-invoices/<str:order_id>/', gen_store_invoices, name="manager-generate-store-invoices"),
     path('customer-invoice-details/', customer_invoice_details, name="manager-customer-invoice-details"),

@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.sites',
+    'preventconcurrentlogins',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -66,7 +67,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
+    'preventconcurrentlogins.middleware.PreventConcurrentLoginsMiddleware'
 ]
 
 ROOT_URLCONF = 'tech_house.urls'
@@ -120,7 +122,7 @@ if DEBUG:                                                      # <-- NEW
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -138,7 +140,7 @@ DATABASES = {
        'PORT': os.getenv('PGPORT'),
    }
 }
-'''
+
 
 
 

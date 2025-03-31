@@ -28,11 +28,26 @@ def store_counter(request):
     
 
     items = ProductBuild.objects.filter(stage="in-stock")
+
     
     sales,totals = get_sales_data('cart')
     
+    if request.session.get("price_category"): 
+        
+        if request.session.get("price_category") == "disty":
+            
+            price_category = "Wholesale/Distributor"
+            
+        else: 
+            
+            price_category = "Retail"
+            
+    else: 
+        
+        price_category = "Retail"
     
-    contxt = {"items":items,"sales":sales,"totals":totals}
+    
+    contxt = {"items":items,"sales":sales,"totals":totals,"price_category":price_category}
     
     return render(request, 'manager/store_sales.html',contxt)
 
@@ -50,10 +65,34 @@ def add_to_counter(request,pk):
     :return: The rendered shop-counter-change.html template with updated cart items and a message.
     :rtype: django.http.HttpResponse
     """
+    
+    
 
     product = ProductBuild.objects.get(pk=pk)
     
     sales_check = StoreSales.objects.filter(product__serial1=product.serial1,status="cart")
+    
+    if request.session.get("price_category"): 
+        
+        if request.session.get("price_category") == "disty": 
+            
+            price = product.disty_price
+            
+           
+            
+        else: 
+            
+            price = product.price
+            
+            
+            
+    else: 
+        
+        price = product.price
+        
+    
+            
+            
     
     
     
@@ -65,7 +104,7 @@ def add_to_counter(request,pk):
                         
                         product=product,
                         quantity =1,
-                        price = product.price,
+                        price = price,
                         created_by = request.user,
                         status = 'cart',
                         tax= product.tax,
@@ -97,6 +136,32 @@ def add_to_counter(request,pk):
     contxt = {"product":product,"items":items,"sales":sales,"totals":totals,"msg":msg}	
     
     return render(request, 'manager/store-complete-instant-sales.html',contxt)
+
+
+def store_conf_price(request): 
+    
+    if request.method == "POST": 
+        
+        price_category = request.POST.get("setPrice")
+        
+        msg = ""
+        
+        if request.session.get("price_category"): 
+            
+            request.session["price_category"] = price_category 
+            
+            msg += '<strong style="color:green"> Edited Set Price category Successfully </strong>'
+            
+        else: 
+            
+            request.session["price_category"] = price_category
+            
+            msg += '<strong style="color:green"> Set Price category Successfully </strong>'
+            
+         
+         
+        return HttpResponse(msg)   
+            
 
 
 def add_to_counter_non_scans(request,pk):

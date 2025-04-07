@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import OrgDetails,StoreSales,Expenses ,FileTransfer
+from .models import OrgDetails,StoreSales,Expenses ,FileTransfer,StoreOrders
 # Register your models here.
 
 @admin.register(OrgDetails)
@@ -15,6 +15,11 @@ class StoreSalesAdmin(admin.ModelAdmin):
 class ExpensesAdmin(admin.ModelAdmin):
     list_display = ['name','amount','date']
     search_fields = ('name',)
+    
+@admin.register(StoreOrders)
+class ExpensesAdmin(admin.ModelAdmin):
+    list_display = ['order_id','sales__product__model__name','date']
+
     
 
 admin.site.register(FileTransfer)

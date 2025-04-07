@@ -1,4 +1,5 @@
 from .models import *
+from django.contrib.auth.models import User
 import datetime
 def get_sales_data(status):
     
@@ -39,7 +40,7 @@ def gen_order_docs(order_id):
     
     return contxt
 
-def gen_order_items_docs(order_id,ids_list):
+def gen_order_items_docs(order_id,ids_list,user):
     
 
     """
@@ -70,7 +71,7 @@ def gen_order_items_docs(order_id,ids_list):
     totals  = {'tax':tax,'subtotal':subtotal,'total':total}
     
     if OrgDetails.objects.count() > 0:
-        org = OrgDetails.objects.all()[0] 
+        rg_details = OrgDetails.objects.filter(seller__username__in = user)[0]
         
         
     
@@ -81,7 +82,7 @@ def gen_order_items_docs(order_id,ids_list):
     return contxt
     
     
-def get_sales_by_status(status):    
+def get_sales_by_status(status,user):    
 
     sales = StoreSales.objects.filter(status=status)
     
@@ -90,8 +91,10 @@ def get_sales_by_status(status):
     total = tax  + subtotal
     total = round(total,2)
     
+    
+    
     if len(OrgDetails.objects.all()):
-        org_details = OrgDetails.objects.all()[0]
+        org_details = OrgDetails.objects.filter(seller__username__in = [user])[0]
     
     date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     contxt = {"sales":sales, "total":total,"tax":tax,"subtotal":subtotal,"org_details":org_details,"date":date}

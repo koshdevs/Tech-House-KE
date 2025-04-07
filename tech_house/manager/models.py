@@ -76,6 +76,7 @@ class OrgDetails(models.Model):
     payment = models.TextField()
     terms = models.TextField()
     logo = models.ImageField(default='',upload_to="org_pics")
+    seller = models.ManyToManyField(User,null=True)
     
     class Meta: 
         
@@ -90,6 +91,23 @@ class Expenses(models.Model):
     class Meta: 
         
         verbose_name_plural = "Expenses"
+        
+        
+class StoreAccount(models.Model): 
+    
+    name = models.CharField(max_length=100)
+    owner_name =  models.CharField(max_length=100) 
+    email = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    town  = models.CharField(max_length=100)
+    logo = models.ImageField(default='',upload_to="org_pics")
+    seller = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    class Meta: 
+        
+        verbose_name_plural = "Partner/Store Account"
+    
         
         
 class FileTransfer(models.Model):

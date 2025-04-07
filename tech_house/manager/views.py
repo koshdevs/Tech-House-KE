@@ -206,7 +206,7 @@ def gen_instant_receipt(request):
     :rtype: django.http.HttpResponse
     """
 
-    contxt = get_sales_by_status('cart')
+    contxt = get_sales_by_status('cart',request.user.username)
     
     
     return render(request, 'manager/store-receipt.html',contxt)
@@ -674,7 +674,7 @@ def gen_invoice_for_selected_items(request):
         ids = request.POST.get('sales_ids').split(',')	
         order_id = request.POST.get('order_id')
         
-        contxt = gen_order_items_docs(order_id,ids)
+        contxt = gen_order_items_docs(order_id,ids,request.user.username)
         
         print(contxt)
         

@@ -271,6 +271,7 @@
                                     {{order.date}}
 
                                 </td>
+                                 
                                 <td>
                                     <a style="display:none" hx-get="{% url 'manager-list-invoice-items' order.order_id %}" hx-target="#orderItemsModalBody" id="viewItemsLink"></a>
                                     <a><i class="fa fa-eye" onclick="showOrderItems('{{order.order_id}}');"></i></a>
@@ -281,6 +282,7 @@
                                     <a onclick="showCustomerDetails('{{order.order_id}}')"><i class="fa fa-eye"></i></a>
 
                                 </td>
+                         
                                 <td>
                                       {{order.sales.status}}
                                 </td>
@@ -290,6 +292,7 @@
                               <td>
                                 {{order.delivery_details.paid_status}}
                           </td>
+                     
                                 <td>
 
                                     <a href="{% url 'manager-generate-store-invoices' order.order_id %}" download><i class="fa fa-print"></i></a>
@@ -310,6 +313,7 @@
                                 <i class="fas fa-trash"></i>
                             </a>
                                 </td>
+                   
                                
                             </tr>
                            {% endfor %}
